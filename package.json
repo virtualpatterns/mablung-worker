@@ -55,6 +55,7 @@
     "push:10": "git add coverage distributable package-lock.json package.json",
     "push:20": "git commit --message=\"post-test\"",
     "push:40": "git push origin master",
+    "push:50": "npm version prerelease",
     "push": "run-s --silent test push:*"
   },
   "type": "module",
