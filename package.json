@@ -18,8 +18,8 @@
     "exclude": [
       "distributable/test/**/*"
     ],
-    "reporter": [ 
-      "lcov" 
+    "reporter": [
+      "lcov"
     ]
   },
   "description": "TBD",
@@ -59,7 +59,7 @@
     "push": "run-s --silent test push:*"
   },
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2-0",
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
