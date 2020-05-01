@@ -16,7 +16,7 @@
   },
   "c8": {
     "exclude": [
-      "distributable/test/**/*"
+      "distributable/test"
     ],
     "reporter": [
       "lcov"
@@ -43,7 +43,7 @@
     "clean:20": "shx mkdir -p process/log",
     "clean": "run-s --silent clean:*",
     "lint:10": "eslint --ignore-path .gitignore source",
-    "lint:20": "depcheck --ignores=\"ava,@babel/*,babel-*,eslint-*,@virtualpatterns/mablung-*\"",
+    "lint:20": "depcheck --ignores=\"@babel/*,babel-*,eslint-*,@virtualpatterns/mablung-*\"",
     "lint": "run-s --silent lint:*",
     "build:10": "babel source --copy-files --extensions .cjs,.js --keep-file-extension --out-dir distributable --source-maps",
     "build": "run-s --silent clean lint build:*",
@@ -62,15 +62,15 @@
   "version": "0.0.2-1",
   "devDependencies": {
     "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
+    "@babel/core": "^7.9.6",
     "@babel/plugin-syntax-import-meta": "^7.8.3",
-    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-env": "^7.9.6",
     "@pwn/is": "^1.0.2",
     "@virtualpatterns/mablung-babel-plugin-replace": "file:../mablung-babel-plugin-replace",
     "@virtualpatterns/mablung-source-map-support": "file:../mablung-source-map-support",
-    "ava": "^3.7.1",
+    "ava": "^3.8.1",
     "babel-eslint": "^10.1.0",
-    "c8": "^7.1.0",
+    "c8": "^7.1.1",
     "depcheck": "^0.9.2",
     "eslint": "^6.8.0",
     "eslint-plugin-babel": "^5.3.0",
@@ -81,7 +81,7 @@
   "dependencies": {
     "@virtualpatterns/mablung-configuration": "file:../mablung-configuration",
     "change-case": "^4.1.1",
-    "commander": "^5.0.0",
+    "commander": "^5.1.0",
     "fs-extra": "^9.0.0",
     "json5": "^2.1.3"
   }
