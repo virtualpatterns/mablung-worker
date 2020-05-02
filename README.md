@@ -1,2 +1,2 @@
 # mablung-worker
-[coverage](coverage/lcov-report/index.html)
+View the coverage report [here](coverage/lcov-report/index.html).
