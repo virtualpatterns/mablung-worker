@@ -70,6 +70,7 @@
     "ava": "^3.8.1",
     "babel-eslint": "^10.1.0",
     "c8": "^7.1.1",
+    "commander": "^5.1.0",
     "depcheck": "^0.9.2",
     "eslint": "^6.8.0",
     "eslint-plugin-babel": "^5.3.0",
@@ -80,7 +81,6 @@
   "dependencies": {
     "@virtualpatterns/mablung-configuration": "file:../mablung-configuration",
     "change-case": "^4.1.1",
-    "commander": "^5.1.0",
     "fs-extra": "^9.0.0",
     "json5": "^2.1.3"
   }
