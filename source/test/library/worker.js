@@ -1,5 +1,11 @@
 const Process = process
 
+export function onImport(option = {}) {
+  console.log('Worker.onImport(option) { ... }')
+  console.dir(option)
+  return Process.pid
+}
+
 export function getPid(duration = 0) {
 
   if (duration) {
@@ -17,4 +23,16 @@ export function getPid(duration = 0) {
     return Process.pid
   }
 
+}
+
+export function onRelease(option = {}) {
+  console.log('Worker.onRelease(option) { ... }')
+  console.dir(option)
+  return Process.pid
+}
+
+export function onEnd(option = {}) {
+  console.log('Worker.onEnd(option) { ... }')
+  console.dir(option)
+  return Process.pid
 }

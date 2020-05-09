@@ -40,9 +40,10 @@ Test('WorkerClient.import(url)', async test => {
 
   try {
 
-    await worker.import(Require.resolve('./worker.js'));
-    await test.throwsAsync(worker.import(Require.resolve('./worker.js')), { 'instanceOf': Error });
+    let pid = await worker.import(Require.resolve('./worker.js'));
+    test.is(pid, worker.pid);
 
+    await test.throwsAsync(worker.import(Require.resolve('./worker.js')), { 'instanceOf': Error });
     test.is(await worker.module.getPid(), worker.pid);
 
   } finally {
@@ -73,9 +74,11 @@ Test('WorkerClient.release()', async test => {
 
   try {
 
-    await worker.import(Require.resolve('./worker.js'));
-    await worker.release();
+    let pid = null;
+    pid = await worker.import(Require.resolve('./worker.js'));
+    pid = await worker.release();
 
+    test.is(pid, worker.pid);
     await test.throws(() => {worker.module.getPid();}, { 'instanceOf': TypeError });
 
   } finally {

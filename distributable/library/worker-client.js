@@ -196,12 +196,14 @@ class WorkerClient extends ForkedProcess {
     await this.send({ 'type': 'ping' });
   }
 
-  async import(url) {
+  async import(url, option = {}) {
 
     await this.whenReady();
-    await this.send({ 'type': 'import', 'url': url });
+    let returnValue = await this.send({ 'type': 'import', 'url': url, 'option': option });
 
     this._module = new Proxy(this, WorkerClientModuleHandler);
+
+    return returnValue;
 
   }
 
@@ -210,18 +212,20 @@ class WorkerClient extends ForkedProcess {
     return this.send({ 'type': 'apply', 'methodName': methodName, 'parameter': parameter });
   }
 
-  async release() {
+  async release(option = {}) {
 
     await this.whenReady();
-    await this.send({ 'type': 'release' });
+    let returnValue = await this.send({ 'type': 'release', 'option': option });
 
     this._module = null;
 
+    return returnValue;
+
   }
 
-  async end() {
+  async end(option = {}) {
     await this.whenReady();
-    await super.send({ 'type': 'end' }); // there will be no response
+    await super.send({ 'type': 'end', 'option': option }); // there will be no response
     await this.whenRejected(WorkerClientExitedError);
   }
 

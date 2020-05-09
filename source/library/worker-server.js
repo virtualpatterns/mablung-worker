@@ -164,22 +164,38 @@ class WorkerServer {
       if (Is.null(this._module)) {
 
         let url = message.url
+        let option = message.option
 
         let module = null
         module = await import(url)
         module = module.default ? module.default : module
+
+        let onImport = module['onImport']
+
+        if (onImport) {
+
+          let returnValue = null
+          returnValue = onImport.apply(module, [ option ])
+          returnValue = returnValue instanceof Promise ? await returnValue : returnValue
+  
+          message.returnValue = returnValue
+      
+        }
+
+        delete message.error
   
         this._module = module
         this._moduleUrl = url
-
-        delete message.error
   
       } else {
         throw new WorkerServerModuleImportedError(this._moduleUrl)
       }
 
     } catch (error) {
+
       message.error = error
+      delete message.returnValue
+
     }
 
     await this.send(message)
@@ -228,10 +244,23 @@ class WorkerServer {
 
       if (Is.not.null(this._module)) {
 
-        this._module = null
-        this._moduleUrl = null
+        let option = message.option
+        let onRelease = this._module['onRelease']
+
+        if (onRelease) {
+
+          let returnValue = null
+          returnValue = onRelease.apply(this._module, [ option ])
+          returnValue = returnValue instanceof Promise ? await returnValue : returnValue
+  
+          message.returnValue = returnValue
+      
+        }
   
         delete message.error
+
+        this._module = null
+        this._moduleUrl = null
   
       } else {
         throw new WorkerServerNoModuleImportedError()
@@ -245,8 +274,35 @@ class WorkerServer {
 
   }
 
-  onEnd() {
-    Process.exit()
+  async onEnd(message) {
+
+    try {
+
+      if (Is.not.null(this._module)) {
+
+        let option = message.option
+        let onEnd = this._module['onEnd']
+
+        if (onEnd) {
+
+          let returnValue = null
+          returnValue = onEnd.apply(this._module, [ option ])
+          returnValue = returnValue instanceof Promise ? await returnValue : returnValue
+  
+          message.returnValue = returnValue
+      
+        }
+
+        delete message.error
+
+      }
+
+      Process.exit()
+
+    } catch (error) {
+      console.error(error)
+    }
+
   }
 
   onUncaughtException() {
