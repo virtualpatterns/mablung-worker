@@ -76,7 +76,7 @@ Test('WorkerClient.release()', async (test) => {
     await worker.import(Require.resolve('./worker.js'))
     await worker.release()
 
-    await test.throwsAsync(worker.module.getPid(), { 'instanceOf': Error })
+    await test.throws(() => { worker.module.getPid() }, { 'instanceOf': TypeError })
 
   } finally {
     await worker.end()
