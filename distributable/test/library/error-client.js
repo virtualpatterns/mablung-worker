@@ -1,8 +1,9 @@
 import { Configuration } from '@virtualpatterns/mablung-configuration';
 
-import { LoggedClient } from './logged-client.js';
+// import { LoggedClient } from './logged-client.js'
+import { WorkerClient } from '../../index.js';
 
-class ErrorClient extends LoggedClient {
+class ErrorClient extends WorkerClient {
 
   constructor(...parameter) {
     super(...parameter);

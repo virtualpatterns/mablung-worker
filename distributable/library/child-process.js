@@ -75,40 +75,40 @@ class ChildProcess extends EventEmitter {
   attach() {
 
     this._process.on('message', this._onMessage = message => {
-      this.console.log('ChildProcess.on(\'message\', this._onMessage = (message) => { ... })');
-      this.console.dir(message);
+      this._console.log('ChildProcess.on(\'message\', this._onMessage = (message) => { ... })');
+      this._console.dir(message);
 
       try {
         this.onMessage(message);
         /* c8 ignore next 3 */
       } catch (error) {
-        this.console.error(error);
+        this._console.error(error);
       }
 
     });
 
     this._process.on('disconnect', this._onDisconnect = () => {
-      this.console.log('ChildProcess.on(\'disconnect\', this._onDisconnect = () => { ... })');
+      this._console.log('ChildProcess.on(\'disconnect\', this._onDisconnect = () => { ... })');
 
       try {
         this.onDisconnect();
         /* c8 ignore next 3 */
       } catch (error) {
-        this.console.error(error);
+        this._console.error(error);
       }
 
     });
 
     this._process.on('error', this._onError = error => {
-      this.console.error('ChildProcess.on(\'error\', this._onError = (error) => { ... })');
-      this.console.error(error);
+      this._console.error('ChildProcess.on(\'error\', this._onError = (error) => { ... })');
+      this._console.error(error);
 
       try {
         this.detach();
         this.onError(error);
         /* c8 ignore next 3 */
       } catch (error) {
-        this.console.error(error);
+        this._console.error(error);
       } finally {
         this._console = new Null();
       }
@@ -116,7 +116,7 @@ class ChildProcess extends EventEmitter {
     });
 
     this._process.on('exit', this._onExit = (code, signal) => {
-      this.console.log(`ChildProcess.on('exit', this._onExit = (${code}, ${Is.null(signal) ? signal : `'${signal}'`}) => { ... })`);
+      this._console.log(`ChildProcess.on('exit', this._onExit = (${code}, ${Is.null(signal) ? signal : `'${signal}'`}) => { ... })`);
 
       try {
 
@@ -133,7 +133,7 @@ class ChildProcess extends EventEmitter {
 
         /* c8 ignore next 3 */
       } catch (error) {
-        this.console.error(error);
+        this._console.error(error);
       } finally {
         this._console = new Null();
       }
@@ -144,48 +144,56 @@ class ChildProcess extends EventEmitter {
 
   detach() {
 
-    this._process.off('exit', this._onExit);
-    delete this._onExit;
+    if (this._onExit) {
+      this._process.off('exit', this._onExit);
+      delete this._onExit;
+    }
 
-    this._process.off('error', this._onError);
-    delete this._onError;
+    if (this._onError) {
+      this._process.off('error', this._onError);
+      delete this._onError;
+    }
 
-    this._process.off('disconnect', this._onDisconnect);
-    delete this._onDisconnect;
+    if (this._onDisconnect) {
+      this._process.off('disconnect', this._onDisconnect);
+      delete this._onDisconnect;
+    }
 
-    this._process.off('message', this._onMessage);
-    delete this._onMessage;
+    if (this._onMessage) {
+      this._process.off('message', this._onMessage);
+      delete this._onMessage;
+    }
 
   }
 
-  writeTo(path, option = { 'encoding': 'utf8', 'flags': 'a+' }) {
+  writeTo(path, option = { 'autoClose': true, 'emitClose': true, 'encoding': 'utf8', 'flags': 'a+' }) {
 
-    let outputStream = null;
+    let stream = null;
 
     switch (true) {
       /* c8 ignore next 3 */
       case path instanceof Stream.Writable:
-        outputStream = path;
+        stream = path;
         break;
       default:
-        outputStream = FileSystem.createWriteStream(path, option);}
+        stream = FileSystem.createWriteStream(path, option);}
 
 
-    this._process.stderr.pipe(outputStream, { 'end': false });
-    this._process.stdout.pipe(outputStream, { 'end': false });
+    this._process.stderr.pipe(stream, { 'end': false });
+    this._process.stdout.pipe(stream, { 'end': false });
 
     this._console = new Console({
       'colorMode': false,
       'ignoreErrors': false,
-      'stderr': outputStream,
-      'stdout': outputStream });
+      'stderr': stream,
+      'stdout': stream });
 
 
   }
 
   send(message) {
-    this.console.log('ChildProcess.send(message) { ... }');
-    this.console.dir(message);
+    this._console.log('ChildProcess.send(message) { ... }');
+    this._console.dir(message);
 
     return new Promise((resolve, reject) => {
 

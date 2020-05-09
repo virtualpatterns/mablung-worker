@@ -38,7 +38,7 @@ class WorkerServer {
       try {
         this._detachReadyInterval()   
         await this.onMessage(message) 
-        /* c8 ignore next 3 */
+      /* c8 ignore next 3 */
       } catch(error) {
         console.error(error)
       }
@@ -51,7 +51,7 @@ class WorkerServer {
       try {
         this._detachReadyInterval()   
         this._detachDisconnect()    
-        /* c8 ignore next 3 */
+      /* c8 ignore next 3 */
       } catch(error) {
         console.error(error)
       }
@@ -63,7 +63,7 @@ class WorkerServer {
 
       try {
         this.detach()
-        /* c8 ignore next 3 */
+      /* c8 ignore next 3 */
       } catch(error) {
         console.error(error)
       }
@@ -74,7 +74,7 @@ class WorkerServer {
 
       try {
         await this.send({ 'type': 'ready' })
-        /* c8 ignore next 4 */
+      /* c8 ignore next 4 */
       } catch (error) {
         this._detachReadyInterval()
         console.error(error)
@@ -171,7 +171,7 @@ class WorkerServer {
   
         this._module = module
         this._moduleUrl = url
-  
+
         delete message.error
   
       } else {

@@ -2,7 +2,7 @@ import ChangeCase from 'change-case'
 import { Configuration } from '@virtualpatterns/mablung-configuration'
 
 import { ForkedProcess } from './forked-process.js'
-import { WorkerClientHandler } from './worker-client-handler.js'
+import { WorkerClientModuleHandler } from './worker-client-module-handler.js'
 import { WorkerClientParameter } from './worker-client-parameter.js'
 
 import { WorkerClientDurationExceededError } from './error/worker-client-duration-exceeded-error.js'
@@ -21,8 +21,7 @@ class WorkerClient extends ForkedProcess {
     super(...WorkerClientParameter.getConstructorParameter(...parameter))
 
     this._isReady = false
-
-    return new Proxy(this, WorkerClientHandler)
+    this._module = null
 
   }
 
@@ -40,6 +39,10 @@ class WorkerClient extends ForkedProcess {
 
   set maximumDuration(value) {
     this.option.maximumDuration = value
+  }
+
+  get module() {
+    return this._module
   }
 
   async whenReady() {
@@ -194,8 +197,12 @@ class WorkerClient extends ForkedProcess {
   }
 
   async import(url) {
+
     await this.whenReady()
     await this.send({ 'type': 'import', 'url': url })
+
+    this._module = new Proxy(this, WorkerClientModuleHandler)
+
   }
 
   async apply(methodName, parameter) {
@@ -204,8 +211,12 @@ class WorkerClient extends ForkedProcess {
   }
 
   async release() {
+
     await this.whenReady()
     await this.send({ 'type': 'release' })
+
+    this._module = null
+
   }
 
   async end() {

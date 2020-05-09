@@ -43,7 +43,7 @@ Test('WorkerClient.import(url)', async (test) => {
     await worker.import(Require.resolve('./worker.js'))
     await test.throwsAsync(worker.import(Require.resolve('./worker.js')), { 'instanceOf': Error })
 
-    test.is(await worker.getPid(), worker.pid)
+    test.is(await worker.module.getPid(), worker.pid)
 
   } finally {
     await worker.end()
@@ -51,7 +51,7 @@ Test('WorkerClient.import(url)', async (test) => {
 
 })
 
-Test('WorkerClient.import(url) thows Error', async (test) => {
+Test('WorkerClient.import(url) throws Error', async (test) => {
 
   let worker = new WorkerClient()
 
@@ -59,7 +59,7 @@ Test('WorkerClient.import(url) thows Error', async (test) => {
 
     await worker.import(Require.resolve('./worker.js'))
 
-    await test.throwsAsync(worker._getPid(), { 'instanceOf': Error })
+    await test.throwsAsync(worker.module._getPid(), { 'instanceOf': Error })
 
   } finally {
     await worker.end()
@@ -76,7 +76,7 @@ Test('WorkerClient.release()', async (test) => {
     await worker.import(Require.resolve('./worker.js'))
     await worker.release()
 
-    await test.throwsAsync(worker.getPid(), { 'instanceOf': Error })
+    await test.throwsAsync(worker.module.getPid(), { 'instanceOf': Error })
 
   } finally {
     await worker.end()
@@ -106,7 +106,7 @@ Test('WorkerClient.getPid(duration) throws WorkerClientRejectedError', async (te
   let worker = new WorkerClient()
 
   await worker.import(Require.resolve('./worker.js'))
-  await test.throwsAsync(Promise.all([ worker.getPid(2500), worker.end() ]), { 'instanceOf': WorkerClientRejectedError })
+  await test.throwsAsync(Promise.all([ worker.module.getPid(2500), worker.end() ]), { 'instanceOf': WorkerClientRejectedError })
 
 })
 
@@ -122,7 +122,7 @@ Test('WorkerClient.whenMessageType(type) throws WorkerClientDurationExceededErro
     maximumDuration = worker.maximumDuration
 
     worker.maximumDuration = 2000
-    await test.throwsAsync(worker.getPid(2500), { 'instanceOf': WorkerClientDurationExceededError })
+    await test.throwsAsync(worker.module.getPid(2500), { 'instanceOf': WorkerClientDurationExceededError })
     worker.maximumDuration = maximumDuration
 
   } finally {

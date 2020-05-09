@@ -40,7 +40,6 @@
     "refresh:40": "npm install",
     "refresh": "run-s --silent refresh:*",
     "clean:10": "shx rm -Rf coverage distributable process",
-    "clean:20": "shx mkdir -p process/log",
     "clean": "run-s --silent clean:*",
     "lint:10": "eslint --ignore-path .gitignore source",
     "lint:20": "depcheck --ignores=\"@babel/*,babel-*,eslint-*,@virtualpatterns/mablung-*\"",

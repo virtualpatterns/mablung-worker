@@ -1,10 +1,11 @@
 import { createRequire as _createRequire } from "module";import { Configuration } from '@virtualpatterns/mablung-configuration';
 
-import { LoggedClient } from './logged-client.js';
+// import { LoggedClient } from './logged-client.js'
+import { WorkerClient } from '../../index.js';
 
 const Require = _createRequire(import.meta.url);
 
-class ExitClient extends LoggedClient {
+class ExitClient extends WorkerClient {
 
   constructor(...parameter) {
     super(...parameter);
