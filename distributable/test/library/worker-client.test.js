@@ -1,6 +1,6 @@
 import { createRequire as _createRequire } from "module";import Test from 'ava';
 
-import { LoggedClient } from './logged-client.js';
+// import { LoggedClient } from './logged-client.js'
 import { WorkerClient } from '../../index.js';
 
 import { WorkerClientDurationExceededError } from '../../index.js';
@@ -159,9 +159,11 @@ Test('WorkerClient.disconnect()', async test => {
 
 });
 
-Test.only('WorkerClient.end()', async test => {
+Test('WorkerClient.end()', async test => {
 
-  let worker = new LoggedClient(); // WorkerClient()
+  let worker = new WorkerClient(); // LoggedClient() // 
+
+  // this import is required because it contains the onEnd method
   await worker.import(Require.resolve('./worker.js'));
 
   await worker.end({ 'pid': worker.pid }); // also establishes is ready
