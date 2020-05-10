@@ -162,6 +162,7 @@ Test('WorkerClient.disconnect()', async test => {
 Test.only('WorkerClient.end()', async test => {
 
   let worker = new LoggedClient(); // WorkerClient()
+  await worker.import(Require.resolve('./worker.js'));
 
   await worker.end({ 'pid': worker.pid }); // also establishes is ready
   await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' });
