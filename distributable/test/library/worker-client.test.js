@@ -1,6 +1,6 @@
 import { createRequire as _createRequire } from "module";import Test from 'ava';
 
-// import { LoggedClient } from './logged-client.js'
+import { LoggedClient } from './logged-client.js';
 import { WorkerClient } from '../../index.js';
 
 import { WorkerClientDurationExceededError } from '../../index.js';
@@ -159,11 +159,11 @@ Test('WorkerClient.disconnect()', async test => {
 
 });
 
-Test('WorkerClient.end()', async test => {
+Test.only('WorkerClient.end()', async test => {
 
-  let worker = new WorkerClient();
+  let worker = new LoggedClient(); // WorkerClient()
 
-  await worker.end(); // also establishes is ready
+  await worker.end({ 'pid': worker.pid }); // also establishes is ready
   await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' });
 
 });
