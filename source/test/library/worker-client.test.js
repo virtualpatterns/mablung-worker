@@ -161,9 +161,12 @@ Test('WorkerClient.disconnect()', async (test) => {
 
 Test('WorkerClient.end()', async (test) => {
 
-  let worker = new WorkerClient()
+  let worker = new WorkerClient() // LoggedClient() // 
 
-  await worker.end() // also establishes is ready
+  // this import is required because it contains the onEnd method
+  await worker.import(Require.resolve('./worker.js'))
+
+  await worker.end({ 'pid': worker.pid }) // also establishes is ready
   await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' })
 
 })
