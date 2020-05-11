@@ -44,7 +44,7 @@ Test('WorkerClient.import(url)', async test => {
     test.is(pid, worker.pid);
 
     await test.throwsAsync(worker.import(Require.resolve('./worker.js')), { 'instanceOf': Error });
-    test.is((await worker.module.getPid()), worker.pid);
+    test.is(await worker.module.getPid(), worker.pid);
 
   } finally {
     await worker.end();
