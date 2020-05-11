@@ -1,6 +1,7 @@
 import ChangeCase from 'change-case'
 import { Configuration } from '@virtualpatterns/mablung-configuration'
 import Is from '@pwn/is'
+import OS from 'os'
 
 import { WorkerServerNoIPCChannelError } from './error/worker-server-no-ipc-channel-error.js'
 import { WorkerServerModuleImportedError } from './error/worker-server-module-imported-error.js'
@@ -153,8 +154,12 @@ class WorkerServer {
     return this[methodName](message)
   }
 
-  onPing(message) {
-    return this.send(message)
+  async onPing(message) {
+
+    message.returnValue = { 'loadAverage': OS.loadavg() }
+
+    await this.send(message)
+
   }
 
   async onImport(message) {
