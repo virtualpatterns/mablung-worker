@@ -193,7 +193,7 @@ class WorkerClient extends ForkedProcess {
 
   async ping() {
     await this.whenReady();
-    await this.send({ 'type': 'ping' });
+    return this.send({ 'type': 'ping' });
   }
 
   async import(url, option = {}) {
