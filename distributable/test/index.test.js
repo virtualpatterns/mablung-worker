@@ -6,6 +6,9 @@ Test.before(async test => {
 
 [
 'WorkerClient',
+'WorkerPool',
+'NextWorkerPool',
+'RandomWorkerPool',
 'WorkerClientDisconnectedError',
 'WorkerClientDurationExceededError',
 'WorkerClientExitedError',

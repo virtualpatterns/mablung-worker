@@ -156,7 +156,11 @@ class WorkerServer {
 
   async onPing(message) {
 
-    message.returnValue = { 'loadAverage': OS.loadavg() };
+    let cpuUsage = null;
+    cpuUsage = Process.cpuUsage();
+    cpuUsage = (cpuUsage.user + cpuUsage.system) / 2.0;
+
+    message.returnValue = { 'index': Process.env.WORKER_POOL_INDEX ? parseInt(Process.env.WORKER_POOL_INDEX) : 0, 'pid': Process.pid, 'cpuUsage': cpuUsage };
 
     await this.send(message);
 
@@ -302,7 +306,7 @@ class WorkerServer {
 
       }
 
-      Process.exit();
+      Process.exit(message.code || 0);
 
     } catch (error) {
       console.error(error);

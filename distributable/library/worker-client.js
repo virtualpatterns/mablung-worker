@@ -21,7 +21,9 @@ class WorkerClient extends ForkedProcess {
     super(...WorkerClientParameter.getConstructorParameter(...parameter));
 
     this._isReady = false;
+
     this._module = null;
+    this._moduleUrl = null;
 
   }
 
@@ -43,6 +45,10 @@ class WorkerClient extends ForkedProcess {
 
   get module() {
     return this._module;
+  }
+
+  get moduleUrl() {
+    return this._moduleUrl;
   }
 
   async whenReady() {
@@ -202,6 +208,7 @@ class WorkerClient extends ForkedProcess {
     let returnValue = await this.send({ 'type': 'import', 'url': url, 'option': option });
 
     this._module = new Proxy(this, WorkerClientModuleHandler);
+    this._moduleUrl = url;
 
     return returnValue;
 
@@ -218,14 +225,15 @@ class WorkerClient extends ForkedProcess {
     let returnValue = await this.send({ 'type': 'release', 'option': option });
 
     this._module = null;
+    this._moduleUrl = null;
 
     return returnValue;
 
   }
 
-  async end(option = {}) {
+  async end(code = 0, option = {}) {
     await this.whenReady();
-    await super.send({ 'type': 'end', 'option': option }); // there will be no response
+    await super.send({ 'type': 'end', 'code': code, 'option': option }); // there will be no response
     await this.whenRejected(WorkerClientExitedError);
   }
 

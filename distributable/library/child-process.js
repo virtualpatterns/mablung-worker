@@ -25,14 +25,111 @@ class ChildProcess extends EventEmitter {
     this._option = option;
 
     this._process = process;
-    this._console = new Null();
 
-    this.attach();
+    this._console = new Null();
+    this._stream = null;
+    this._streamOption = null;
+
+    this._attach();
 
   }
 
   /* c8 ignore next 1 */
   _createProcess() /* path, parameter, option */{}
+
+  _attach() {
+
+    this._process.on('message', this._onMessage = message => {
+      // this._console.log('ChildProcess.on(\'message\', this._onMessage = (message) => { ... })')
+      // this._console.dir(message)
+
+      try {
+        this.onMessage(message);
+        /* c8 ignore next 3 */
+      } catch (error) {
+        this._console.error(error);
+      }
+
+    });
+
+    this._process.on('disconnect', this._onDisconnect = () => {
+      this._console.log('ChildProcess.on(\'disconnect\', this._onDisconnect = () => { ... })');
+
+      try {
+        this.onDisconnect();
+        /* c8 ignore next 3 */
+      } catch (error) {
+        this._console.error(error);
+      }
+
+    });
+
+    this._process.on('error', this._onError = error => {
+      this._console.error('ChildProcess.on(\'error\', this._onError = (error) => { ... })');
+      this._console.error(error);
+
+      try {
+        this._detach();
+        this.onError(error);
+        /* c8 ignore next 3 */
+      } catch (error) {
+        this._console.error(error);
+      } finally {
+        this._console = new Null();
+      }
+
+    });
+
+    this._process.on('exit', this._onExit = (code, signal) => {
+      this._console.log(`ChildProcess.on('exit', this._onExit = (${code}, ${Is.null(signal) ? signal : `'${signal}'`}) => { ... })`);
+
+      try {
+
+        this._detach();
+
+        if (Is.not.null(code)) {
+          this.onExit(code);
+          /* c8 ignore next 5 */
+        } else if (Is.not.null(signal)) {
+          this.onTerminate(signal);
+        } else {
+          this.onExit(0);
+        }
+
+        /* c8 ignore next 3 */
+      } catch (error) {
+        this._console.error(error);
+      } finally {
+        this._console = new Null();
+      }
+
+    });
+
+  }
+
+  _detach() {
+
+    if (this._onExit) {
+      this._process.off('exit', this._onExit);
+      delete this._onExit;
+    }
+
+    if (this._onError) {
+      this._process.off('error', this._onError);
+      delete this._onError;
+    }
+
+    if (this._onDisconnect) {
+      this._process.off('disconnect', this._onDisconnect);
+      delete this._onDisconnect;
+    }
+
+    if (this._onMessage) {
+      this._process.off('message', this._onMessage);
+      delete this._onMessage;
+    }
+
+  }
 
   /* c8 ignore next 3 */
   get path() {
@@ -72,100 +169,6 @@ class ChildProcess extends EventEmitter {
     return this._process.connected;
   }
 
-  attach() {
-
-    this._process.on('message', this._onMessage = message => {
-      this._console.log('ChildProcess.on(\'message\', this._onMessage = (message) => { ... })');
-      this._console.dir(message);
-
-      try {
-        this.onMessage(message);
-        /* c8 ignore next 3 */
-      } catch (error) {
-        this._console.error(error);
-      }
-
-    });
-
-    this._process.on('disconnect', this._onDisconnect = () => {
-      this._console.log('ChildProcess.on(\'disconnect\', this._onDisconnect = () => { ... })');
-
-      try {
-        this.onDisconnect();
-        /* c8 ignore next 3 */
-      } catch (error) {
-        this._console.error(error);
-      }
-
-    });
-
-    this._process.on('error', this._onError = error => {
-      this._console.error('ChildProcess.on(\'error\', this._onError = (error) => { ... })');
-      this._console.error(error);
-
-      try {
-        this.detach();
-        this.onError(error);
-        /* c8 ignore next 3 */
-      } catch (error) {
-        this._console.error(error);
-      } finally {
-        this._console = new Null();
-      }
-
-    });
-
-    this._process.on('exit', this._onExit = (code, signal) => {
-      this._console.log(`ChildProcess.on('exit', this._onExit = (${code}, ${Is.null(signal) ? signal : `'${signal}'`}) => { ... })`);
-
-      try {
-
-        this.detach();
-
-        if (Is.not.null(code)) {
-          this.onExit(code);
-          /* c8 ignore next 5 */
-        } else if (Is.not.null(signal)) {
-          this.onTerminate(signal);
-        } else {
-          this.onExit(0);
-        }
-
-        /* c8 ignore next 3 */
-      } catch (error) {
-        this._console.error(error);
-      } finally {
-        this._console = new Null();
-      }
-
-    });
-
-  }
-
-  detach() {
-
-    if (this._onExit) {
-      this._process.off('exit', this._onExit);
-      delete this._onExit;
-    }
-
-    if (this._onError) {
-      this._process.off('error', this._onError);
-      delete this._onError;
-    }
-
-    if (this._onDisconnect) {
-      this._process.off('disconnect', this._onDisconnect);
-      delete this._onDisconnect;
-    }
-
-    if (this._onMessage) {
-      this._process.off('message', this._onMessage);
-      delete this._onMessage;
-    }
-
-  }
-
   writeTo(path, option = { 'autoClose': true, 'emitClose': true, 'encoding': 'utf8', 'flags': 'a+' }) {
 
     let stream = null;
@@ -189,11 +192,14 @@ class ChildProcess extends EventEmitter {
       'stdout': stream });
 
 
+    this._stream = stream;
+    this._streamOption = option;
+
   }
 
   send(message) {
-    this._console.log('ChildProcess.send(message) { ... }');
-    this._console.dir(message);
+    // this._console.log('ChildProcess.send(message) { ... }')
+    // this._console.dir(message)
 
     return new Promise((resolve, reject) => {
 
