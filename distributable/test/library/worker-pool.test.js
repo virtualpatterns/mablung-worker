@@ -23,7 +23,7 @@ Test('new WorkerPool()', async test => {
 
 Test.only('WorkerPool.ping() throws WorkerClientDurationExceededError', async test => {
 
-  let worker = new WorkerPool({ 'maximumDuration': 1 });
+  let worker = new LoggedPool({ 'maximumDuration': 1 });
 
   try {
     await test.throwsAsync(worker.ping(), { 'instanceOf': WorkerClientDurationExceededError });
