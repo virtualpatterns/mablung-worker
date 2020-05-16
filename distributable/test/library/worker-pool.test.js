@@ -21,18 +21,18 @@ Test('new WorkerPool()', async test => {
 
 });
 
-// Test('WorkerPool.ping() throws WorkerClientDurationExceededError', async (test) => {
+Test('WorkerPool.ping() throws WorkerClientDurationExceededError', async test => {
 
-//   let worker = new WorkerPool({ 'maximumDuration': 1 })
+  let worker = new WorkerPool({ 'maximumDuration': 1 });
 
-//   try {
-//     await test.throwsAsync(worker.ping(), { 'instanceOf': WorkerClientDurationExceededError })
-//   } finally {
-//     // we can't use worker.kill() because it'll timeout
-//     Process.kill(worker.pid)
-//   }
+  try {
+    await test.throwsAsync(worker.ping(), { 'instanceOf': WorkerClientDurationExceededError });
+  } finally {
+    // we can't use worker.kill() because it'll timeout
+    // Process.kill(worker.pid)
+  }
 
-// })
+});
 
 // Test('WorkerPool.import(url)', async (test) => {
 
