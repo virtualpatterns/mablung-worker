@@ -11,25 +11,25 @@ const Require = _createRequire(import.meta.url);
 
 Test('new WorkerPool()', async test => {
 
-  let worker = new LoggedPool();
+  let pool = new LoggedPool();
 
   try {
-    await test.notThrowsAsync(worker.ping());
+    await test.notThrowsAsync(pool.ping());
   } finally {
-    await worker.end();
+    await pool.end();
   }
 
 });
 
 Test.only('WorkerPool.ping() throws WorkerClientDurationExceededError', async test => {
 
-  let worker = new LoggedPool({ 'maximumDuration': 1 });
+  let pool = new LoggedPool({ 'maximumDuration': 1 });
 
   try {
-    await test.throwsAsync(worker.ping(), { 'instanceOf': WorkerClientDurationExceededError });
+    await test.throwsAsync(pool.ping(), { 'instanceOf': WorkerClientDurationExceededError });
   } finally {
-    // we can't use worker.kill() because it'll timeout
-    // Process.kill(worker.pid)
+    // we can't use pool.kill() because it'll timeout
+    pool.connectedProcess.forEach(({ process: worker }) => Process.kill(worker.pid));
   }
 
 });

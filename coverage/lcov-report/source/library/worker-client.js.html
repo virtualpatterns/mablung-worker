@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">42.9% </span>
+                <span class="strong">45.43% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>136/317</span>
+                <span class='fraction'>144/317</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">86.67% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>10/12</span>
+                <span class='fraction'>13/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">21.21% </span>
+                <span class="strong">30.3% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>7/33</span>
+                <span class='fraction'>10/33</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">42.9% </span>
+                <span class="strong">45.43% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>136/317</span>
+                <span class='fraction'>144/317</span>
             </div>
         
             
@@ -393,22 +393,22 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">21x</span>
@@ -664,9 +664,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -679,13 +679,13 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -979,10 +979,10 @@ class WorkerClient extends ForkedProcess {
 <span class="cstat-no" title="statement not covered" >    this.emit('release', message)</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="fstat-no" title="function not covered" >  onDisconnect() {</span>
-<span class="cstat-no" title="statement not covered" >    this.onReject(new WorkerClientDisconnectedError())</span>
-<span class="cstat-no" title="statement not covered" >    super.onDisconnect()</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+  onDisconnect() {
+    this.onReject(new WorkerClientDisconnectedError())
+    super.onDisconnect()
+  }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  onError(error) {</span>
 <span class="cstat-no" title="statement not covered" >    this.onReject(new WorkerClientInternalError(error))</span>
@@ -994,14 +994,14 @@ class WorkerClient extends ForkedProcess {
 <span class="cstat-no" title="statement not covered" >    super.onExit(code)</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="fstat-no" title="function not covered" >  onTerminate(signal) {</span>
-<span class="cstat-no" title="statement not covered" >    this.onReject(new WorkerClientTerminatedError(signal))</span>
-<span class="cstat-no" title="statement not covered" >    super.onTerminate(signal)</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+  onTerminate(signal) {
+    this.onReject(new WorkerClientTerminatedError(signal))
+    super.onTerminate(signal)
+  }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  onReject(error) {</span>
-<span class="cstat-no" title="statement not covered" >    this.emit('reject', error)</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+  onReject(error) {
+    this.emit('reject', error)
+  }
 &nbsp;
 }
 &nbsp;
@@ -1012,7 +1012,7 @@ export { WorkerClient }</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sat May 16 2020 19:29:54 GMT-0400 (Eastern Daylight Time)
+                at Sat May 16 2020 19:36:10 GMT-0400 (Eastern Daylight Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
