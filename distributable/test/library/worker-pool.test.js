@@ -68,7 +68,7 @@ Test('WorkerPool.import(url) throws Error', async test => {
 
 });
 
-Test.only('WorkerPool.release()', async test => {
+Test('WorkerPool.release()', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
@@ -88,22 +88,22 @@ Test.only('WorkerPool.release()', async test => {
 
 });
 
-// Test('WorkerPool.release() throws Error', async (test) => {
+Test.only('WorkerPool.release() throws Error', async test => {
 
-//   let worker = new WorkerPool({ 'numberOfProcess': 2 })
+  let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
-//   try {
+  try {
 
-//     await worker.import(Require.resolve('./worker.js'))
-//     await worker.release()
+    await pool.import(Require.resolve('./worker.js'));
+    await pool.release();
 
-//     await test.throwsAsync(worker.release(), { 'instanceOf': Error })
+    await test.throwsAsync(pool.release(), { 'instanceOf': Error });
 
-//   } finally {
-//     await worker.end()
-//   }
+  } finally {
+    await pool.end();
+  }
 
-// })
+});
 
 // Test('WorkerPool.getPid(duration) throws WorkerClientRejectedError', async (test) => {
 
