@@ -36,7 +36,7 @@ Test('WorkerPool.ping() throws WorkerClientDurationExceededError', async test =>
 
 Test.only('WorkerPool.import(url)', async test => {
 
-  let pool = new LoggedPool({ 'numberOfProcess': 1 });
+  let pool = new LoggedPool({ 'numberOfProcess': 2 });
 
   try {
 
