@@ -160,7 +160,7 @@ Test('WorkerPool.disconnect()', async test => {
 
 });
 
-Test('WorkerPool.end()', async test => {
+Test.only('WorkerPool.end()', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
@@ -221,7 +221,7 @@ Test('WorkerPool.unhandledRejection()', async test => {
 
 });
 
-Test.only('WorkerPool.kill() when maximumNumberOfCreate is 0', async test => {
+Test('WorkerPool.kill() when maximumNumberOfCreate is 0', async test => {
 
   let pool = new WorkerPool({ 'maximumNumberOfCreate': 0, 'numberOfProcess': 2 });
 
