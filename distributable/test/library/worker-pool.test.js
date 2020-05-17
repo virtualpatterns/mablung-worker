@@ -220,4 +220,20 @@ Test('WorkerPool.unhandledRejection()', async test => {
   }
 
 });
+
+Test.only('WorkerPool.kill() when maximumNumberOfCreate is 0', async test => {
+
+  let pool = new WorkerPool({ 'maximumNumberOfCreate': 0, 'numberOfProcess': 2 });
+
+  try {
+
+    await test.notThrowsAsync(pool.ping()); // establishes is ready
+    await pool.kill();
+    await test.throwsAsync(pool.ping()); // the pool will not recreate killed processes
+
+  } finally {
+    await pool.end();
+  }
+
+});
 //# sourceMappingURL=worker-pool.test.js.map
