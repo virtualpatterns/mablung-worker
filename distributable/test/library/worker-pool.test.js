@@ -36,13 +36,14 @@ Test('WorkerPool.ping() throws WorkerClientDurationExceededError', async test =>
 
 Test.only('WorkerPool.import(url)', async test => {
 
-  let pool = new LoggedPool();
+  let pool = new LoggedPool({ 'numberOfProcess': 1 });
 
   try {
 
-    let pid = await pool.import(Require.resolve('./worker.js'));
+    let allPid = await pool.import(Require.resolve('./worker.js'));
+    let onePid = await pool.module.getPid();
 
-    test.assert(pid.includes(await pool.module.getPid()));
+    test.assert(allPid.includes(onePid));
     await test.throwsAsync(pool.import(Require.resolve('./worker.js')), { 'instanceOf': Error });
 
   } finally {
