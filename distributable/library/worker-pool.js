@@ -75,12 +75,20 @@ class WorkerPool extends ChildProcessPool {
 
   async import(url, option = {}) {
 
-    let returnValue = await Promise.all(this.getConnectedProcessInformation().map(({ process: workerClient }) => workerClient.import(url, option)));
+    let processInformation = this.getConnectedProcessInformation();
 
-    this._module = new Proxy(this, WorkerPoolModuleHandler);
-    this._moduleUrl = url;
+    if (processInformation.length > 0) {
 
-    return returnValue;
+      let returnValue = await Promise.all(processInformation.map(({ process: workerClient }) => workerClient.import(url, option)));
+
+      this._module = new Proxy(this, WorkerPoolModuleHandler);
+      this._moduleUrl = url;
+
+      return returnValue;
+
+    } else {
+      throw new WorkerPoolDisconnectedError();
+    }
 
   }
 
@@ -90,33 +98,81 @@ class WorkerPool extends ChildProcessPool {
 
   async release(option = {}) {
 
-    let returnValue = await Promise.all(this.getConnectedProcessInformation().map(({ process: workerClient }) => workerClient.release(option)));
+    let processInformation = this.getConnectedProcessInformation();
 
-    this._module = null;
-    this._moduleUrl = null;
+    if (processInformation.length > 0) {
 
-    return returnValue;
+      let returnValue = await Promise.all(processInformation.map(({ process: workerClient }) => workerClient.release(option)));
+
+      this._module = null;
+      this._moduleUrl = null;
+
+      return returnValue;
+
+    } else {
+      throw new WorkerPoolDisconnectedError();
+    }
 
   }
 
   end(code = 0, option = {}) {
-    return Promise.all(this.getConnectedProcessInformation().map(({ process: workerClient }) => workerClient.end(code, option)));
+
+    let processInformation = this.getConnectedProcessInformation();
+
+    if (processInformation.length > 0) {
+      return Promise.all(processInformation.map(({ process: workerClient }) => workerClient.end(code, option)));
+    } else {
+      throw new WorkerPoolDisconnectedError();
+    }
+
   }
 
   uncaughtException() {
-    return Promise.all(this.getConnectedProcessInformation().map(({ process: workerClient }) => workerClient.uncaughtException()));
+
+    let processInformation = this.getConnectedProcessInformation();
+
+    if (processInformation.length > 0) {
+      return Promise.all(processInformation.map(({ process: workerClient }) => workerClient.uncaughtException()));
+    } else {
+      throw new WorkerPoolDisconnectedError();
+    }
+
   }
 
   unhandledRejection() {
-    return Promise.all(this.getConnectedProcessInformation().map(({ process: workerClient }) => workerClient.unhandledRejection()));
+
+    let processInformation = this.getConnectedProcessInformation();
+
+    if (processInformation.length > 0) {
+      return Promise.all(processInformation.map(({ process: workerClient }) => workerClient.unhandledRejection()));
+    } else {
+      throw new WorkerPoolDisconnectedError();
+    }
+
   }
 
   disconnect() {
-    return Promise.all(this.getConnectedProcessInformation().map(({ process: workerClient }) => workerClient.disconnect()));
+
+    let processInformation = this.getConnectedProcessInformation();
+
+    if (processInformation.length > 0) {
+      return Promise.all(processInformation.map(({ process: workerClient }) => workerClient.disconnect()));
+    } else {
+      throw new WorkerPoolDisconnectedError();
+    }
+
   }
 
   kill(...parameter) {
-    return Promise.all(this.getConnectedProcessInformation().map(({ process: workerClient }) => workerClient.kill(...parameter)));
+
+    let processInformation = this.getConnectedProcessInformation();
+
+    if (processInformation.length > 0) {
+      return Promise.all(processInformation.map(({ process: workerClient }) => workerClient.kill(...parameter)));
+    } else {
+      throw new WorkerPoolDisconnectedError();
+    }
+
   }}
 
 

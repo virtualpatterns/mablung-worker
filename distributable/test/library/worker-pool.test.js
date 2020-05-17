@@ -21,15 +21,15 @@ Test('new WorkerPool()', async test => {
 
 });
 
-Test('WorkerPool.ping() throws WorkerClientDurationExceededError', async test => {
+Test.only('WorkerPool.ping() throws WorkerClientDurationExceededError', async test => {
 
-  let pool = new WorkerPool({ 'numberOfProcess': 2 });
+  let pool = new WorkerPool({ 'maximumDuration': 1, 'numberOfProcess': 2 });
 
   try {
     await test.throwsAsync(pool.ping(), { 'instanceOf': WorkerClientDurationExceededError });
   } finally {
     // we can't use pool.kill() because it'll timeout
-    pool.connectedProcess.forEach(({ process: worker }) => Process.kill(worker.pid));
+    pool.getConnectedProcessInformation().forEach(({ process: worker }) => Process.kill(worker.pid));
   }
 
 });
@@ -150,7 +150,7 @@ Test('WorkerPool.whenRejected() throws WorkerClientDurationExceededError', async
 
 });
 
-Test.only('WorkerPool.disconnect()', async test => {
+Test('WorkerPool.disconnect()', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
