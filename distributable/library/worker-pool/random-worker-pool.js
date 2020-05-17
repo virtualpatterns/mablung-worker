@@ -1,3 +1,5 @@
+import Is from '@pwn/is';
+
 import { WorkerPool } from '../worker-pool.js';
 
 class RandomWorkerPool extends WorkerPool {
@@ -7,7 +9,15 @@ class RandomWorkerPool extends WorkerPool {
   }
 
   async selectProcess() {
-    return this.getProcess(Math.round(Math.random() * (this.numberOfProcess - 1)));
+
+    let process = null;
+
+    while (Is.null(process) || !process.process.isConnected) {
+      process = this.getProcess(Math.round(Math.random() * (this.numberOfProcess - 1)));
+    }
+
+    return process;
+
   }}
 
 

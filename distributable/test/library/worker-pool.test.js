@@ -41,10 +41,9 @@ Test.only('WorkerPool.import(url)', async test => {
   try {
 
     let pid = await pool.import(Require.resolve('./worker.js'));
-    // test.is(pid, worker.pid)
 
+    test.assert(pid.includes(await pool.module.getPid()));
     await test.throwsAsync(pool.import(Require.resolve('./worker.js')), { 'instanceOf': Error });
-    // test.is(await pool.module.getPid(), pool.pid)
 
   } finally {
     await pool.end();

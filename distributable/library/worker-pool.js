@@ -38,7 +38,7 @@ class WorkerPool extends ChildProcessPool {
 
   async ping() {
 
-    let pingResult = await Promise.allSettled(this.connectedProcess.map(({ process: workerClient }) => workerClient.ping()));
+    let pingResult = await Promise.allSettled(this.getConnectedProcess().map(({ process: workerClient }) => workerClient.ping()));
 
     let fulfilledPingResult = pingResult.filter(result => result.status === 'fulfilled');
 
@@ -57,10 +57,12 @@ class WorkerPool extends ChildProcessPool {
 
   async import(url, option = {}) {
 
-    await Promise.all(this.connectedProcess.map(({ process: workerClient }) => workerClient.import(url, option)));
+    let returnValue = await Promise.all(this.getConnectedProcess().map(({ process: workerClient }) => workerClient.import(url, option)));
 
     this._module = new Proxy(this, WorkerPoolModuleHandler);
     this._moduleUrl = url;
+
+    return returnValue;
 
   }
 
@@ -70,31 +72,33 @@ class WorkerPool extends ChildProcessPool {
 
   async release(option = {}) {
 
-    await Promise.all(this.connectedProcess.map(({ process: workerClient }) => workerClient.release(option)));
+    let returnValue = await Promise.all(this.getConnectedProcess().map(({ process: workerClient }) => workerClient.release(option)));
 
     this._module = null;
     this._moduleUrl = null;
 
+    return returnValue;
+
   }
 
   end(code = 0, option = {}) {
-    return Promise.all(this.connectedProcess.map(({ process: workerClient }) => workerClient.end(code, option)));
+    return Promise.all(this.getConnectedProcess().map(({ process: workerClient }) => workerClient.end(code, option)));
   }
 
   uncaughtException() {
-    return Promise.all(this.connectedProcess.map(({ process: workerClient }) => workerClient.uncaughtException()));
+    return Promise.all(this.getConnectedProcess().map(({ process: workerClient }) => workerClient.uncaughtException()));
   }
 
   unhandledRejection() {
-    return Promise.all(this.connectedProcess.map(({ process: workerClient }) => workerClient.unhandledRejection()));
+    return Promise.all(this.getConnectedProcess().map(({ process: workerClient }) => workerClient.unhandledRejection()));
   }
 
   disconnect() {
-    return Promise.all(this.connectedProcess.map(({ process: workerClient }) => workerClient.disconnect()));
+    return Promise.all(this.getConnectedProcess().map(({ process: workerClient }) => workerClient.disconnect()));
   }
 
   kill(...parameter) {
-    return Promise.all(this.connectedProcess.map(({ process: workerClient }) => workerClient.kill(...parameter)));
+    return Promise.all(this.getConnectedProcess().map(({ process: workerClient }) => workerClient.kill(...parameter)));
   }}
 
 

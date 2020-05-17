@@ -1,3 +1,5 @@
+import Is from '@pwn/is';
+
 import { WorkerPool } from '../worker-pool.js';
 
 class NextWorkerPool extends WorkerPool {
@@ -10,7 +12,15 @@ class NextWorkerPool extends WorkerPool {
   }
 
   selectProcess() {
-    return this.getProcess(this._nextProcess++ % this.numberOfProcess);
+
+    let process = null;
+
+    while (Is.null(process) || !process.process.isConnected) {
+      process = this.getProcess(this._nextProcess++ % this.numberOfProcess);
+    }
+
+    return process;
+
   }}
 
 

@@ -93,7 +93,7 @@ class ChildProcessPool extends EventEmitter {
       this._console.log('ChildProcessPool.on(\'disconnect\', processInformation._onDisconnect = () => { ... })');
 
       try {
-        this.onDisconnect(processInformation);
+        this._onDisconnect(processInformation);
         /* c8 ignore next 3 */
       } catch (error) {
         this._console.error(error);
@@ -107,7 +107,7 @@ class ChildProcessPool extends EventEmitter {
 
       try {
         this._detachProcess(processInformation);
-        this.onError(processInformation, error);
+        this._onError(processInformation, error);
         this._recreateProcess(processInformation);
         /* c8 ignore next 3 */
       } catch (error) {
@@ -122,7 +122,7 @@ class ChildProcessPool extends EventEmitter {
       try {
 
         this._detachProcess(processInformation);
-        this.onExit(processInformation, code);
+        this._onExit(processInformation, code);
 
         if (code > 0) {
           this._recreateProcess(processInformation);
@@ -140,7 +140,7 @@ class ChildProcessPool extends EventEmitter {
 
       try {
         this._detachProcess(processInformation);
-        this.onTerminate(processInformation, signal);
+        this._onTerminate(processInformation, signal);
         this._recreateProcess(processInformation);
         /* c8 ignore next 3 */
       } catch (error) {
@@ -177,6 +177,22 @@ class ChildProcessPool extends EventEmitter {
 
   }
 
+  _onDisconnect(processInformation) {
+    this.emit('disconnect', processInformation);
+  }
+
+  _onError(processInformation, error) {
+    this.emit('error', processInformation, error);
+  }
+
+  _onExit(processInformation, code) {
+    this.emit('exit', processInformation, code);
+  }
+
+  _onTerminate(processInformation, signal) {
+    this.emit('terminate', processInformation, signal);
+  }
+
   get defaultParameter() {
     return {};
   }
@@ -205,7 +221,7 @@ class ChildProcessPool extends EventEmitter {
     return this._processOption.numberOfProcess;
   }
 
-  get connectedProcess() {
+  getConnectedProcess() {
     return this._process.
     filter(({ process }) => process.isConnected);
   }
@@ -244,31 +260,15 @@ class ChildProcessPool extends EventEmitter {
   }
 
   disconnect() {
-    this.connectedProcess.forEach(({ process }) => process.disconnect());
+    this.getConnectedProcess().forEach(({ process }) => process.disconnect());
   }
 
   signal(signal) {
-    this.connectedProcess.forEach(({ process }) => process.signal(signal));
+    this.getConnectedProcess().forEach(({ process }) => process.signal(signal));
   }
 
   kill(signal = 'SIGINT') {
     this.signal(signal);
-  }
-
-  onDisconnect(processInformation) {
-    this.emit('disconnect', processInformation);
-  }
-
-  onError(processInformation, error) {
-    this.emit('error', processInformation, error);
-  }
-
-  onExit(processInformation, code) {
-    this.emit('exit', processInformation, code);
-  }
-
-  onTerminate(processInformation, signal) {
-    this.emit('terminate', processInformation, signal);
   }}
 
 
