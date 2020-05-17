@@ -4,7 +4,7 @@ import { ErrorPool } from './error-pool.js';
 
 Test('new ErrorPool()', async test => {
 
-  let pool = new ErrorPool({ 'numberOfProcess': 2 });
+  let pool = new ErrorPool({ 'maximumNumberOfCreate': 0, 'numberOfProcess': 2 });
   let error = await new Promise(resolve => {
 
     let error = [];
@@ -14,7 +14,7 @@ Test('new ErrorPool()', async test => {
 
       error.push(_error);
 
-      if (error.length === pool.numberOfProcess * 2) {
+      if (error.length === pool.numberOfProcess) {
 
         pool.off('error', onError);
         onError = null;
