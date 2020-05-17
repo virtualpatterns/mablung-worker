@@ -225,15 +225,9 @@ Test.only('WorkerPool.kill() when maximumNumberOfCreate is 0', async test => {
 
   let pool = new WorkerPool({ 'maximumNumberOfCreate': 0, 'numberOfProcess': 2 });
 
-  try {
-
-    await test.notThrowsAsync(pool.ping()); // establishes is ready
-    await pool.kill();
-    await test.throwsAsync(pool.ping()); // the pool will not recreate killed processes
-
-  } finally {
-    await pool.end();
-  }
+  await test.notThrowsAsync(pool.ping()); // establishes is ready
+  await pool.kill();
+  await test.throwsAsync(pool.ping()); // the pool will not recreate killed processes
 
 });
 //# sourceMappingURL=worker-pool.test.js.map
