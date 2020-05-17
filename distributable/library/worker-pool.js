@@ -23,6 +23,14 @@ class WorkerPool extends ChildProcessPool {
     return new WorkerClient(path, parameter, Configuration.merge(option, { 'env': Configuration.merge(Process.env, { 'WORKER_POOL_INDEX': index }) }));
   }
 
+  get maximumDuration() {
+    return this.option.maximumDuration;
+  }
+
+  set maximumDuration(value) {
+    this.option.maximumDuration = value;
+  }
+
   get module() {
     return this._module;
   }

@@ -1,6 +1,6 @@
 import { createRequire as _createRequire } from "module";import Test from 'ava';
 
-// import { LoggedClient } from './logged-client.js'
+import { LoggedClient } from './logged-client.js';
 import { WorkerClient } from '../../index.js';
 
 import { WorkerClientDurationExceededError } from '../../index.js';
@@ -9,9 +9,9 @@ import { WorkerClientRejectedError } from '../../library/error/worker-client-rej
 const Process = process;
 const Require = _createRequire(import.meta.url);
 
-Test('new WorkerClient()', async test => {
+Test.only('new WorkerClient()', async test => {
 
-  let worker = new WorkerClient();
+  let worker = new LoggedClient();
 
   try {
     await test.notThrowsAsync(worker.ping());

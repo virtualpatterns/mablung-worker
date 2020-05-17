@@ -27,12 +27,65 @@ class WorkerClient extends ForkedProcess {
 
   }
 
-  get defaultParameter() {
-    return Configuration.merge(super.defaultParameter, { '--worker-server-class-path': Require.resolve('./worker-server.js') });
+  get _defaultParameter() {
+    return Configuration.merge(super._defaultParameter, { '--worker-server-class-path': Require.resolve('./worker-server.js') });
   }
 
-  get defaultOption() {
-    return Configuration.merge(super.defaultOption, { 'maximumDuration': 5000 });
+  get _defaultOption() {
+    return Configuration.merge(super._defaultOption, { 'maximumDuration': 5000 });
+  }
+
+  _onMessage(message) {
+
+    let methodName = `_on${PascalCase(message.type)}`;
+    this[methodName](message);
+
+    super._onMessage(message);
+
+  }
+
+  _onReady(message) {
+    this.emit('ready', message);
+  }
+
+  _onPing(message) {
+    this.emit('ping', message);
+  }
+
+  _onImport(message) {
+    this.emit('import', message);
+  }
+
+  _onApply(message) {
+    this.emit('apply', message);
+  }
+
+  _onRelease(message) {
+    this.emit('release', message);
+  }
+
+  _onDisconnect() {
+    this._onReject(new WorkerClientDisconnectedError());
+    super._onDisconnect();
+  }
+
+  _onError(error) {
+    this._onReject(new WorkerClientInternalError(error));
+    super._onError(error);
+  }
+
+  _onExit(code) {
+    this._onReject(new WorkerClientExitedError(code));
+    super._onExit(code);
+  }
+
+  _onTerminate(signal) {
+    this._onReject(new WorkerClientTerminatedError(signal));
+    super._onTerminate(signal);
+  }
+
+  _onReject(error) {
+    this.emit('reject', error);
   }
 
   get maximumDuration() {
@@ -257,59 +310,6 @@ class WorkerClient extends ForkedProcess {
   kill(...parameter) {
     super.kill(...parameter);
     return this.whenRejected(WorkerClientTerminatedError);
-  }
-
-  onMessage(message) {
-
-    let methodName = `on${PascalCase(message.type)}`;
-    this[methodName](message);
-
-    super.onMessage(message);
-
-  }
-
-  onReady(message) {
-    this.emit('ready', message);
-  }
-
-  onPing(message) {
-    this.emit('ping', message);
-  }
-
-  onImport(message) {
-    this.emit('import', message);
-  }
-
-  onApply(message) {
-    this.emit('apply', message);
-  }
-
-  onRelease(message) {
-    this.emit('release', message);
-  }
-
-  onDisconnect() {
-    this.onReject(new WorkerClientDisconnectedError());
-    super.onDisconnect();
-  }
-
-  onError(error) {
-    this.onReject(new WorkerClientInternalError(error));
-    super.onError(error);
-  }
-
-  onExit(code) {
-    this.onReject(new WorkerClientExitedError(code));
-    super.onExit(code);
-  }
-
-  onTerminate(signal) {
-    this.onReject(new WorkerClientTerminatedError(signal));
-    super.onTerminate(signal);
-  }
-
-  onReject(error) {
-    this.emit('reject', error);
   }}
 
 

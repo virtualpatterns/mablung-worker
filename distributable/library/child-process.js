@@ -14,19 +14,20 @@ class ChildProcess extends EventEmitter {
   constructor(userPath, userParameter = {}, userOption = {}) {// 
     super();
 
-    let path = userPath;
-    let parameter = Configuration.getParameter(this.defaultParameter, userParameter);
-    let option = Configuration.getOption(this.defaultOption, userOption);
+    let processPath = userPath;
+    let processParameter = Configuration.getParameter(this._defaultParameter, userParameter);
+    let processOption = Configuration.getOption(this._defaultOption, userOption);
 
-    let process = this._createProcess(path, parameter, option);
+    let process = this._createProcess(processPath, processParameter, processOption);
 
-    this._path = path;
-    this._parameter = parameter;
-    this._option = option;
+    this._processPath = processPath;
+    this._processParameter = processParameter;
+    this._processOption = processOption;
 
     this._process = process;
 
     this._console = new Null();
+
     this._stream = null;
     this._streamOption = null;
 
@@ -39,12 +40,12 @@ class ChildProcess extends EventEmitter {
 
   _attach() {
 
-    this._process.on('message', this._onMessage = message => {
-      // this._console.log('ChildProcess.on(\'message\', this._onMessage = (message) => { ... })')
+    this._process.on('message', this.__onMessage = message => {
+      // this._console.log('ChildProcess.on(\'message\', this.__onMessage = (message) => { ... })')
       // this._console.dir(message)
 
       try {
-        this.onMessage(message);
+        this._onMessage(message);
         /* c8 ignore next 3 */
       } catch (error) {
         this._console.error(error);
@@ -52,11 +53,11 @@ class ChildProcess extends EventEmitter {
 
     });
 
-    this._process.on('disconnect', this._onDisconnect = () => {
-      this._console.log('ChildProcess.on(\'disconnect\', this._onDisconnect = () => { ... })');
+    this._process.on('disconnect', this.__onDisconnect = () => {
+      this._console.log('ChildProcess.on(\'disconnect\', this.__onDisconnect = () => { ... })');
 
       try {
-        this.onDisconnect();
+        this._onDisconnect();
         /* c8 ignore next 3 */
       } catch (error) {
         this._console.error(error);
@@ -64,13 +65,13 @@ class ChildProcess extends EventEmitter {
 
     });
 
-    this._process.on('error', this._onError = error => {
-      this._console.error('ChildProcess.on(\'error\', this._onError = (error) => { ... })');
+    this._process.on('error', this.__onError = error => {
+      this._console.error('ChildProcess.on(\'error\', this.__onError = (error) => { ... })');
       this._console.error(error);
 
       try {
         this._detach();
-        this.onError(error);
+        this._onError(error);
         /* c8 ignore next 3 */
       } catch (error) {
         this._console.error(error);
@@ -80,20 +81,20 @@ class ChildProcess extends EventEmitter {
 
     });
 
-    this._process.on('exit', this._onExit = (code, signal) => {
-      this._console.log(`ChildProcess.on('exit', this._onExit = (${code}, ${Is.null(signal) ? signal : `'${signal}'`}) => { ... })`);
+    this._process.on('exit', this.__onExit = (code, signal) => {
+      this._console.log(`ChildProcess.on('exit', this.__onExit = (${code}, ${Is.null(signal) ? signal : `'${signal}'`}) => { ... })`);
 
       try {
 
         this._detach();
 
         if (Is.not.null(code)) {
-          this.onExit(code);
+          this._onExit(code);
           /* c8 ignore next 5 */
         } else if (Is.not.null(signal)) {
-          this.onTerminate(signal);
+          this._onTerminate(signal);
         } else {
-          this.onExit(0);
+          this._onExit(0);
         }
 
         /* c8 ignore next 3 */
@@ -109,43 +110,63 @@ class ChildProcess extends EventEmitter {
 
   _detach() {
 
-    if (this._onExit) {
-      this._process.off('exit', this._onExit);
-      delete this._onExit;
+    if (this.__onExit) {
+      this._process.off('exit', this.__onExit);
+      delete this.__onExit;
     }
 
-    if (this._onError) {
-      this._process.off('error', this._onError);
-      delete this._onError;
+    if (this.__onError) {
+      this._process.off('error', this.__onError);
+      delete this.__onError;
     }
 
-    if (this._onDisconnect) {
-      this._process.off('disconnect', this._onDisconnect);
-      delete this._onDisconnect;
+    if (this.__onDisconnect) {
+      this._process.off('disconnect', this.__onDisconnect);
+      delete this.__onDisconnect;
     }
 
-    if (this._onMessage) {
-      this._process.off('message', this._onMessage);
-      delete this._onMessage;
+    if (this.__onMessage) {
+      this._process.off('message', this.__onMessage);
+      delete this.__onMessage;
     }
 
+  }
+
+  _onMessage(message) {
+    this.emit('message', message);
+  }
+
+  _onDisconnect() {
+    this.emit('disconnect');
+  }
+
+  _onError(error) {
+    this.emit('error', error);
+  }
+
+  _onExit(code) {
+    this.emit('exit', code);
+  }
+
+  _onTerminate(signal) {
+    this.emit('terminate', signal);
   }
 
   /* c8 ignore next 3 */
   get path() {
-    return this._path;
+    return this._processPath;
   }
 
-  get defaultParameter() {
+  get _defaultParameter() {
     return {};
   }
 
   /* c8 ignore next 3 */
   get parameter() {
-    return this._parameter;
+    return this._processParameter;
   }
 
-  get defaultOption() {
+  get _defaultOption() {
     return {
       'serialization': 'advanced',
       'stdio': 'pipe' };
@@ -153,7 +174,7 @@ class ChildProcess extends EventEmitter {
   }
 
   get option() {
-    return this._option;
+    return this._processOption;
   }
 
   get console() {
@@ -164,7 +185,6 @@ class ChildProcess extends EventEmitter {
     return this._process.pid;
   }
 
-  /* c8 ignore next 3 */
   get isConnected() {
     return this._process.connected;
   }
@@ -234,26 +254,6 @@ class ChildProcess extends EventEmitter {
 
   kill(signal = 'SIGINT') {
     this.signal(signal);
-  }
-
-  onMessage(message) {
-    this.emit('message', message);
-  }
-
-  onDisconnect() {
-    this.emit('disconnect');
-  }
-
-  onError(error) {
-    this.emit('error', error);
-  }
-
-  onExit(code) {
-    this.emit('exit', code);
-  }
-
-  onTerminate(signal) {
-    this.emit('terminate', signal);
   }}
 
 

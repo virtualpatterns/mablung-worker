@@ -105,7 +105,7 @@ Test('WorkerPool.release() throws Error', async test => {
 
 });
 
-Test.only('WorkerPool.getPid(duration) throws WorkerClientRejectedError', async test => {
+Test('WorkerPool.getPid(duration) throws WorkerClientRejectedError', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
@@ -114,26 +114,26 @@ Test.only('WorkerPool.getPid(duration) throws WorkerClientRejectedError', async 
 
 });
 
-// Test('WorkerPool.whenMessageType(type) throws WorkerClientDurationExceededError', async (test) => {
+Test.only('WorkerPool.whenMessageType(type) throws WorkerClientDurationExceededError', async test => {
 
-//   let worker = new WorkerPool({ 'numberOfProcess': 2 })
+  let pool = new LoggedPool({ 'numberOfProcess': 2 });
 
-//   try {
+  try {
 
-//     await worker.import(Require.resolve('./worker.js'))
+    await pool.import(Require.resolve('./worker.js'));
 
-//     let maximumDuration = null
-//     maximumDuration = worker.maximumDuration
+    // let maximumDuration = null
+    // maximumDuration = pool.maximumDuration
 
-//     worker.maximumDuration = 2000
-//     await test.throwsAsync(worker.module.getPid(2500), { 'instanceOf': WorkerClientDurationExceededError })
-//     worker.maximumDuration = maximumDuration
+    // pool.maximumDuration = 2000
+    // await test.throwsAsync(pool.module.getPid(2500), { 'instanceOf': WorkerClientDurationExceededError })
+    // pool.maximumDuration = maximumDuration
 
-//   } finally {
-//     await worker.end()
-//   }
+  } finally {
+    await pool.end();
+  }
 
-// })
+});
 
 // Test('WorkerPool.whenRejected() throws WorkerClientDurationExceededError', async (test) => {
 
