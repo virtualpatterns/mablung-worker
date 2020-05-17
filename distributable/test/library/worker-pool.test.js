@@ -77,7 +77,7 @@ Test.only('WorkerPool.release()', async test => {
     await pool.import(Require.resolve('./worker.js'));
     await pool.release();
 
-    await test.throws(() => {pool.module.getPid();}, { 'instanceOf': TypeError });
+    test.is(pool.module, null);
 
   } finally {
     await pool.end();
