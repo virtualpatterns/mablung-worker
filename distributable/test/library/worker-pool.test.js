@@ -114,9 +114,9 @@ Test('WorkerPool.getPid(duration) throws WorkerClientRejectedError', async test 
 
 });
 
-Test.only('WorkerPool.whenMessageType(type) throws WorkerClientDurationExceededError', async test => {
+Test('WorkerPool.whenMessageType(type) throws WorkerClientDurationExceededError', async test => {
 
-  let pool = new LoggedPool({ 'numberOfProcess': 2 });
+  let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
   try {
 
@@ -135,20 +135,20 @@ Test.only('WorkerPool.whenMessageType(type) throws WorkerClientDurationExceededE
 
 });
 
-// Test('WorkerPool.whenRejected() throws WorkerClientDurationExceededError', async (test) => {
+Test.only('WorkerPool.whenRejected() throws WorkerClientDurationExceededError', async test => {
 
-//   let worker = new WorkerPool({ 'numberOfProcess': 2 })
+  let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
-//   await worker.ping() // establish is ready before call to end
+  await pool.ping(); // establish is ready before call to end
 
-//   let maximumDuration = null
-//   maximumDuration = worker.maximumDuration
+  let maximumDuration = null;
+  maximumDuration = pool.maximumDuration;
 
-//   worker.maximumDuration = 1
-//   await test.throwsAsync(worker.end(), { 'instanceOf': WorkerClientDurationExceededError })
-//   worker.maximumDuration = maximumDuration
+  pool.maximumDuration = 1;
+  await test.throwsAsync(pool.end(), { 'instanceOf': WorkerClientDurationExceededError });
+  pool.maximumDuration = maximumDuration;
 
-// })
+});
 
 // Test('WorkerPool.disconnect()', async (test) => {
 
