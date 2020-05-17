@@ -74,9 +74,12 @@ Test.only('WorkerPool.release()', async test => {
 
   try {
 
-    await pool.import(Require.resolve('./worker.js'));
-    await pool.release();
+    let allPid = await pool.import(Require.resolve('./worker.js'));
+    let onePid = await pool.module.getPid();
 
+    allPid = await pool.release();
+
+    test.assert(allPid.includes(onePid));
     test.is(pool.module, null);
 
   } finally {

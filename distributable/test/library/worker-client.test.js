@@ -79,7 +79,7 @@ Test.skip('WorkerClient.release()', async test => {
     pid = await worker.release();
 
     test.is(pid, worker.pid);
-    await test.throws(() => {worker.module.getPid();}, { 'instanceOf': TypeError });
+    test.is(worker.module, null);
 
   } finally {
     await worker.end();
