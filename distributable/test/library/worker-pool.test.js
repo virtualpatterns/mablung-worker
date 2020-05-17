@@ -160,7 +160,7 @@ Test('WorkerPool.disconnect()', async test => {
 
 });
 
-Test.only('WorkerPool.end()', async test => {
+Test('WorkerPool.end()', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
