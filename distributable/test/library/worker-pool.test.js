@@ -160,7 +160,7 @@ Test('WorkerPool.disconnect()', async test => {
 
 });
 
-Test.only('WorkerPool.end()', async test => {
+Test('WorkerPool.end()', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
@@ -172,15 +172,15 @@ Test.only('WorkerPool.end()', async test => {
 
 });
 
-// Test('WorkerPool.kill()', async (test) => {
+Test.only('WorkerPool.kill()', async test => {
 
-//   let worker = new WorkerPool({ 'numberOfProcess': 2 })
+  let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
-//   await test.notThrowsAsync(worker.ping()) // establishes is ready
-//   await worker.kill()
-//   await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' })
+  await test.notThrowsAsync(pool.ping()); // establishes is ready
+  await pool.kill();
+  await test.notThrowsAsync(pool.ping()); // the pool should recreate killed processes
 
-// })
+});
 
 // Test('WorkerPool.uncaughtException()', async (test) => {
 
