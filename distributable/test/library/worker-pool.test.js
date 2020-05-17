@@ -176,9 +176,15 @@ Test.only('WorkerPool.kill()', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
-  await test.notThrowsAsync(pool.ping()); // establishes is ready
-  await pool.kill();
-  await test.notThrowsAsync(pool.ping()); // the pool should recreate killed processes
+  try {
+
+    await test.notThrowsAsync(pool.ping()); // establishes is ready
+    await pool.kill();
+    await test.notThrowsAsync(pool.ping()); // the pool should recreate killed processes
+
+  } finally {
+    await pool.end();
+  }
 
 });
 
