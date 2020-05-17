@@ -23,7 +23,7 @@ Test('new WorkerPool()', async test => {
 
 Test('WorkerPool.ping() throws WorkerClientDurationExceededError', async test => {
 
-  let pool = new WorkerPool({ 'maximumDuration': 1 });
+  let pool = new WorkerPool();
 
   try {
     await test.throwsAsync(pool.ping(), { 'instanceOf': WorkerClientDurationExceededError });
@@ -34,9 +34,9 @@ Test('WorkerPool.ping() throws WorkerClientDurationExceededError', async test =>
 
 });
 
-Test.only('WorkerPool.import(url)', async test => {
+Test('WorkerPool.import(url)', async test => {
 
-  let pool = new LoggedPool({ 'numberOfProcess': 2 });
+  let pool = new WorkerPool();
 
   try {
 
@@ -52,21 +52,21 @@ Test.only('WorkerPool.import(url)', async test => {
 
 });
 
-// Test('WorkerPool.import(url) throws Error', async (test) => {
+Test.only('WorkerPool.import(url) throws Error', async test => {
 
-//   let worker = new WorkerPool()
+  let pool = new WorkerPool();
 
-//   try {
+  try {
 
-//     await worker.import(Require.resolve('./worker.js'))
+    await pool.import(Require.resolve('./worker.js'));
 
-//     await test.throwsAsync(worker.module._getPid(), { 'instanceOf': Error })
+    await test.throwsAsync(pool.module._getPid(), { 'instanceOf': Error });
 
-//   } finally {
-//     await worker.end()
-//   }
+  } finally {
+    await pool.end();
+  }
 
-// })
+});
 
 // Test('WorkerPool.release()', async (test) => {
 
