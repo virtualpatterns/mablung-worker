@@ -13,7 +13,8 @@ Test.before(async test => {
 'WorkerClientDurationExceededError',
 'WorkerClientExitedError',
 'WorkerClientInternalError',
-'WorkerClientTerminatedError'].
+'WorkerClientTerminatedError',
+'WorkerPoolDisconnectedError'].
 forEach(name => {
 
   Test(name, async test => {

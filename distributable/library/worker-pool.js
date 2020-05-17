@@ -6,6 +6,8 @@ import { WorkerClient } from './worker-client.js';
 import { WorkerPoolModuleHandler } from './worker-pool-module-handler.js';
 import { WorkerPoolParameter } from './worker-pool-parameter.js';
 
+import { WorkerPoolDisconnectedError } from './error/worker-pool-disconnected-error.js';
+
 const Process = process;
 
 class WorkerPool extends ChildProcessPool {
@@ -46,19 +48,27 @@ class WorkerPool extends ChildProcessPool {
 
   async ping() {
 
-    let pingResult = await Promise.allSettled(this.getConnectedProcessInformation().map(({ process: workerClient }) => workerClient.ping()));
+    let processInformation = this.getConnectedProcessInformation();
 
-    let fulfilledPingResult = pingResult.filter(result => result.status === 'fulfilled');
+    if (processInformation.length > 0) {
 
-    if (fulfilledPingResult.length > 0) {
+      let pingResult = await Promise.allSettled(processInformation.map(({ process: workerClient }) => workerClient.ping()));
 
-      fulfilledPingResult = fulfilledPingResult.map(result => result.value);
-      fulfilledPingResult = fulfilledPingResult.reduce((minimumResult, result) => Is.null(minimumResult) || result.cpuUsage < minimumResult.cpuUsage ? result : minimumResult, null);
+      let fulfilledPingResult = pingResult.filter(result => result.status === 'fulfilled');
 
-      return fulfilledPingResult;
+      if (fulfilledPingResult.length > 0) {
+
+        fulfilledPingResult = fulfilledPingResult.map(result => result.value);
+        fulfilledPingResult = fulfilledPingResult.reduce((minimumResult, result) => Is.null(minimumResult) || result.cpuUsage < minimumResult.cpuUsage ? result : minimumResult, null);
+
+        return fulfilledPingResult;
+
+      } else {
+        throw pingResult[0].reason;
+      }
 
     } else {
-      throw pingResult[0].reason;
+      throw new WorkerPoolDisconnectedError();
     }
 
   }

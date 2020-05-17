@@ -3,7 +3,7 @@ import { createRequire as _createRequire } from "module";import Test from 'ava';
 import { LoggedPool } from './logged-pool.js';
 import { WorkerPool } from '../../index.js';
 
-import { WorkerClientDurationExceededError } from '../../index.js';
+import { WorkerClientDurationExceededError, WorkerPoolDisconnectedError } from '../../index.js';
 import { WorkerClientRejectedError } from '../../library/error/worker-client-rejected-error.js';
 
 const Process = process;
@@ -135,7 +135,7 @@ Test('WorkerPool.whenMessageType(type) throws WorkerClientDurationExceededError'
 
 });
 
-Test.only('WorkerPool.whenRejected() throws WorkerClientDurationExceededError', async test => {
+Test('WorkerPool.whenRejected() throws WorkerClientDurationExceededError', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
@@ -150,15 +150,15 @@ Test.only('WorkerPool.whenRejected() throws WorkerClientDurationExceededError', 
 
 });
 
-// Test('WorkerPool.disconnect()', async (test) => {
+Test.only('WorkerPool.disconnect()', async test => {
 
-//   let worker = new WorkerPool({ 'numberOfProcess': 2 })
+  let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
-//   await test.notThrowsAsync(worker.ping()) // establishes is ready
-//   await worker.disconnect()
-//   await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' })
+  await test.notThrowsAsync(pool.ping()); // establishes is ready
+  await pool.disconnect();
+  await test.throwsAsync(pool.ping(), { 'instanceOf': WorkerPoolDisconnectedError });
 
-// })
+});
 
 // Test('WorkerPool.end()', async (test) => {
 
