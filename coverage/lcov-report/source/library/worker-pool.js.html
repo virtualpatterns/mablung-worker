@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.7% </span>
+                <span class="strong">69.81% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>76/106</span>
+                <span class='fraction'>74/106</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.74% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>18/19</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">57.14% </span>
+                <span class="strong">42.86% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>8/14</span>
+                <span class='fraction'>6/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.7% </span>
+                <span class="strong">69.81% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>76/106</span>
+                <span class='fraction'>74/106</span>
             </div>
         
             
@@ -196,15 +196,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -218,10 +212,12 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -237,13 +233,17 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -300,18 +300,18 @@ class WorkerPool extends ChildProcessPool {
 <span class="cstat-no" title="statement not covered" >    return this._moduleUrl</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-  async selectProcess(/* methodName, parameter */) {
-    let { index } = await this.ping()
-    return this.getProcess(index)
-  }
+<span class="fstat-no" title="function not covered" >  async selectProcess(/* methodName, parameter */) {</span>
+<span class="cstat-no" title="statement not covered" >    let { index } = await this.ping()</span>
+<span class="cstat-no" title="statement not covered" >    return this.getProcess(index)</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-  async ping() {
-&nbsp;
-    let pingResult = await Promise.allSettled(this.getConnectedProcess().map(({ process: workerClient }) =&gt; workerClient.ping()))
-&nbsp;
-    let fulfilledPingResult = pingResult.filter((result) =&gt; result.status === 'fulfilled')
-&nbsp;
-<span class="branch-0 cbranch-no" title="branch not covered" >    if (fulfilledPingResult.length &gt; 0) {</span>
+<span class="fstat-no" title="function not covered" >  async ping() {</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    let pingResult = await Promise.allSettled(this.getConnectedProcess().map(({ process: workerClient }) =&gt; workerClient.ping()))</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    let fulfilledPingResult = pingResult.filter((result) =&gt; result.status === 'fulfilled')</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    if (fulfilledPingResult.length &gt; 0) {</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      fulfilledPingResult = fulfilledPingResult.map((result) =&gt; result.value)</span>
 <span class="cstat-no" title="statement not covered" >      fulfilledPingResult = fulfilledPingResult.reduce((minimumResult, result) =&gt; Is.null(minimumResult) || result.cpuUsage &lt; minimumResult.cpuUsage ? result : minimumResult, null)</span>
@@ -335,20 +335,20 @@ class WorkerPool extends ChildProcessPool {
 &nbsp;
   }
 &nbsp;
-  async apply(methodName, parameter) {
-    return (await this.selectProcess(methodName, parameter)).process.apply(methodName, parameter)
-  }
-&nbsp;
-<span class="fstat-no" title="function not covered" >  async release(option = {}) {</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    let returnValue = await Promise.all(this.getConnectedProcess().map(({ process: workerClient }) =&gt; workerClient.release(option)))</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    this._module = null</span>
-<span class="cstat-no" title="statement not covered" >    this._moduleUrl = null</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    return returnValue</span>
-<span class="cstat-no" title="statement not covered" ></span>
+<span class="fstat-no" title="function not covered" >  async apply(methodName, parameter) {</span>
+<span class="cstat-no" title="statement not covered" >    return (await this.selectProcess(methodName, parameter)).process.apply(methodName, parameter)</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
+&nbsp;
+  async release(option = {}) {
+&nbsp;
+    let returnValue = await Promise.all(this.getConnectedProcess().map(({ process: workerClient }) =&gt; workerClient.release(option)))
+&nbsp;
+    this._module = null
+    this._moduleUrl = null
+&nbsp;
+    return returnValue
+&nbsp;
+  }
 &nbsp;
   end(code = 0, option = {}) {
     return Promise.all(this.getConnectedProcess().map(({ process: workerClient }) =&gt; workerClient.end(code, option)))
@@ -379,7 +379,7 @@ export { WorkerPool }</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sat May 16 2020 21:22:01 GMT-0400 (Eastern Daylight Time)
+                at Sat May 16 2020 21:32:49 GMT-0400 (Eastern Daylight Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

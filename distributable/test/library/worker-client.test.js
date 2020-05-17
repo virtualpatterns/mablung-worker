@@ -68,7 +68,7 @@ Test('WorkerClient.import(url) throws Error', async test => {
 
 });
 
-Test('WorkerClient.release()', async test => {
+Test.skip('WorkerClient.release()', async test => {
 
   let worker = new WorkerClient();
 

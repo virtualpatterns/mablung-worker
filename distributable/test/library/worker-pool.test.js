@@ -11,7 +11,7 @@ const Require = _createRequire(import.meta.url);
 
 Test('new WorkerPool()', async test => {
 
-  let pool = new WorkerPool();
+  let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
   try {
     await test.notThrowsAsync(pool.ping());
@@ -23,7 +23,7 @@ Test('new WorkerPool()', async test => {
 
 Test('WorkerPool.ping() throws WorkerClientDurationExceededError', async test => {
 
-  let pool = new WorkerPool();
+  let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
   try {
     await test.throwsAsync(pool.ping(), { 'instanceOf': WorkerClientDurationExceededError });
@@ -36,7 +36,7 @@ Test('WorkerPool.ping() throws WorkerClientDurationExceededError', async test =>
 
 Test('WorkerPool.import(url)', async test => {
 
-  let pool = new WorkerPool();
+  let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
   try {
 
@@ -52,9 +52,9 @@ Test('WorkerPool.import(url)', async test => {
 
 });
 
-Test.only('WorkerPool.import(url) throws Error', async test => {
+Test('WorkerPool.import(url) throws Error', async test => {
 
-  let pool = new LoggedPool({ 'numberOfProcess': 2 });
+  let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
   try {
 
@@ -68,28 +68,26 @@ Test.only('WorkerPool.import(url) throws Error', async test => {
 
 });
 
-// Test('WorkerPool.release()', async (test) => {
+Test.only('WorkerPool.release()', async test => {
 
-//   let worker = new WorkerPool()
+  let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
-//   try {
+  try {
 
-//     let pid = null
-//     pid = await worker.import(Require.resolve('./worker.js'))
-//     pid = await worker.release()
+    await pool.import(Require.resolve('./worker.js'));
+    await pool.release();
 
-//     test.is(pid, worker.pid)
-//     await test.throws(() => { worker.module.getPid() }, { 'instanceOf': TypeError })
+    await test.throws(() => {pool.module.getPid();}, { 'instanceOf': TypeError });
 
-//   } finally {
-//     await worker.end()
-//   }
+  } finally {
+    await pool.end();
+  }
 
-// })
+});
 
 // Test('WorkerPool.release() throws Error', async (test) => {
 
-//   let worker = new WorkerPool()
+//   let worker = new WorkerPool({ 'numberOfProcess': 2 })
 
 //   try {
 
@@ -106,7 +104,7 @@ Test.only('WorkerPool.import(url) throws Error', async test => {
 
 // Test('WorkerPool.getPid(duration) throws WorkerClientRejectedError', async (test) => {
 
-//   let worker = new WorkerPool()
+//   let worker = new WorkerPool({ 'numberOfProcess': 2 })
 
 //   await worker.import(Require.resolve('./worker.js'))
 //   await test.throwsAsync(Promise.all([ worker.module.getPid(2500), worker.end() ]), { 'instanceOf': WorkerClientRejectedError })
@@ -115,7 +113,7 @@ Test.only('WorkerPool.import(url) throws Error', async test => {
 
 // Test('WorkerPool.whenMessageType(type) throws WorkerClientDurationExceededError', async (test) => {
 
-//   let worker = new WorkerPool()
+//   let worker = new WorkerPool({ 'numberOfProcess': 2 })
 
 //   try {
 
@@ -136,7 +134,7 @@ Test.only('WorkerPool.import(url) throws Error', async test => {
 
 // Test('WorkerPool.whenRejected() throws WorkerClientDurationExceededError', async (test) => {
 
-//   let worker = new WorkerPool()
+//   let worker = new WorkerPool({ 'numberOfProcess': 2 })
 
 //   await worker.ping() // establish is ready before call to end
 
@@ -151,7 +149,7 @@ Test.only('WorkerPool.import(url) throws Error', async test => {
 
 // Test('WorkerPool.disconnect()', async (test) => {
 
-//   let worker = new WorkerPool()
+//   let worker = new WorkerPool({ 'numberOfProcess': 2 })
 
 //   await test.notThrowsAsync(worker.ping()) // establishes is ready
 //   await worker.disconnect()
@@ -161,7 +159,7 @@ Test.only('WorkerPool.import(url) throws Error', async test => {
 
 // Test('WorkerPool.end()', async (test) => {
 
-//   let worker = new WorkerPool() // LoggedClient() // 
+//   let worker = new WorkerPool({ 'numberOfProcess': 2 }) // LoggedClient() // 
 
 //   // this import is required because it contains the onEnd method
 //   await worker.import(Require.resolve('./worker.js'))
@@ -173,7 +171,7 @@ Test.only('WorkerPool.import(url) throws Error', async test => {
 
 // Test('WorkerPool.kill()', async (test) => {
 
-//   let worker = new WorkerPool()
+//   let worker = new WorkerPool({ 'numberOfProcess': 2 })
 
 //   await test.notThrowsAsync(worker.ping()) // establishes is ready
 //   await worker.kill()
@@ -183,7 +181,7 @@ Test.only('WorkerPool.import(url) throws Error', async test => {
 
 // Test('WorkerPool.uncaughtException()', async (test) => {
 
-//   let worker = new WorkerPool()
+//   let worker = new WorkerPool({ 'numberOfProcess': 2 })
 
 //   await worker.uncaughtException() // also establishes is ready
 //   await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' })
@@ -195,7 +193,7 @@ Test.only('WorkerPool.import(url) throws Error', async test => {
 //   // this test requires that unhandled promises exit the node process
 //   // this is enabled by the --unhandled-rejections=strict argument
 
-//   let worker = new WorkerPool()
+//   let worker = new WorkerPool({ 'numberOfProcess': 2 })
 
 //   await worker.unhandledRejection() // also establishes is ready
 //   await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' })
