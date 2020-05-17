@@ -9,7 +9,7 @@ import { WorkerClientRejectedError } from '../../library/error/worker-client-rej
 const Process = process;
 const Require = _createRequire(import.meta.url);
 
-Test.only('new WorkerClient()', async test => {
+Test('new WorkerClient()', async test => {
 
   let worker = new LoggedClient();
 
