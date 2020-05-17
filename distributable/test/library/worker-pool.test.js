@@ -54,7 +54,7 @@ Test('WorkerPool.import(url)', async test => {
 
 Test.only('WorkerPool.import(url) throws Error', async test => {
 
-  let pool = new WorkerPool();
+  let pool = new LoggedPool({ 'numberOfProcess': 1 });
 
   try {
 
