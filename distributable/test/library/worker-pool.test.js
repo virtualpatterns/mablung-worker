@@ -88,7 +88,7 @@ Test('WorkerPool.release()', async test => {
 
 });
 
-Test.only('WorkerPool.release() throws Error', async test => {
+Test('WorkerPool.release() throws Error', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
@@ -105,14 +105,14 @@ Test.only('WorkerPool.release() throws Error', async test => {
 
 });
 
-// Test('WorkerPool.getPid(duration) throws WorkerClientRejectedError', async (test) => {
+Test.only('WorkerPool.getPid(duration) throws WorkerClientRejectedError', async test => {
 
-//   let worker = new WorkerPool({ 'numberOfProcess': 2 })
+  let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
-//   await worker.import(Require.resolve('./worker.js'))
-//   await test.throwsAsync(Promise.all([ worker.module.getPid(2500), worker.end() ]), { 'instanceOf': WorkerClientRejectedError })
+  await pool.import(Require.resolve('./worker.js'));
+  await test.throwsAsync(Promise.all([pool.module.getPid(2500), pool.end()]), { 'instanceOf': WorkerClientRejectedError });
 
-// })
+});
 
 // Test('WorkerPool.whenMessageType(type) throws WorkerClientDurationExceededError', async (test) => {
 
