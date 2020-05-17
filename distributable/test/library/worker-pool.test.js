@@ -160,17 +160,17 @@ Test('WorkerPool.disconnect()', async test => {
 
 });
 
-// Test('WorkerPool.end()', async (test) => {
+Test.only('WorkerPool.end()', async test => {
 
-//   let worker = new WorkerPool({ 'numberOfProcess': 2 }) // LoggedClient() // 
+  let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
-//   // this import is required because it contains the onEnd method
-//   await worker.import(Require.resolve('./worker.js'))
+  // this import is required because it contains the onEnd method
+  await pool.import(Require.resolve('./worker.js'));
 
-//   await worker.end({ 'pid': worker.pid }) // also establishes is ready
-//   await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' })
+  await pool.end({ 'pid': 10000 }); // also establishes is ready
+  await test.throwsAsync(pool.ping(), { 'instanceOf': WorkerPoolDisconnectedError });
 
-// })
+});
 
 // Test('WorkerPool.kill()', async (test) => {
 
