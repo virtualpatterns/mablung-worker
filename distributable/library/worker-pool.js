@@ -1,6 +1,5 @@
 import { Configuration } from '@virtualpatterns/mablung-configuration';
 import Is from '@pwn/is';
-import OS from 'os';
 
 import { ChildProcessPool } from './child-process-pool.js';
 import { WorkerClient } from './worker-client.js';
@@ -29,6 +28,7 @@ class WorkerPool extends ChildProcessPool {
 
   set maximumDuration(value) {
     this.option.maximumDuration = value;
+    this.getConnectedProcessInformation().forEach(({ process: workerClient }) => workerClient.maximumDuration = value);
   }
 
   get module() {
@@ -39,14 +39,14 @@ class WorkerPool extends ChildProcessPool {
     return this._moduleUrl;
   }
 
-  async selectProcess() /* methodName, parameter */{
+  async selectProcessInformation() /* methodName, parameter */{
     let { index } = await this.ping();
-    return this.getProcess(index);
+    return this.getProcessInformation(index);
   }
 
   async ping() {
 
-    let pingResult = await Promise.allSettled(this.getConnectedProcess().map(({ process: workerClient }) => workerClient.ping()));
+    let pingResult = await Promise.allSettled(this.getConnectedProcessInformation().map(({ process: workerClient }) => workerClient.ping()));
 
     let fulfilledPingResult = pingResult.filter(result => result.status === 'fulfilled');
 
@@ -65,7 +65,7 @@ class WorkerPool extends ChildProcessPool {
 
   async import(url, option = {}) {
 
-    let returnValue = await Promise.all(this.getConnectedProcess().map(({ process: workerClient }) => workerClient.import(url, option)));
+    let returnValue = await Promise.all(this.getConnectedProcessInformation().map(({ process: workerClient }) => workerClient.import(url, option)));
 
     this._module = new Proxy(this, WorkerPoolModuleHandler);
     this._moduleUrl = url;
@@ -75,12 +75,12 @@ class WorkerPool extends ChildProcessPool {
   }
 
   async apply(methodName, parameter) {
-    return (await this.selectProcess(methodName, parameter)).process.apply(methodName, parameter);
+    return (await this.selectProcessInformation(methodName, parameter)).process.apply(methodName, parameter);
   }
 
   async release(option = {}) {
 
-    let returnValue = await Promise.all(this.getConnectedProcess().map(({ process: workerClient }) => workerClient.release(option)));
+    let returnValue = await Promise.all(this.getConnectedProcessInformation().map(({ process: workerClient }) => workerClient.release(option)));
 
     this._module = null;
     this._moduleUrl = null;
@@ -90,23 +90,23 @@ class WorkerPool extends ChildProcessPool {
   }
 
   end(code = 0, option = {}) {
-    return Promise.all(this.getConnectedProcess().map(({ process: workerClient }) => workerClient.end(code, option)));
+    return Promise.all(this.getConnectedProcessInformation().map(({ process: workerClient }) => workerClient.end(code, option)));
   }
 
   uncaughtException() {
-    return Promise.all(this.getConnectedProcess().map(({ process: workerClient }) => workerClient.uncaughtException()));
+    return Promise.all(this.getConnectedProcessInformation().map(({ process: workerClient }) => workerClient.uncaughtException()));
   }
 
   unhandledRejection() {
-    return Promise.all(this.getConnectedProcess().map(({ process: workerClient }) => workerClient.unhandledRejection()));
+    return Promise.all(this.getConnectedProcessInformation().map(({ process: workerClient }) => workerClient.unhandledRejection()));
   }
 
   disconnect() {
-    return Promise.all(this.getConnectedProcess().map(({ process: workerClient }) => workerClient.disconnect()));
+    return Promise.all(this.getConnectedProcessInformation().map(({ process: workerClient }) => workerClient.disconnect()));
   }
 
   kill(...parameter) {
-    return Promise.all(this.getConnectedProcess().map(({ process: workerClient }) => workerClient.kill(...parameter)));
+    return Promise.all(this.getConnectedProcessInformation().map(({ process: workerClient }) => workerClient.kill(...parameter)));
   }}
 
 

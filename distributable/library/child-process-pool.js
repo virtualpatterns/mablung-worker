@@ -17,31 +17,27 @@ class ChildProcessPool extends EventEmitter {
     super();
 
     let path = userPath;
-    let parameter = Configuration.getParameter(this.defaultParameter, userParameter);
-    let option = Configuration.getOption(this.defaultOption, userOption);
+    let parameter = Configuration.getParameter(this._defaultParameter, userParameter);
+    let option = Configuration.getOption(this._defaultOption, userOption);
 
     let numberOfProcess = option.numberOfProcess || OS.cpus().length - 1;
-    let process = [];
+    let processInformation = [];
 
     for (let index = 0; index < numberOfProcess; index++) {
-
-      let processInformation = this._createProcessInformation(index, path, parameter, option);
-
-      this._attachProcess(processInformation);
-
-      process.push(processInformation);
-
+      processInformation.push(this._createProcessInformation(index, path, parameter, option));
     }
 
     this._processPath = path;
     this._processParameter = parameter;
     this._processOption = option;
 
-    this._process = process;
+    this._processInformation = processInformation;
 
     this._console = new Null();
     this._stream = null;
     this._streamOption = null;
+
+    this._processInformation.forEach(processInformation => this._attach(processInformation));
 
   }
 
@@ -70,14 +66,14 @@ class ChildProcessPool extends EventEmitter {
     let stream = this._stream;
     let streamOption = this._streamOption;
 
-    this._detachProcess(processInformation);
+    this._detach(processInformation);
 
-    if (processInformation.numberOfCreate < (processOption.maximumNumberOfCreate || Infinity)) {
+    if (processInformation.numberOfCreate < processOption.maximumNumberOfCreate) {
 
       processInformation.process = this._createProcess(index, processPath, processParameter, processOption);
       processInformation.numberOfCreate++;
 
-      this._attachProcess(processInformation);
+      this._attach(processInformation);
 
       if (stream) {
         processInformation.process.writeTo(stream, streamOption);
@@ -85,12 +81,14 @@ class ChildProcessPool extends EventEmitter {
 
     }
 
+    return processInformation;
+
   }
 
-  _attachProcess(processInformation) {
+  _attach(processInformation) {
 
-    processInformation.process.on('disconnect', processInformation._onDisconnect = () => {
-      this._console.log('ChildProcessPool.on(\'disconnect\', processInformation._onDisconnect = () => { ... })');
+    processInformation.process.on('disconnect', processInformation.__onDisconnect = () => {
+      this._console.log('ChildProcessPool.on(\'disconnect\', processInformation.__onDisconnect = () => { ... })');
 
       try {
         this._onDisconnect(processInformation);
@@ -101,12 +99,12 @@ class ChildProcessPool extends EventEmitter {
 
     });
 
-    processInformation.process.on('error', processInformation._onError = error => {
-      this._console.error('ChildProcessPool.on(\'error\', processInformation._onError = (error) => { ... })');
+    processInformation.process.on('error', processInformation.__onError = error => {
+      this._console.error('ChildProcessPool.on(\'error\', processInformation.__onError = (error) => { ... })');
       this._console.error(error);
 
       try {
-        this._detachProcess(processInformation);
+        this._detach(processInformation);
         this._onError(processInformation, error);
         this._recreateProcess(processInformation);
         /* c8 ignore next 3 */
@@ -116,12 +114,12 @@ class ChildProcessPool extends EventEmitter {
 
     });
 
-    processInformation.process.on('exit', processInformation._onExit = code => {
-      this._console.log(`ChildProcessPool.on('exit', processInformation._onExit = (${code}) => { ... })`);
+    processInformation.process.on('exit', processInformation.__onExit = code => {
+      this._console.log(`ChildProcessPool.on('exit', processInformation.__onExit = (${code}) => { ... })`);
 
       try {
 
-        this._detachProcess(processInformation);
+        this._detach(processInformation);
         this._onExit(processInformation, code);
 
         if (code > 0) {
@@ -135,11 +133,11 @@ class ChildProcessPool extends EventEmitter {
 
     });
 
-    processInformation.process.on('terminate', processInformation._onTerminate = signal => {
-      this._console.log(`ChildProcessPool.on('terminate', processInformation._onTerminate = ('${signal}') => { ... })`);
+    processInformation.process.on('terminate', processInformation.__onTerminate = signal => {
+      this._console.log(`ChildProcessPool.on('terminate', processInformation.__onTerminate = ('${signal}') => { ... })`);
 
       try {
-        this._detachProcess(processInformation);
+        this._detach(processInformation);
         this._onTerminate(processInformation, signal);
         this._recreateProcess(processInformation);
         /* c8 ignore next 3 */
@@ -151,28 +149,28 @@ class ChildProcessPool extends EventEmitter {
 
   }
 
-  _detachProcess(processInformation) {
+  _detach(processInformation) {
 
     let process = processInformation.process;
 
-    if (processInformation._onTerminate) {
-      process.off('terminate', processInformation._onTerminate);
-      delete processInformation._onTerminate;
+    if (processInformation.__onTerminate) {
+      process.off('terminate', processInformation.__onTerminate);
+      delete processInformation.__onTerminate;
     }
 
-    if (processInformation._onExit) {
-      process.off('exit', processInformation._onExit);
-      delete processInformation._onExit;
+    if (processInformation.__onExit) {
+      process.off('exit', processInformation.__onExit);
+      delete processInformation.__onExit;
     }
 
-    if (processInformation._onError) {
-      process.off('error', processInformation._onError);
-      delete processInformation._onError;
+    if (processInformation.__onError) {
+      process.off('error', processInformation.__onError);
+      delete processInformation.__onError;
     }
 
-    if (processInformation._onDisconnect) {
-      process.off('disconnect', processInformation._onDisconnect);
-      delete processInformation._onDisconnect;
+    if (processInformation.__onDisconnect) {
+      process.off('disconnect', processInformation.__onDisconnect);
+      delete processInformation.__onDisconnect;
     }
 
   }
@@ -193,7 +191,7 @@ class ChildProcessPool extends EventEmitter {
     this.emit('terminate', processInformation, signal);
   }
 
-  get defaultParameter() {
+  get _defaultParameter() {
     return {};
   }
 
@@ -202,7 +200,7 @@ class ChildProcessPool extends EventEmitter {
     return this._processParameter;
   }
 
-  get defaultOption() {
+  get _defaultOption() {
     return {
       'maximumNumberOfCreate': 3,
       'numberOfProcess': OS.cpus().length - 1 };
@@ -221,15 +219,14 @@ class ChildProcessPool extends EventEmitter {
     return this._processOption.numberOfProcess;
   }
 
-  getConnectedProcess() {
-    return this._process.
-    filter(({ process }) => process.isConnected);
+  selectProcessInformation() {}
+
+  getProcessInformation(index) {
+    return this._processInformation[index];
   }
 
-  selectProcess() {}
-
-  getProcess(index) {
-    return this._process[index];
+  getConnectedProcessInformation() {
+    return this._processInformation.filter(({ process }) => process.isConnected);
   }
 
   writeTo(path, option = { 'autoClose': true, 'emitClose': true, 'encoding': 'utf8', 'flags': 'a+' }) {
@@ -245,7 +242,7 @@ class ChildProcessPool extends EventEmitter {
         stream = FileSystem.createWriteStream(path, option);}
 
 
-    this._process.forEach(({ process }) => process.writeTo(stream, option));
+    this._processInformation.forEach(({ process }) => process.writeTo(stream, option));
 
     this._console = new Console({
       'colorMode': false,
@@ -260,11 +257,11 @@ class ChildProcessPool extends EventEmitter {
   }
 
   disconnect() {
-    this.getConnectedProcess().forEach(({ process }) => process.disconnect());
+    this.getConnectedProcessInformation().forEach(({ process }) => process.disconnect());
   }
 
   signal(signal) {
-    this.getConnectedProcess().forEach(({ process }) => process.signal(signal));
+    this.getConnectedProcessInformation().forEach(({ process }) => process.signal(signal));
   }
 
   kill(signal = 'SIGINT') {

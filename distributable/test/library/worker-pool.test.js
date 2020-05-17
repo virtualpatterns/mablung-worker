@@ -122,12 +122,12 @@ Test.only('WorkerPool.whenMessageType(type) throws WorkerClientDurationExceededE
 
     await pool.import(Require.resolve('./worker.js'));
 
-    // let maximumDuration = null
-    // maximumDuration = pool.maximumDuration
+    let maximumDuration = null;
+    maximumDuration = pool.maximumDuration;
 
-    // pool.maximumDuration = 2000
-    // await test.throwsAsync(pool.module.getPid(2500), { 'instanceOf': WorkerClientDurationExceededError })
-    // pool.maximumDuration = maximumDuration
+    pool.maximumDuration = 2000;
+    await test.throwsAsync(pool.module.getPid(2500), { 'instanceOf': WorkerClientDurationExceededError });
+    pool.maximumDuration = maximumDuration;
 
   } finally {
     await pool.end();
