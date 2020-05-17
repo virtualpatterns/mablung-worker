@@ -188,24 +188,36 @@ Test.only('WorkerPool.kill()', async test => {
 
 });
 
-// Test('WorkerPool.uncaughtException()', async (test) => {
+Test('WorkerPool.uncaughtException()', async test => {
 
-//   let worker = new WorkerPool({ 'numberOfProcess': 2 })
+  let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
-//   await worker.uncaughtException() // also establishes is ready
-//   await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' })
+  try {
 
-// })
+    await pool.uncaughtException();
+    await test.notThrowsAsync(pool.ping()); // the pool should recreate exited processes
 
-// Test('WorkerPool.unhandledRejection()', async (test) => {
+  } finally {
+    await pool.end();
+  }
 
-//   // this test requires that unhandled promises exit the node process
-//   // this is enabled by the --unhandled-rejections=strict argument
+});
 
-//   let worker = new WorkerPool({ 'numberOfProcess': 2 })
+Test('WorkerPool.unhandledRejection()', async test => {
 
-//   await worker.unhandledRejection() // also establishes is ready
-//   await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' })
+  // this test requires that unhandled promises exit the node process
+  // this is enabled by the --unhandled-rejections=strict argument
 
-// })
+  let pool = new WorkerPool({ 'numberOfProcess': 2 });
+
+  try {
+
+    await pool.unhandledRejection();
+    await test.notThrowsAsync(pool.ping()); // the pool should recreate exited processes
+
+  } finally {
+    await pool.end();
+  }
+
+});
 //# sourceMappingURL=worker-pool.test.js.map
