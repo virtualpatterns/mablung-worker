@@ -172,7 +172,7 @@ Test('WorkerPool.end()', async test => {
 
 });
 
-Test.only('WorkerPool.kill()', async test => {
+Test('WorkerPool.kill()', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
