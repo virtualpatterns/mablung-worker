@@ -73,7 +73,7 @@ Test('WorkerPool.module/Url', async test => {
 
 });
 
-Test.only('WorkerPool.selectProcessInformation(methodName, parameter)', async test => {
+Test('WorkerPool.selectProcessInformation(methodName, parameter)', async test => {
 
   const sandbox = Sinon.createSandbox();
 
@@ -83,10 +83,9 @@ Test.only('WorkerPool.selectProcessInformation(methodName, parameter)', async te
 
     try {
 
-      await pool.import(Require.resolve('./worker.js'));
-
       sandbox.spy(pool, 'selectProcessInformation');
 
+      await pool.import(Require.resolve('./worker.js'));
       await pool.module.getPid();
 
       test.true(pool.selectProcessInformation.calledOnce);
