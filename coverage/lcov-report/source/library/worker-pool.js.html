@@ -447,7 +447,7 @@ class WorkerPool extends ChildProcessPool {
 &nbsp;
 <span class="fstat-no" title="function not covered" >  set maximumDuration(value) {</span>
 <span class="cstat-no" title="statement not covered" >    this.option.maximumDuration = value</span>
-<span class="cstat-no" title="statement not covered" >    this.getConnectedProcessInformation().forEach(({ process: workerClient }) =&gt; workerClient.maximumDuration = value)</span>
+<span class="cstat-no" title="statement not covered" >    this._getConnectedProcessInformation().forEach(({ process: workerClient }) =&gt; workerClient.maximumDuration = value)</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
 <span class="fstat-no" title="function not covered" >  get module() {</span>
@@ -458,14 +458,14 @@ class WorkerPool extends ChildProcessPool {
 <span class="cstat-no" title="statement not covered" >    return this._moduleUrl</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="fstat-no" title="function not covered" >  async selectProcessInformation(/* methodName, parameter */) {</span>
+<span class="fstat-no" title="function not covered" >  async _selectProcessInformation(/* methodName, parameter */) {</span>
 <span class="cstat-no" title="statement not covered" >    let { index } = await this.ping()</span>
-<span class="cstat-no" title="statement not covered" >    return this.getProcessInformation(index)</span>
+<span class="cstat-no" title="statement not covered" >    return this._getProcessInformation(index)</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
   async ping() {
 &nbsp;
-    let processInformation = this.getConnectedProcessInformation()
+    let processInformation = this._getConnectedProcessInformation()
 &nbsp;
 <span class="branch-0 cbranch-no" title="branch not covered" >    if (processInformation.length &gt; 0) {</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -492,7 +492,7 @@ class WorkerPool extends ChildProcessPool {
   
 <span class="fstat-no" title="function not covered" >  async import(url, option = {}) {</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    let processInformation = this.getConnectedProcessInformation()</span>
+<span class="cstat-no" title="statement not covered" >    let processInformation = this._getConnectedProcessInformation()</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    if (processInformation.length &gt; 0) {</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -510,12 +510,12 @@ class WorkerPool extends ChildProcessPool {
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
 <span class="fstat-no" title="function not covered" >  async apply(methodName, parameter) {</span>
-<span class="cstat-no" title="statement not covered" >    return (await this.selectProcessInformation(methodName, parameter)).process.apply(methodName, parameter)</span>
+<span class="cstat-no" title="statement not covered" >    return (await this._selectProcessInformation(methodName, parameter)).process.apply(methodName, parameter)</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
 <span class="fstat-no" title="function not covered" >  async release(option = {}) {</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    let processInformation = this.getConnectedProcessInformation()</span>
+<span class="cstat-no" title="statement not covered" >    let processInformation = this._getConnectedProcessInformation()</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    if (processInformation.length &gt; 0) {</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -534,7 +534,7 @@ class WorkerPool extends ChildProcessPool {
 &nbsp;
   end(code = 0, option = {}) {
 &nbsp;
-    let processInformation = this.getConnectedProcessInformation()
+    let processInformation = this._getConnectedProcessInformation()
 &nbsp;
 <span class="branch-0 cbranch-no" title="branch not covered" >    if (processInformation.length &gt; 0) {</span>
 <span class="cstat-no" title="statement not covered" >      return Promise.all(processInformation.map(({ process: workerClient }) =&gt; workerClient.end(code, option)))</span>
@@ -546,7 +546,7 @@ class WorkerPool extends ChildProcessPool {
 &nbsp;
 <span class="fstat-no" title="function not covered" >  uncaughtException() {</span>
 <span class="cstat-no" title="statement not covered" >  </span>
-<span class="cstat-no" title="statement not covered" >    let processInformation = this.getConnectedProcessInformation()</span>
+<span class="cstat-no" title="statement not covered" >    let processInformation = this._getConnectedProcessInformation()</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    if (processInformation.length &gt; 0) {</span>
 <span class="cstat-no" title="statement not covered" >      return Promise.all(processInformation.map(({ process: workerClient }) =&gt; workerClient.uncaughtException()))</span>
@@ -558,7 +558,7 @@ class WorkerPool extends ChildProcessPool {
 &nbsp;
 <span class="fstat-no" title="function not covered" >  unhandledRejection() {</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    let processInformation = this.getConnectedProcessInformation()</span>
+<span class="cstat-no" title="statement not covered" >    let processInformation = this._getConnectedProcessInformation()</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    if (processInformation.length &gt; 0) {</span>
 <span class="cstat-no" title="statement not covered" >      return Promise.all(processInformation.map(({ process: workerClient }) =&gt; workerClient.unhandledRejection()))</span>
@@ -570,7 +570,7 @@ class WorkerPool extends ChildProcessPool {
 &nbsp;
 <span class="fstat-no" title="function not covered" >  disconnect() {</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    let processInformation = this.getConnectedProcessInformation()</span>
+<span class="cstat-no" title="statement not covered" >    let processInformation = this._getConnectedProcessInformation()</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    if (processInformation.length &gt; 0) {</span>
 <span class="cstat-no" title="statement not covered" >      return Promise.all(processInformation.map(({ process: workerClient }) =&gt; workerClient.disconnect()))</span>
@@ -582,7 +582,7 @@ class WorkerPool extends ChildProcessPool {
 &nbsp;
 <span class="fstat-no" title="function not covered" >  kill(...parameter) {</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    let processInformation = this.getConnectedProcessInformation()</span>
+<span class="cstat-no" title="statement not covered" >    let processInformation = this._getConnectedProcessInformation()</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    if (processInformation.length &gt; 0) {</span>
 <span class="cstat-no" title="statement not covered" >      return Promise.all(processInformation.map(({ process: workerClient }) =&gt; workerClient.kill(...parameter)))</span>
@@ -601,7 +601,7 @@ export { WorkerPool }</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon May 18 2020 00:34:46 GMT-0400 (Eastern Daylight Time)
+                at Mon May 18 2020 02:15:25 GMT-0400 (Eastern Daylight Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

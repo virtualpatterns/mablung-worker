@@ -13,7 +13,7 @@ class RandomWorkerPool extends WorkerPool {
     let process = null;
 
     while (Is.null(process) || !process.process.isConnected) {
-      process = this.getProcess(Math.round(Math.random() * (this.numberOfProcess - 1)));
+      process = this._getProcessInformation(Math.round(Math.random() * (this.numberOfProcess - 1)));
     }
 
     return process;

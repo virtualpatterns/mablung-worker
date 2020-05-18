@@ -73,7 +73,7 @@ Test('WorkerPool.module/Url', async test => {
 
 });
 
-Test('WorkerPool.selectProcessInformation(methodName, parameter)', async test => {
+Test('WorkerPool._selectProcessInformation(methodName, parameter)', async test => {
 
   const sandbox = Sinon.createSandbox();
 
@@ -83,12 +83,12 @@ Test('WorkerPool.selectProcessInformation(methodName, parameter)', async test =>
 
     try {
 
-      sandbox.spy(pool, 'selectProcessInformation');
+      sandbox.spy(pool, '_selectProcessInformation');
 
       await pool.import(Require.resolve('./worker.js'));
       await pool.module.getPid();
 
-      test.true(pool.selectProcessInformation.calledOnce);
+      test.true(pool._selectProcessInformation.calledOnce);
 
     } finally {
       await pool.end();
@@ -119,7 +119,7 @@ Test.skip('new WorkerPool({ \'numberOfProcess\': 2 })', async test => {
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
   try {
-    test.is(pool.getConnectedProcessInformation().length, 2);
+    test.is(pool._getConnectedProcessInformation().length, 2);
   } finally {
     await pool.end();
   }
@@ -155,7 +155,7 @@ Test.skip('WorkerPool.ping() throws WorkerClientDurationExceededError', async te
     await test.throwsAsync(pool.ping(), { 'instanceOf': WorkerClientDurationExceededError });
   } finally {
     // we can't use pool.kill() because it'll timeout
-    pool.getConnectedProcessInformation().forEach(({ process: worker }) => Process.kill(worker.pid));
+    pool._getConnectedProcessInformation().forEach(({ process: worker }) => Process.kill(worker.pid));
   }
 
 });

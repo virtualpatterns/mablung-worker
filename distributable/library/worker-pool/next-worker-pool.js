@@ -16,7 +16,7 @@ class NextWorkerPool extends WorkerPool {
     let process = null;
 
     while (Is.null(process) || !process.process.isConnected) {
-      process = this.getProcess(this._nextProcess++ % this.numberOfProcess);
+      process = this._getProcessInformation(this._nextProcess++ % this.numberOfProcess);
     }
 
     return process;

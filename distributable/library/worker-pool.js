@@ -30,7 +30,7 @@ class WorkerPool extends ChildProcessPool {
 
   set maximumDuration(value) {
     this.option.maximumDuration = value;
-    this.getConnectedProcessInformation().forEach(({ process: workerClient }) => workerClient.maximumDuration = value);
+    this._getConnectedProcessInformation().forEach(({ process: workerClient }) => workerClient.maximumDuration = value);
   }
 
   get module() {
@@ -41,14 +41,14 @@ class WorkerPool extends ChildProcessPool {
     return this._moduleUrl;
   }
 
-  async selectProcessInformation() /* methodName, parameter */{
+  async _selectProcessInformation() /* methodName, parameter */{
     let { index } = await this.ping();
-    return this.getProcessInformation(index);
+    return this._getProcessInformation(index);
   }
 
   async ping() {
 
-    let processInformation = this.getConnectedProcessInformation();
+    let processInformation = this._getConnectedProcessInformation();
 
     if (processInformation.length > 0) {
 
@@ -75,7 +75,7 @@ class WorkerPool extends ChildProcessPool {
 
   async import(url, option = {}) {
 
-    let processInformation = this.getConnectedProcessInformation();
+    let processInformation = this._getConnectedProcessInformation();
 
     if (processInformation.length > 0) {
 
@@ -93,12 +93,12 @@ class WorkerPool extends ChildProcessPool {
   }
 
   async apply(methodName, parameter) {
-    return (await this.selectProcessInformation(methodName, parameter)).process.apply(methodName, parameter);
+    return (await this._selectProcessInformation(methodName, parameter)).process.apply(methodName, parameter);
   }
 
   async release(option = {}) {
 
-    let processInformation = this.getConnectedProcessInformation();
+    let processInformation = this._getConnectedProcessInformation();
 
     if (processInformation.length > 0) {
 
@@ -117,7 +117,7 @@ class WorkerPool extends ChildProcessPool {
 
   end(code = 0, option = {}) {
 
-    let processInformation = this.getConnectedProcessInformation();
+    let processInformation = this._getConnectedProcessInformation();
 
     if (processInformation.length > 0) {
       return Promise.all(processInformation.map(({ process: workerClient }) => workerClient.end(code, option)));
@@ -129,7 +129,7 @@ class WorkerPool extends ChildProcessPool {
 
   uncaughtException() {
 
-    let processInformation = this.getConnectedProcessInformation();
+    let processInformation = this._getConnectedProcessInformation();
 
     if (processInformation.length > 0) {
       return Promise.all(processInformation.map(({ process: workerClient }) => workerClient.uncaughtException()));
@@ -141,7 +141,7 @@ class WorkerPool extends ChildProcessPool {
 
   unhandledRejection() {
 
-    let processInformation = this.getConnectedProcessInformation();
+    let processInformation = this._getConnectedProcessInformation();
 
     if (processInformation.length > 0) {
       return Promise.all(processInformation.map(({ process: workerClient }) => workerClient.unhandledRejection()));
@@ -153,7 +153,7 @@ class WorkerPool extends ChildProcessPool {
 
   disconnect() {
 
-    let processInformation = this.getConnectedProcessInformation();
+    let processInformation = this._getConnectedProcessInformation();
 
     if (processInformation.length > 0) {
       return Promise.all(processInformation.map(({ process: workerClient }) => workerClient.disconnect()));
@@ -165,7 +165,7 @@ class WorkerPool extends ChildProcessPool {
 
   kill(...parameter) {
 
-    let processInformation = this.getConnectedProcessInformation();
+    let processInformation = this._getConnectedProcessInformation();
 
     if (processInformation.length > 0) {
       return Promise.all(processInformation.map(({ process: workerClient }) => workerClient.kill(...parameter)));

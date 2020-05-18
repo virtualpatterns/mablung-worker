@@ -219,13 +219,13 @@ class ChildProcessPool extends EventEmitter {
     return this._processOption.numberOfProcess;
   }
 
-  selectProcessInformation() {}
+  _selectProcessInformation() {}
 
-  getProcessInformation(index) {
+  _getProcessInformation(index) {
     return this._processInformation[index];
   }
 
-  getConnectedProcessInformation() {
+  _getConnectedProcessInformation() {
     return this._processInformation.filter(({ process }) => process.isConnected);
   }
 
@@ -257,11 +257,11 @@ class ChildProcessPool extends EventEmitter {
   }
 
   disconnect() {
-    this.getConnectedProcessInformation().forEach(({ process }) => process.disconnect());
+    this._getConnectedProcessInformation().forEach(({ process }) => process.disconnect());
   }
 
   signal(signal) {
-    this.getConnectedProcessInformation().forEach(({ process }) => process.signal(signal));
+    this._getConnectedProcessInformation().forEach(({ process }) => process.signal(signal));
   }
 
   kill(signal = 'SIGINT') {
