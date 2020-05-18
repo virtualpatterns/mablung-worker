@@ -20,13 +20,25 @@ Test('new WorkerPool()', async test => {
 
 Test('new WorkerPool({ \'maximumDuration\': N })', async test => {
 
-  let shortMaximumDuration = 1000;
   let longMaximumDuration = 5000;
-
   let pool = new WorkerPool({ 'maximumDuration': longMaximumDuration });
 
   try {
     test.is(pool.maximumDuration, longMaximumDuration);
+  } finally {
+    await pool.end();
+  }
+
+});
+
+Test('WorkerPool.maximumDuration', async test => {
+
+  let shortMaximumDuration = 1000;
+  let longMaximumDuration = 5000;
+
+  let pool = new WorkerPool();
+
+  try {
 
     pool.maximumDuration = shortMaximumDuration;
     test.is(pool.maximumDuration, shortMaximumDuration);
