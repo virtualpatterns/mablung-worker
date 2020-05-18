@@ -100,6 +100,20 @@ Test('WorkerPool.selectProcessInformation(methodName, parameter)', async test =>
 
 });
 
+Test.only('WorkerPool.ping()', async test => {
+
+  let pool = new WorkerPool();
+
+  try {
+
+    await test.notThrowsAsync(pool.ping());
+
+  } finally {
+    await pool.end();
+  }
+
+});
+
 Test.skip('new WorkerPool({ \'numberOfProcess\': 2 })', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
