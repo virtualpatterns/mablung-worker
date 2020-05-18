@@ -67,6 +67,12 @@ Test('WorkerPool.module/Url', async test => {
     test.not(pool.module, null);
     test.not(pool.moduleUrl, null);
 
+    await pool.release();
+
+    // after release
+    test.is(pool.module, null);
+    test.is(pool.moduleUrl, null);
+
   } finally {
     await pool.end();
   }
@@ -105,8 +111,23 @@ Test('WorkerPool.ping()', async test => {
   let pool = new WorkerPool();
 
   try {
-    // does not show the code as executed
+    // does not show the code as executed :-(
     await test.notThrowsAsync(pool.ping());
+  } finally {
+    await pool.end();
+  }
+
+});
+
+Test.only('WorkerPool.release(option)', async test => {
+
+  let pool = new WorkerPool();
+
+  try {
+
+    await pool.import(Require.resolve('./worker.js'));
+    await test.notThrowsAsync(pool.release());
+
   } finally {
     await pool.end();
   }
