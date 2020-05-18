@@ -9,7 +9,7 @@ import { WorkerClientRejectedError } from '../../library/error/worker-client-rej
 const Process = process;
 const Require = _createRequire(import.meta.url);
 
-Test('new WorkerPool()', async test => {
+Test.only('new WorkerPool()', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
