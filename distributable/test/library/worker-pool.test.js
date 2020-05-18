@@ -18,16 +18,19 @@ Test('new WorkerPool()', async test => {
 
 });
 
-Test('new WorkerPool({ \'maximumDuration\': 5000 })', async test => {
+Test('new WorkerPool({ \'maximumDuration\': N })', async test => {
 
-  let pool = new WorkerPool({ 'maximumDuration': 5000 });
+  let shortMaximumDuration = 1000;
+  let longMaximumDuration = 5000;
+
+  let pool = new WorkerPool({ 'maximumDuration': longMaximumDuration });
 
   try {
-    test.is(pool.maximumDuration, 5000);
+    test.is(pool.maximumDuration, longMaximumDuration);
 
-    pool.maximumDuration = 1000;
-    test.is(pool.maximumDuration, 1000);
-    pool.maximumDuration = 5000;
+    pool.maximumDuration = shortMaximumDuration;
+    test.is(pool.maximumDuration, shortMaximumDuration);
+    pool.maximumDuration = longMaximumDuration;
 
   } finally {
     await pool.end();
