@@ -72,6 +72,20 @@ Test('WorkerPool.module/Url', async test => {
 
 });
 
+Test('WorkerPool.selectProcessInformation(methodName, parameter)', async test => {
+
+  let pool = new WorkerPool();
+
+  try {
+    await pool.ping();
+  } finally {
+    await pool.end();
+  }
+
+  test.pass();
+
+});
+
 Test.skip('new WorkerPool({ \'numberOfProcess\': 2 })', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
