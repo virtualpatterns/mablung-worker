@@ -55,24 +55,24 @@ FNDA:14,_createProcessInformation
 FNDA:0,_createProcess
 FNDA:0,_recreateProcess
 FNDA:14,_attach
-FNDA:14,processInformation.process.on.processInformation.__onDisconnect
+FNDA:12,processInformation.process.on.processInformation.__onDisconnect
 FNDA:0,processInformation.process.on.processInformation.__onError
 FNDA:14,processInformation.process.on.processInformation.__onExit
 FNDA:0,processInformation.process.on.processInformation.__onTerminate
 FNDA:14,_detach
-FNDA:14,_onDisconnect
+FNDA:12,_onDisconnect
 FNDA:0,_onError
 FNDA:14,_onExit
 FNDA:0,_onTerminate
 FNDA:2,get _defaultParameter
 FNDA:1,get parameter
 FNDA:2,get _defaultOption
-FNDA:1,get option
+FNDA:4,get option
 FNDA:0,get maximumNumberOfCreate
 FNDA:0,get numberOfProcess
 FNDA:0,selectProcessInformation
 FNDA:0,getProcessInformation
-FNDA:2,getConnectedProcessInformation
+FNDA:4,getConnectedProcessInformation
 FNDA:0,writeTo
 FNDA:0,disconnect
 FNDA:0,signal
@@ -167,16 +167,16 @@ DA:87,1
 DA:88,1
 DA:89,14
 DA:90,14
-DA:91,14
-DA:92,14
-DA:93,14
-DA:94,14
+DA:91,12
+DA:92,12
+DA:93,12
+DA:94,12
 DA:95,1
 DA:96,1
 DA:97,1
 DA:98,1
-DA:99,14
-DA:100,14
+DA:99,12
+DA:100,12
 DA:101,14
 DA:102,14
 DA:103,0
@@ -255,8 +255,8 @@ DA:175,14
 DA:176,14
 DA:177,1
 DA:178,1
-DA:179,14
-DA:180,14
+DA:179,12
+DA:180,12
 DA:181,1
 DA:182,1
 DA:183,0
@@ -287,8 +287,8 @@ DA:207,2
 DA:208,2
 DA:209,1
 DA:210,1
-DA:211,1
-DA:212,1
+DA:211,4
+DA:212,4
 DA:213,1
 DA:214,1
 DA:215,0
@@ -305,8 +305,8 @@ DA:225,0
 DA:226,0
 DA:227,1
 DA:228,1
-DA:229,2
-DA:230,2
+DA:229,4
+DA:230,4
 DA:231,1
 DA:232,1
 DA:233,0
@@ -359,19 +359,19 @@ BRDA:26,3,0,14
 BRDA:40,4,0,14
 BRDA:44,5,0,14
 BRDA:88,6,0,14
-BRDA:90,7,0,14
+BRDA:90,7,0,12
 BRDA:96,8,0,1
 BRDA:117,9,0,14
 BRDA:125,10,0,0
 BRDA:130,11,0,1
 BRDA:152,12,0,14
-BRDA:178,13,0,14
+BRDA:178,13,0,12
 BRDA:186,14,0,14
 BRDA:194,15,0,2
 BRDA:203,16,0,2
-BRDA:210,17,0,1
-BRDA:228,18,0,2
-BRDA:229,19,0,14
+BRDA:210,17,0,4
+BRDA:228,18,0,4
+BRDA:229,19,0,28
 BRF:20
 BRH:18
 end_of_record
@@ -409,12 +409,12 @@ FNDA:14,ChildProcess
 FNDA:1,_createProcess
 FNDA:14,_attach
 FNDA:14,_process.on.__onMessage
-FNDA:14,_process.on.__onDisconnect
+FNDA:12,_process.on.__onDisconnect
 FNDA:0,_process.on.__onError
 FNDA:14,_process.on.__onExit
 FNDA:14,_detach
 FNDA:14,_onMessage
-FNDA:14,_onDisconnect
+FNDA:12,_onDisconnect
 FNDA:0,_onError
 FNDA:14,_onExit
 FNDA:0,_onTerminate
@@ -422,10 +422,10 @@ FNDA:1,get path
 FNDA:14,get _defaultParameter
 FNDA:1,get parameter
 FNDA:14,get _defaultOption
-FNDA:84,get option
+FNDA:98,get option
 FNDA:0,get console
 FNDA:0,get pid
-FNDA:14,get isConnected
+FNDA:28,get isConnected
 FNDA:0,writeTo
 FNDA:14,send
 FNDA:0,disconnect
@@ -487,16 +487,16 @@ DA:53,14
 DA:54,14
 DA:55,14
 DA:56,14
-DA:57,14
-DA:58,14
-DA:59,14
-DA:60,14
+DA:57,12
+DA:58,12
+DA:59,12
+DA:60,12
 DA:61,1
 DA:62,1
 DA:63,1
 DA:64,1
-DA:65,14
-DA:66,14
+DA:65,12
+DA:66,12
 DA:67,14
 DA:68,14
 DA:69,0
@@ -570,8 +570,8 @@ DA:136,14
 DA:137,14
 DA:138,1
 DA:139,1
-DA:140,14
-DA:141,14
+DA:140,12
+DA:141,12
 DA:142,1
 DA:143,1
 DA:144,0
@@ -607,8 +607,8 @@ DA:173,14
 DA:174,14
 DA:175,1
 DA:176,1
-DA:177,84
-DA:178,84
+DA:177,98
+DA:178,98
 DA:179,1
 DA:180,1
 DA:181,0
@@ -619,8 +619,8 @@ DA:185,0
 DA:186,0
 DA:187,1
 DA:188,1
-DA:189,14
-DA:190,14
+DA:189,28
+DA:190,28
 DA:191,1
 DA:192,1
 DA:193,0
@@ -699,7 +699,7 @@ BRDA:14,1,0,14
 BRDA:41,2,0,14
 BRDA:43,3,0,14
 BRDA:50,4,0,1
-BRDA:56,5,0,14
+BRDA:56,5,0,12
 BRDA:62,6,0,1
 BRDA:84,7,0,14
 BRDA:85,8,0,0
@@ -707,12 +707,12 @@ BRDA:91,9,0,0
 BRDA:101,10,0,1
 BRDA:111,11,0,14
 BRDA:135,12,0,14
-BRDA:139,13,0,14
+BRDA:139,13,0,12
 BRDA:147,14,0,14
 BRDA:160,15,0,14
 BRDA:169,16,0,14
-BRDA:176,17,0,84
-BRDA:188,18,0,14
+BRDA:176,17,0,98
+BRDA:188,18,0,28
 BRDA:220,19,0,14
 BRDA:224,20,0,14
 BRDA:226,21,0,14
@@ -807,12 +807,12 @@ SF:source/library/null-handler.js
 FN:3,get
 FNF:1
 FNH:1
-FNDA:56,get
+FNDA:52,get
 DA:1,1
 DA:2,1
 DA:3,1
-DA:4,56
-DA:5,56
+DA:4,52
+DA:5,52
 DA:6,1
 DA:7,1
 DA:8,1
@@ -820,8 +820,8 @@ DA:9,1
 LF:9
 LH:9
 BRDA:9,0,0,1
-BRDA:3,1,0,56
-BRDA:4,2,0,56
+BRDA:3,1,0,52
+BRDA:4,2,0,52
 BRF:3
 BRH:3
 end_of_record
@@ -996,7 +996,7 @@ FN:299,unhandledRejection
 FN:305,disconnect
 FN:310,kill
 FNF:34
-FNH:15
+FNH:16
 FNDA:14,WorkerClient
 FNDA:14,get _defaultParameter
 FNDA:14,get _defaultOption
@@ -1006,13 +1006,13 @@ FNDA:0,_onPing
 FNDA:0,_onImport
 FNDA:0,_onApply
 FNDA:0,_onRelease
-FNDA:14,_onDisconnect
+FNDA:12,_onDisconnect
 FNDA:0,_onError
 FNDA:14,_onExit
 FNDA:0,_onTerminate
-FNDA:28,_onReject
+FNDA:26,_onReject
 FNDA:84,get maximumDuration
-FNDA:0,set maximumDuration
+FNDA:14,set maximumDuration
 FNDA:0,get module
 FNDA:0,get moduleUrl
 FNDA:14,whenReady
@@ -1020,7 +1020,7 @@ FNDA:14,whenMessageType
 FNDA:14,onMessage
 FNDA:0,onReject
 FNDA:14,whenRejected
-FNDA:28,onReject
+FNDA:26,onReject
 FNDA:0,send
 FNDA:0,ping
 FNDA:0,import
@@ -1098,9 +1098,9 @@ DA:64,0
 DA:65,0
 DA:66,1
 DA:67,1
-DA:68,14
-DA:69,14
-DA:70,14
+DA:68,12
+DA:69,12
+DA:70,12
 DA:71,1
 DA:72,1
 DA:73,0
@@ -1118,16 +1118,16 @@ DA:84,0
 DA:85,0
 DA:86,1
 DA:87,1
-DA:88,28
-DA:89,28
+DA:88,26
+DA:89,26
 DA:90,1
 DA:91,1
 DA:92,84
 DA:93,84
 DA:94,1
 DA:95,1
-DA:96,0
-DA:97,0
+DA:96,14
+DA:97,14
 DA:98,1
 DA:99,1
 DA:100,0
@@ -1229,10 +1229,10 @@ DA:195,14
 DA:196,14
 DA:197,14
 DA:198,14
-DA:199,28
-DA:200,28
-DA:201,28
-DA:202,28
+DA:199,26
+DA:200,26
+DA:201,26
+DA:202,26
 DA:203,14
 DA:204,14
 DA:205,14
@@ -1245,8 +1245,8 @@ DA:211,14
 DA:212,14
 DA:213,14
 DA:214,14
-DA:215,28
-DA:216,28
+DA:215,26
+DA:216,26
 DA:217,14
 DA:218,14
 DA:219,14
@@ -1349,28 +1349,29 @@ DA:315,1
 DA:316,1
 DA:317,1
 LF:317
-LH:206
+LH:208
 BRDA:317,0,0,1
 BRDA:20,1,0,14
 BRDA:30,2,0,14
 BRDA:34,3,0,14
 BRDA:38,4,0,14
 BRDA:47,5,0,14
-BRDA:67,6,0,14
+BRDA:67,6,0,12
 BRDA:77,7,0,14
-BRDA:87,8,0,28
+BRDA:87,8,0,26
 BRDA:91,9,0,84
-BRDA:107,10,0,14
-BRDA:116,11,0,14
-BRDA:119,12,0,14
-BRDA:125,13,0,14
-BRDA:190,14,0,14
-BRDA:193,15,0,14
-BRDA:198,16,0,28
-BRDA:202,17,0,14
-BRDA:287,18,0,14
-BRF:19
-BRH:19
+BRDA:95,10,0,14
+BRDA:107,11,0,14
+BRDA:116,12,0,14
+BRDA:119,13,0,14
+BRDA:125,14,0,14
+BRDA:190,15,0,14
+BRDA:193,16,0,14
+BRDA:198,17,0,26
+BRDA:202,18,0,14
+BRDA:287,19,0,14
+BRF:20
+BRH:20
 end_of_record
 TN:
 SF:source/library/worker-pool-module-handler.js
@@ -1438,11 +1439,11 @@ FN:142,unhandledRejection
 FN:154,disconnect
 FN:166,kill
 FNF:16
-FNH:4
+FNH:5
 FNDA:2,WorkerPool
 FNDA:14,_createProcess
-FNDA:1,get maximumDuration
-FNDA:0,set maximumDuration
+FNDA:2,get maximumDuration
+FNDA:2,set maximumDuration
 FNDA:0,get module
 FNDA:0,get moduleUrl
 FNDA:0,selectProcessInformation
@@ -1482,13 +1483,13 @@ DA:24,14
 DA:25,14
 DA:26,1
 DA:27,1
-DA:28,1
-DA:29,1
+DA:28,2
+DA:29,2
 DA:30,1
 DA:31,1
-DA:32,0
-DA:33,0
-DA:34,0
+DA:32,2
+DA:33,2
+DA:34,2
 DA:35,1
 DA:36,1
 DA:37,0
@@ -1636,16 +1637,18 @@ DA:178,1
 DA:179,1
 DA:180,1
 LF:180
-LH:65
+LH:68
 BRDA:180,0,0,1
 BRDA:15,1,0,2
 BRDA:23,2,0,14
-BRDA:27,3,0,1
-BRDA:118,4,0,2
-BRDA:122,5,0,0
-BRDA:123,6,0,14
-BRF:7
-BRH:6
+BRDA:27,3,0,2
+BRDA:31,4,0,2
+BRDA:33,5,0,14
+BRDA:118,6,0,2
+BRDA:122,7,0,0
+BRDA:123,8,0,14
+BRF:9
+BRH:8
 end_of_record
 TN:
 SF:source/library/worker-server.js
@@ -2047,12 +2050,12 @@ SF:source/library/error/child-process-error.js
 FN:3,ChildProcessError
 FNF:1
 FNH:1
-FNDA:28,ChildProcessError
+FNDA:26,ChildProcessError
 DA:1,1
 DA:2,1
 DA:3,1
-DA:4,28
-DA:5,28
+DA:4,26
+DA:5,26
 DA:6,1
 DA:7,1
 DA:8,1
@@ -2060,7 +2063,7 @@ DA:9,1
 LF:9
 LH:9
 BRDA:9,0,0,1
-BRDA:3,1,0,28
+BRDA:3,1,0,26
 BRF:2
 BRH:2
 end_of_record
@@ -2113,14 +2116,14 @@ SF:source/library/error/worker-client-disconnected-error.js
 FN:5,WorkerClientDisconnectedError
 FNF:1
 FNH:1
-FNDA:14,WorkerClientDisconnectedError
+FNDA:12,WorkerClientDisconnectedError
 DA:1,1
 DA:2,1
 DA:3,1
 DA:4,1
 DA:5,1
-DA:6,14
-DA:7,14
+DA:6,12
+DA:7,12
 DA:8,1
 DA:9,1
 DA:10,1
@@ -2128,7 +2131,7 @@ DA:11,1
 LF:11
 LH:11
 BRDA:11,0,0,1
-BRDA:5,1,0,14
+BRDA:5,1,0,12
 BRF:2
 BRH:2
 end_of_record
@@ -2160,14 +2163,14 @@ SF:source/library/error/worker-client-error.js
 FN:5,WorkerClientError
 FNF:1
 FNH:1
-FNDA:28,WorkerClientError
+FNDA:26,WorkerClientError
 DA:1,1
 DA:2,1
 DA:3,1
 DA:4,1
 DA:5,1
-DA:6,28
-DA:7,28
+DA:6,26
+DA:7,26
 DA:8,1
 DA:9,1
 DA:10,1
@@ -2175,7 +2178,7 @@ DA:11,1
 LF:11
 LH:11
 BRDA:11,0,0,1
-BRDA:5,1,0,28
+BRDA:5,1,0,26
 BRF:2
 BRH:2
 end_of_record
@@ -2238,14 +2241,14 @@ SF:source/library/error/worker-client-rejected-error.js
 FN:5,WorkerClientRejectedError
 FNF:1
 FNH:1
-FNDA:28,WorkerClientRejectedError
+FNDA:26,WorkerClientRejectedError
 DA:1,1
 DA:2,1
 DA:3,1
 DA:4,1
 DA:5,1
-DA:6,28
-DA:7,28
+DA:6,26
+DA:7,26
 DA:8,1
 DA:9,1
 DA:10,1
@@ -2253,7 +2256,7 @@ DA:11,1
 LF:11
 LH:11
 BRDA:11,0,0,1
-BRDA:5,1,0,28
+BRDA:5,1,0,26
 BRF:2
 BRH:2
 end_of_record

@@ -24,6 +24,11 @@ Test('new WorkerPool({ \'maximumDuration\': 5000 })', async test => {
 
   try {
     test.is(pool.maximumDuration, 5000);
+
+    pool.maximumDuration = 1000;
+    test.is(pool.maximumDuration, 1000);
+    pool.maximumDuration = 5000;
+
   } finally {
     await pool.end();
   }
