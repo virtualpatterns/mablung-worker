@@ -77,7 +77,10 @@ Test('WorkerPool.selectProcessInformation(methodName, parameter)', async test =>
   let pool = new WorkerPool();
 
   try {
-    await pool.ping();
+
+    await pool.import(Require.resolve('./worker.js'));
+    test.log(await pool.module.getPid());
+
   } finally {
     await pool.end();
   }
