@@ -100,14 +100,13 @@ Test('WorkerPool._selectProcessInformation(methodName, parameter)', async test =
 
 });
 
-Test.only('WorkerPool.ping()', async test => {
+Test('WorkerPool.ping()', async test => {
 
   let pool = new WorkerPool();
 
   try {
-
+    // does not show the code as executed
     await test.notThrowsAsync(pool.ping());
-
   } finally {
     await pool.end();
   }
