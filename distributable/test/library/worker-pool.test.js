@@ -1,4 +1,5 @@
-import { createRequire as _createRequire } from "module";import Test from 'ava';
+import { createRequire as _createRequire } from "module";import Sinon from 'sinon';
+import Test from 'ava';
 
 import { LoggedPool } from './logged-pool.js';
 import { WorkerPool } from '../../index.js';
@@ -72,17 +73,32 @@ Test('WorkerPool.module/Url', async test => {
 
 });
 
-Test('WorkerPool.selectProcessInformation(methodName, parameter)', async test => {
+Test.only('WorkerPool.selectProcessInformation(methodName, parameter)', async test => {
 
-  let pool = new WorkerPool();
+  const sandbox = Sinon.createSandbox();
 
   try {
 
-    await pool.import(Require.resolve('./worker.js'));
-    test.log(`pool.module.getPid() resolved ${await pool.module.getPid()}`);
+    let pool = new WorkerPool();
+
+    try {
+
+      await pool.import(Require.resolve('./worker.js'));
+
+      sandbox.spy(pool, 'selectProcessInformation');
+
+      await pool.module.getPid();
+
+      test.true(pool.selectProcessInformation.calledOnce);
+
+      // test.log(`pool.module.getPid() resolved to ${await pool.module.getPid()}`)
+
+    } finally {
+      await pool.end();
+    }
 
   } finally {
-    await pool.end();
+    sandbox.restore();
   }
 
   test.pass();
