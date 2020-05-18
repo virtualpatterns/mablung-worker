@@ -13,12 +13,24 @@ Test('new WorkerPool()', async test => {
 
   let pool = null;
 
-  test.notThrows(() => {pool = new WorkerPool({ 'numberOfProcess': 2 });});
+  test.notThrows(() => {pool = new WorkerPool();});
   await test.notThrowsAsync(pool.end());
 
 });
 
-Test('new WorkerPool({ \'numberOfProcess\': 2 })', async test => {
+Test('new WorkerPool({ \'maximumDuration\': 5000 })', async test => {
+
+  let pool = new WorkerPool({ 'maximumDuration': 5000 });
+
+  try {
+    test.is(pool.maximumDuration, 5000);
+  } finally {
+    await pool.end();
+  }
+
+});
+
+Test.skip('new WorkerPool({ \'numberOfProcess\': 2 })', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
@@ -30,7 +42,7 @@ Test('new WorkerPool({ \'numberOfProcess\': 2 })', async test => {
 
 });
 
-Test('WorkerPool.whenMessageType(type) throws WorkerClientDurationExceededError', async test => {
+Test.skip('WorkerPool.whenMessageType(type) throws WorkerClientDurationExceededError', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
