@@ -91,8 +91,6 @@ Test.only('WorkerPool.selectProcessInformation(methodName, parameter)', async te
 
       test.true(pool.selectProcessInformation.calledOnce);
 
-      // test.log(`pool.module.getPid() resolved to ${await pool.module.getPid()}`)
-
     } finally {
       await pool.end();
     }
@@ -100,8 +98,6 @@ Test.only('WorkerPool.selectProcessInformation(methodName, parameter)', async te
   } finally {
     sandbox.restore();
   }
-
-  test.pass();
 
 });
 
