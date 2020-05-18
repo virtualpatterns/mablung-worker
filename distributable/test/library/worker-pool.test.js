@@ -11,13 +11,10 @@ const Require = _createRequire(import.meta.url);
 
 Test('new WorkerPool()', async test => {
 
-  let pool = new WorkerPool({ 'numberOfProcess': 2 });
+  let pool = null;
 
-  try {
-    test.pass();
-  } finally {
-    await pool.end();
-  }
+  test.notThrows(() => {pool = new WorkerPool({ 'numberOfProcess': 2 });});
+  await test.notThrowsAsync(pool.end());
 
 });
 
