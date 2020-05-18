@@ -50,6 +50,26 @@ Test('WorkerPool.maximumDuration', async test => {
 
 });
 
+Test('WorkerPool.module', async test => {
+
+  let pool = new WorkerPool();
+
+  try {
+
+    // before import
+    test.is(pool.module, null);
+
+    await pool.import(Require.resolve('./worker.js'));
+
+    // after import
+    test.not(pool.module, null);
+
+  } finally {
+    await pool.end();
+  }
+
+});
+
 Test.skip('new WorkerPool({ \'numberOfProcess\': 2 })', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
