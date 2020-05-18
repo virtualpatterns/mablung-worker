@@ -208,7 +208,7 @@ Test('WorkerPool.unhandledRejection()', async test => {
   // this test requires that unhandled promises exit the node process
   // this is enabled by the --unhandled-rejections=strict argument
 
-  let pool = new WorkerPool({ 'numberOfProcess': 2 });
+  let pool = new LoggedPool({ 'numberOfProcess': 2 });
 
   try {
 
