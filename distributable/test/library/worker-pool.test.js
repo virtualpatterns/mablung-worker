@@ -18,7 +18,19 @@ Test('new WorkerPool()', async test => {
 
 });
 
-Test.skip('WorkerPool.whenMessageType(type) throws WorkerClientDurationExceededError', async test => {
+Test('new WorkerPool({ \'numberOfProcess\': 2 })', async test => {
+
+  let pool = new WorkerPool({ 'numberOfProcess': 2 });
+
+  try {
+    test.is(pool.getConnectedProcessInformation().length, 2);
+  } finally {
+    await pool.end();
+  }
+
+});
+
+Test('WorkerPool.whenMessageType(type) throws WorkerClientDurationExceededError', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
 
