@@ -191,7 +191,7 @@ Test.only('WorkerPool.module.throwUncaughtException()', async test => {
 
   try {
     await test.notThrowsAsync(pool.module.throwUncaughtException()); // the pool should recreate exited processes
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
     await test.notThrowsAsync(pool.ping());
   } finally {
     await pool.end();
