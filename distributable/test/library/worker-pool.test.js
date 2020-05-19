@@ -51,13 +51,11 @@ Test('WorkerPool.maximumDuration', async test => {
 
 });
 
-Test.only('WorkerPool.module/Url', async test => {
+Test('WorkerPool.module/Url', async test => {
 
   let pool = new WorkerPool();
 
   try {
-
-    // await pool.end()
 
     // before import
     test.is(pool.module, null);
@@ -121,18 +119,47 @@ Test('WorkerPool.ping()', async test => {
 
 });
 
+Test('WorkerPool.import(url, option)', async test => {
+
+  let pool = new WorkerPool();
+
+  try {
+    await test.notThrowsAsync(pool.import(Require.resolve('./worker.js')));
+  } finally {
+    await pool.end();
+  }
+
+});
+
+Test('WorkerPool.import(url, option) throws WorkerPoolDisconnectedError', async test => {
+
+  let pool = new WorkerPool();
+
+  await pool.end();
+  await test.throwsAsync(pool.import(Require.resolve('./worker.js')), { 'instanceOf': WorkerPoolDisconnectedError });
+
+});
+
 Test('WorkerPool.release(option)', async test => {
 
   let pool = new WorkerPool();
 
   try {
-
     await pool.import(Require.resolve('./worker.js'));
     await test.notThrowsAsync(pool.release());
-
   } finally {
     await pool.end();
   }
+
+});
+
+Test('WorkerPool.release(option) throws WorkerPoolDisconnectedError', async test => {
+
+  let pool = new WorkerPool();
+
+  await pool.import(Require.resolve('./worker.js'));
+  await pool.end();
+  await test.throwsAsync(pool.release(), { 'instanceOf': WorkerPoolDisconnectedError });
 
 });
 
