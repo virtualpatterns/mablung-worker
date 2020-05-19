@@ -198,7 +198,7 @@ Test.only('WorkerPool.module.throwUncaughtException()', async test => {
 
 });
 
-Test.only('WorkerPool.module.rejectUnhandledException()', async test => {
+Test.skip('WorkerPool.module.rejectUnhandledException()', async test => {
 
   let pool = new LoggedPool(Require.resolve('./worker.js'), { 'numberOfProcess': 1 });
 
