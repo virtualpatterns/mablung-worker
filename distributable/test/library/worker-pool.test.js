@@ -51,7 +51,7 @@ Test('WorkerPool.maximumDuration', async test => {
 
 });
 
-Test('WorkerPool.module/Url', async test => {
+Test.only('WorkerPool.module/Url', async test => {
 
   let pool = new WorkerPool();
 
