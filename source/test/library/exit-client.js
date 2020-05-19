@@ -11,8 +11,8 @@ class ExitClient extends WorkerClient {
     super(...parameter)
   }
 
-  get defaultParameter() {
-    return Configuration.merge(super.defaultParameter, { '--worker-server-class-path': Require.resolve('./exit-server.js') })
+  get _defaultParameter() {
+    return Configuration.merge(super._defaultParameter, { '--worker-server-class-path': Require.resolve('./exit-server.js') })
   }
 
 }

@@ -46,7 +46,7 @@
     "lint": "run-s --silent lint:*",
     "build:10": "babel source --copy-files --extensions .cjs,.js --keep-file-extension --out-dir distributable --source-maps",
     "build": "run-s --silent clean lint build:*",
-    "test:10": "c8 ava",
+    "test:10": "c8 --clean ava",
     "test:after:10": "git add coverage distributable",
     "test:after:20": "git commit --message=\"post-test\" --quiet",
     "test": "run-s --silent build \"test:10 {@}\" test:after:* --",
@@ -74,7 +74,8 @@
     "eslint-plugin-babel": "^5.3.0",
     "npm-check-updates": "^5.0.0",
     "npm-run-all": "^4.1.5",
-    "shx": "^0.3.2"
+    "shx": "^0.3.2",
+    "sinon": "^9.0.2"
   },
   "dependencies": {
     "@virtualpatterns/mablung-configuration": "file:../mablung-configuration",

@@ -6,11 +6,15 @@ Test.before(async (test) => {
 
 ;[
   'WorkerClient',
+  'WorkerPool',
+  'NextWorkerPool',
+  'RandomWorkerPool',
   'WorkerClientDisconnectedError',
   'WorkerClientDurationExceededError',
   'WorkerClientExitedError',
   'WorkerClientInternalError',
-  'WorkerClientTerminatedError'
+  'WorkerClientTerminatedError',
+  'WorkerPoolDisconnectedError'
 ].forEach((name) => {
 
   Test(name, async (test) => {

@@ -1,6 +1,6 @@
 import Test from 'ava'
 
-// import { LoggedClient } from './logged-client.js'
+import { LoggedClient } from './logged-client.js'
 import { WorkerClient } from '../../index.js'
 
 import { WorkerClientDurationExceededError } from '../../index.js'
@@ -11,7 +11,7 @@ const Require = __require
 
 Test('new WorkerClient()', async (test) => {
 
-  let worker = new WorkerClient()
+  let worker = new LoggedClient()
 
   try {
     await test.notThrowsAsync(worker.ping())
@@ -79,7 +79,7 @@ Test('WorkerClient.release()', async (test) => {
     pid = await worker.release()
 
     test.is(pid, worker.pid)
-    await test.throws(() => { worker.module.getPid() }, { 'instanceOf': TypeError })
+    test.is(worker.module, null)
 
   } finally {
     await worker.end()

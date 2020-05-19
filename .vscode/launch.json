@@ -7,11 +7,11 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch ...",
+      "name": "Launch p.js",
       "autoAttachChildProcesses": false,
       "internalConsoleOptions": "openOnSessionStart",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/distributable/sandbox/cc.js",
+      "program": "${workspaceFolder}/distributable/sandbox/p.js",
       "skipFiles": [ "<node_internals>/**" ]
     },
     {
@@ -26,7 +26,7 @@
       "runtimeArgs": [
         "debug",
         "--break",
-        "distributable/library/test/error-client.test.js"
+        "distributable/test/library/worker-pool.test.js"
       ],
       "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ava",
       "skipFiles": [

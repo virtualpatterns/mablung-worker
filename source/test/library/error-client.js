@@ -9,8 +9,8 @@ class ErrorClient extends WorkerClient {
     super(...parameter)
   }
 
-  get defaultOption() {
-    return Configuration.merge(super.defaultOption, { 'execPath': '/abc' })
+  get _defaultOption() {
+    return Configuration.merge(super._defaultOption, { 'execPath': '/abc' })
   }
 
 }

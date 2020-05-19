@@ -14,6 +14,7 @@ const Package = JSON5.parse(FileSystem.readFileSync(Require.resolve('../../packa
 
   Command.version(Package.version)
   Command.option('--worker-server-class-path <path>', 'Path to the server class to import/create', Require.resolve('./worker-server.js'))
+  Command.option('--import-path <path>', 'Path to the module for the server to import', Require.resolve('./worker.js'))
 
   Command.parse(Process.argv)
 
@@ -24,6 +25,7 @@ const Package = JSON5.parse(FileSystem.readFileSync(Require.resolve('../../packa
   console.log(`Process.execArgv              = ${Utilities.inspect(Process.execArgv)}`)
   console.log(`Process.argv[1]               = '${Path.relative(Process.cwd(), Process.argv[1])}'`)
   console.log(`Command.workerServerClassPath = '${Path.relative(Process.cwd(), Command.workerServerClassPath)}'`)
+  console.log(`Command.importPath            = '${Path.relative(Process.cwd(), Command.importPath)}'`)
 
   let workerServerClass = null
   workerServerClass = await import(Command.workerServerClassPath)
@@ -32,6 +34,6 @@ const Package = JSON5.parse(FileSystem.readFileSync(Require.resolve('../../packa
   console.log(`workerServerClass.name        = ${workerServerClass.name}`)
   console.log('-'.repeat(80))
 
-  new workerServerClass()
+  await (new workerServerClass()).import(Command.importPath)
 
 })()
