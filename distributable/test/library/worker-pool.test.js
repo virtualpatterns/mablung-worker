@@ -185,9 +185,9 @@ Test('WorkerPool.end(option) throws WorkerPoolDisconnectedError', async test => 
 
 });
 
-Test.only('WorkerPool.module.throwUncaughtException()', async test => {
+Test('WorkerPool.module.throwUncaughtException()', async test => {
 
-  let pool = new LoggedPool(Require.resolve('./worker.js'), { 'numberOfProcess': 1 });
+  let pool = new WorkerPool(Require.resolve('./worker.js'), { 'numberOfProcess': 1 });
 
   try {
     await test.notThrowsAsync(pool.module.throwUncaughtException()); // the pool should recreate exited processes
@@ -199,13 +199,14 @@ Test.only('WorkerPool.module.throwUncaughtException()', async test => {
 
 });
 
-Test.skip('WorkerPool.module.rejectUnhandledException()', async test => {
+Test.only('WorkerPool.module.rejectUnhandledException()', async test => {
 
   let pool = new LoggedPool(Require.resolve('./worker.js'), { 'numberOfProcess': 1 });
 
   try {
     await test.notThrowsAsync(pool.module.rejectUnhandledException()); // the pool should recreate exited processes
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    await test.notThrowsAsync(pool.ping());
   } finally {
     await pool.end();
   }
