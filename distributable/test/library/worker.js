@@ -1,3 +1,6 @@
+import { WorkerUncaughtExceptionError } from './error/worker-uncaught-exception-error.js';
+import { WorkerUnhandledRejectionError } from './error/worker-unhandled-rejection-error.js';
+
 const Process = process;
 
 export function onImport(option = {}) {
@@ -23,6 +26,13 @@ export function getPid(duration = 0) {
     return Process.pid;
   }
 
+}
+
+export function throwUncaughtException() {
+  setImmediate(() => {throw new WorkerUncaughtExceptionError();});
+}
+export function rejectUnhandledException() {
+  setImmediate(() => Promise.reject(new WorkerUnhandledRejectionError()));
 }
 
 export function onRelease(option = {}) {

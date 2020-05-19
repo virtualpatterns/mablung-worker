@@ -172,16 +172,64 @@ Test('WorkerPool.release(option) throws WorkerPoolDisconnectedError', async test
 
 });
 
-Test.only('WorkerPool.end(option)', async test => {
+Test('WorkerPool.end(option)', async test => {
   await test.notThrowsAsync(new WorkerPool().end());
 });
 
-Test.only('WorkerPool.end(option) throws WorkerPoolDisconnectedError', async test => {
+Test('WorkerPool.end(option) throws WorkerPoolDisconnectedError', async test => {
 
   let pool = new WorkerPool();
 
   await pool.end();
   await test.throws(() => {pool.end();}, { 'instanceOf': WorkerPoolDisconnectedError });
+
+});
+
+Test.only('WorkerPool.module.throwUncaughtException()', async test => {
+
+  let pool = new LoggedPool({ 'numberOfProcess': 1 });
+
+  try {
+
+    await pool.import(Require.resolve('./worker.js'));
+    await test.notThrowsAsync(pool.module.throwUncaughtException()); // the pool should recreate exited processes
+
+  } finally {
+    await pool.end();
+  }
+
+});
+
+Test.skip('WorkerPool.uncaughtException()', async test => {
+
+  let pool = new WorkerPool();
+
+  try {
+
+    await pool.uncaughtException();
+    await test.notThrowsAsync(pool.ping()); // the pool should recreate exited processes
+
+  } finally {
+    await pool.end();
+  }
+
+});
+
+Test.skip('WorkerPool.unhandledRejection()', async test => {
+
+  // this test requires that unhandled promises exit the node process
+  // this is enabled by the --unhandled-rejections=strict argument
+
+  let pool = new LoggedPool();
+
+  try {
+
+    await pool.unhandledRejection();
+    await test.notThrowsAsync(pool.ping()); // the pool should recreate exited processes
+
+  } finally {
+    await pool.end();
+  }
 
 });
 
@@ -357,39 +405,6 @@ Test.skip('WorkerPool.kill()', async test => {
     await test.notThrowsAsync(pool.ping()); // establishes is ready
     await pool.kill();
     await test.notThrowsAsync(pool.ping()); // the pool should recreate killed processes
-
-  } finally {
-    await pool.end();
-  }
-
-});
-
-Test.skip('WorkerPool.uncaughtException()', async test => {
-
-  let pool = new WorkerPool({ 'numberOfProcess': 2 });
-
-  try {
-
-    await pool.uncaughtException();
-    await test.notThrowsAsync(pool.ping()); // the pool should recreate exited processes
-
-  } finally {
-    await pool.end();
-  }
-
-});
-
-Test.skip('WorkerPool.unhandledRejection()', async test => {
-
-  // this test requires that unhandled promises exit the node process
-  // this is enabled by the --unhandled-rejections=strict argument
-
-  let pool = new LoggedPool({ 'numberOfProcess': 2 });
-
-  try {
-
-    await pool.unhandledRejection();
-    await test.notThrowsAsync(pool.ping()); // the pool should recreate exited processes
 
   } finally {
     await pool.end();
