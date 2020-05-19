@@ -121,7 +121,7 @@ Test('WorkerPool.ping()', async test => {
 
 });
 
-Test.only('WorkerPool.release(option)', async test => {
+Test('WorkerPool.release(option)', async test => {
 
   let pool = new WorkerPool();
 
