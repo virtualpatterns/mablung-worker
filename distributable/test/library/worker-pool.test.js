@@ -57,6 +57,8 @@ Test.only('WorkerPool.module/Url', async test => {
 
   try {
 
+    // await pool.end()
+
     // before import
     test.is(pool.module, null);
     test.is(pool.moduleUrl, null);
