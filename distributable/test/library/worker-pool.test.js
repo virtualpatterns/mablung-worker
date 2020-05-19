@@ -119,6 +119,15 @@ Test('WorkerPool.ping()', async test => {
 
 });
 
+Test('WorkerPool.ping() throws WorkerPoolDisconnectedError', async test => {
+
+  let pool = new WorkerPool();
+
+  await pool.end();
+  await test.throwsAsync(pool.ping(), { 'instanceOf': WorkerPoolDisconnectedError });
+
+});
+
 Test('WorkerPool.import(url, option)', async test => {
 
   let pool = new WorkerPool();
