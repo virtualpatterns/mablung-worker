@@ -21,8 +21,8 @@ class WorkerClientParameter {
 
         switch (true) {
           case Is.string(parameter[0]):
-            _path = parameter[0];
-            // _parameter = default
+            // _path = default
+            _parameter = { '--import-path': parameter[0] };
             // _option = default
             break;
           default:
@@ -36,8 +36,8 @@ class WorkerClientParameter {
 
         switch (true) {
           case Is.string(parameter[0]):
-            _path = parameter[0];
-            // _parameter = default
+            // _path = default
+            _parameter = { '--import-path': parameter[0] };
             _option = parameter[1];
             break;
           default:

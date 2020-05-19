@@ -4,11 +4,11 @@ import Is from '@pwn/is';
 import OS from 'os';
 
 import { WorkerServerNoIPCChannelError } from './error/worker-server-no-ipc-channel-error.js';
-import { WorkerServerModuleImportedError } from './error/worker-server-module-imported-error.js';
-import { WorkerServerNoModuleImportedError } from './error/worker-server-no-module-imported-error.js';
-import { WorkerServerUncaughtExceptionError } from './error/worker-server-uncaught-exception-error.js';
-import { WorkerServerUnhandledRejectionError } from './error/worker-server-unhandled-rejection-error.js';
-import { WorkerServerModuleExportError } from './error/worker-server-module-export-error.js';
+// import { WorkerServerModuleImportedError } from './error/worker-server-module-imported-error.js'
+// import { WorkerServerNoModuleImportedError } from './error/worker-server-no-module-imported-error.js'
+// import { WorkerServerUncaughtExceptionError } from './error/worker-server-uncaught-exception-error.js'
+// import { WorkerServerUnhandledRejectionError } from './error/worker-server-unhandled-rejection-error.js'
+// import { WorkerServerModuleExportError } from './error/worker-server-module-export-error.js'
 
 const { pascalCase: PascalCase } = ChangeCase;
 const Process = process;
@@ -20,9 +20,9 @@ class WorkerServer {
     this._option = Configuration.getOption(this.defaultOption, userOption);
 
     this._module = null;
-    this._moduleUrl = null;
+    this._modulePath = null;
 
-    this.attach();
+    this._attach();
 
   }
 
@@ -30,15 +30,15 @@ class WorkerServer {
     return { 'readyInterval': 1000 };
   }
 
-  attach() {
+  _attach() {
 
-    Process.on('message', this._onMessage = async message => {
-      console.log('WorkerServer.on(\'message\', this._onMessage = async (message) => { ... })');
+    Process.on('message', this.__onMessage = async message => {
+      console.log('WorkerServer.on(\'message\', this.__onMessage = async (message) => { ... })');
       console.dir(message);
 
       try {
         this._detachReadyInterval();
-        await this.onMessage(message);
+        await this._onMessage(message);
         /* c8 ignore next 3 */
       } catch (error) {
         console.error(error);
@@ -46,8 +46,8 @@ class WorkerServer {
 
     });
 
-    Process.on('disconnect', this._onDisconnect = () => {
-      console.log('WorkerServer.on(\'disconnect\', this._onDisconnect = () => { ... })');
+    Process.on('disconnect', this.__onDisconnect = () => {
+      console.log('WorkerServer.on(\'disconnect\', this.__onDisconnect = () => { ... })');
 
       try {
         this._detachReadyInterval();
@@ -59,11 +59,11 @@ class WorkerServer {
 
     });
 
-    Process.on('exit', this._onExit = code => {
-      console.log(`WorkerServer.on('exit', this._onExit = (${code}) => { ... })`);
+    Process.on('exit', this.__onExit = code => {
+      console.log(`WorkerServer.on('exit', this.__onExit = (${code}) => { ... })`);
 
       try {
-        this.detach();
+        this._detach();
         /* c8 ignore next 3 */
       } catch (error) {
         console.error(error);
@@ -96,28 +96,39 @@ class WorkerServer {
 
   _detachDisconnect() {
 
-    if (this._onDisconnect) {
-      Process.off('disconnect', this._onDisconnect);
-      delete this._onDisconnect;
+    if (this.__onDisconnect) {
+      Process.off('disconnect', this.__onDisconnect);
+      delete this.__onDisconnect;
     }
 
   }
 
-  detach() {
+  _detach() {
 
     this._detachReadyInterval();
 
-    if (this._onExit) {
-      Process.off('exit', this._onExit);
-      delete this._onExit;
+    if (this.__onExit) {
+      Process.off('exit', this.__onExit);
+      delete this.__onExit;
     }
 
     this._detachDisconnect();
 
-    if (this._onMessage) {
-      Process.off('message', this._onMessage);
-      delete this._onMessage;
+    if (this.__onMessage) {
+      Process.off('message', this.__onMessage);
+      delete this.__onMessage;
     }
+
+  }
+
+  async import(path) {
+
+    let module = null;
+    module = await import(path);
+    module = module.default ? module.default : module;
+
+    this._module = module;
+    this._modulePath = path;
 
   }
 
@@ -149,12 +160,12 @@ class WorkerServer {
 
   }
 
-  onMessage(message) {
-    let methodName = `on${PascalCase(message.type)}`;
+  _onMessage(message) {
+    let methodName = `_on${PascalCase(message.type)}`;
     return this[methodName](message);
   }
 
-  async onPing(message) {
+  async _onPing(message) {
 
     let cpuUsage = null;
     cpuUsage = Process.cpuUsage();
@@ -166,39 +177,61 @@ class WorkerServer {
 
   }
 
-  async onImport(message) {
+  // async onImport(message) {
+
+  //   try {
+
+  //     if (Is.null(this._module)) {
+
+  //       let url = message.url
+  //       let option = message.option
+
+  //       let module = null
+  //       module = await import(url)
+  //       module = module.default ? module.default : module
+
+  //       let onImport = module['onImport']
+
+  //       if (onImport) {
+
+  //         let returnValue = null
+  //         returnValue = onImport.apply(module, [ option ])
+  //         returnValue = returnValue instanceof Promise ? await returnValue : returnValue
+
+  //         message.returnValue = returnValue
+
+  //       }
+
+  //       delete message.error
+
+  //       this._module = module
+  //       this._modulePath = url
+
+  //     } else {
+  //       throw new WorkerServerModuleImportedError(this._modulePath)
+  //     }
+
+  //   } catch (error) {
+
+  //     message.error = error
+  //     delete message.returnValue
+
+  //   }
+
+  //   await this.send(message)
+
+  // }
+
+  async _onApply(message) {
 
     try {
 
-      if (Is.null(this._module)) {
+      let returnValue = null;
+      returnValue = this._module[message.methodName].apply(this._module, message.parameter);
+      returnValue = returnValue instanceof Promise ? await returnValue : returnValue;
 
-        let url = message.url;
-        let option = message.option;
-
-        let module = null;
-        module = await import(url);
-        module = module.default ? module.default : module;
-
-        let onImport = module['onImport'];
-
-        if (onImport) {
-
-          let returnValue = null;
-          returnValue = onImport.apply(module, [option]);
-          returnValue = returnValue instanceof Promise ? await returnValue : returnValue;
-
-          message.returnValue = returnValue;
-
-        }
-
-        delete message.error;
-
-        this._module = module;
-        this._moduleUrl = url;
-
-      } else {
-        throw new WorkerServerModuleImportedError(this._moduleUrl);
-      }
+      delete message.error;
+      message.returnValue = returnValue;
 
     } catch (error) {
 
@@ -211,79 +244,79 @@ class WorkerServer {
 
   }
 
-  async onApply(message) {
+  // async onApply(message) {
 
-    try {
+  //   try {
 
-      if (Is.not.null(this._module)) {
+  //     if (Is.not.null(this._module)) {
 
-        let method = this._module[message.methodName];
+  //       let method = this._module[message.methodName]
 
-        if (method) {
+  //       if (method) {
 
-          let returnValue = null;
-          returnValue = method.apply(this._module, message.parameter);
-          returnValue = returnValue instanceof Promise ? await returnValue : returnValue;
+  //         let returnValue = null
+  //         returnValue = method.apply(this._module, message.parameter)
+  //         returnValue = returnValue instanceof Promise ? await returnValue : returnValue
 
-          delete message.error;
-          message.returnValue = returnValue;
+  //         delete message.error
+  //         message.returnValue = returnValue
 
-        } else {
-          throw new WorkerServerModuleExportError(this._moduleUrl, message.methodName);
-        }
+  //       } else {
+  //         throw new WorkerServerModuleExportError(this._modulePath, message.methodName)
+  //       }
 
-      } else {
-        throw new WorkerServerNoModuleImportedError();
-      }
+  //     } else {
+  //       throw new WorkerServerNoModuleImportedError()
+  //     }
 
-    } catch (error) {
+  //   } catch (error) {
 
-      message.error = error;
-      delete message.returnValue;
+  //     message.error = error
+  //     delete message.returnValue
 
-    }
+  //   }
 
-    await this.send(message);
+  //   await this.send(message)
 
-  }
+  // }
 
-  async onRelease(message) {
+  // async onRelease(message) {
 
-    try {
+  //   try {
 
-      if (Is.not.null(this._module)) {
+  //     if (Is.not.null(this._module)) {
 
-        let option = message.option;
-        let onRelease = this._module['onRelease'];
+  //       let option = message.option
+  //       let onRelease = this._module['onRelease']
 
-        if (onRelease) {
+  //       if (onRelease) {
 
-          let returnValue = null;
-          returnValue = onRelease.apply(this._module, [option]);
-          returnValue = returnValue instanceof Promise ? await returnValue : returnValue;
+  //         let returnValue = null
+  //         returnValue = onRelease.apply(this._module, [ option ])
+  //         returnValue = returnValue instanceof Promise ? await returnValue : returnValue
 
-          message.returnValue = returnValue;
+  //         message.returnValue = returnValue
 
-        }
+  //       }
 
-        delete message.error;
+  //       delete message.error
 
-        this._module = null;
-        this._moduleUrl = null;
+  //       this._module = null
+  //       this._modulePath = null
 
-      } else {
-        throw new WorkerServerNoModuleImportedError();
-      }
+  //     } else {
+  //       throw new WorkerServerNoModuleImportedError()
+  //     }
 
-    } catch (error) {
-      message.error = error;
-    }
+  //   } catch (error) {
+  //     message.error = error
+  //   }
 
-    await this.send(message);
+  //   await this.send(message)
 
-  }
+  // }
 
-  async onEnd(message) {
+  async _onEnd(message) {
 
     try {
 
@@ -314,14 +347,14 @@ class WorkerServer {
 
   }
 
-  onUncaughtException() {
-    setImmediate(() => {throw new WorkerServerUncaughtExceptionError();});
-  }
+  // onUncaughtException() {
+  //   setImmediate(() => { throw new WorkerServerUncaughtExceptionError() })
+  // }
 
-  onUnhandledRejection() {
-    setImmediate(() => Promise.reject(new WorkerServerUnhandledRejectionError()));
-  }}
-
+  // onUnhandledRejection() {
+  //   setImmediate(() => Promise.reject(new WorkerServerUnhandledRejectionError()))
+  // }
+}
 
 
 export default WorkerServer;

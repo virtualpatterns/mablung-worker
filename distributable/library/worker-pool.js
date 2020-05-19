@@ -15,13 +15,17 @@ class WorkerPool extends ChildProcessPool {
   constructor(...parameter) {
     super(...WorkerPoolParameter.getConstructorParameter(...parameter));
 
-    this._module = null;
-    this._moduleUrl = null;
+    this._module = new Proxy(this, WorkerPoolModuleHandler);
 
   }
 
   _createProcess(index, path, parameter, option) {
     return new WorkerClient(path, parameter, Configuration.merge(option, { 'env': Configuration.merge(Process.env, { 'WORKER_POOL_INDEX': index }) }));
+  }
+
+  async _selectProcessInformation() /* methodName, parameter */{
+    let { index } = await this.ping();
+    return this._getProcessInformation(index);
   }
 
   get maximumDuration() {
@@ -37,35 +41,17 @@ class WorkerPool extends ChildProcessPool {
     return this._module;
   }
 
-  get moduleUrl() {
-    return this._moduleUrl;
-  }
-
-  async _selectProcessInformation() /* methodName, parameter */{
-    let { index } = await this.ping();
-    return this._getProcessInformation(index);
-  }
-
   async ping() {
 
     let processInformation = this._getConnectedProcessInformation();
 
     if (processInformation.length > 0) {
 
-      let pingResult = await Promise.allSettled(processInformation.map(({ process: workerClient }) => workerClient.ping()));
+      let pingResult = null;
+      pingResult = await Promise.all(processInformation.map(({ process: workerClient }) => workerClient.ping()));
+      pingResult = pingResult.reduce((minimumResult, result) => Is.null(minimumResult) || result.cpuUsage < minimumResult.cpuUsage ? result : minimumResult, null);
 
-      let fulfilledPingResult = pingResult.filter(result => result.status === 'fulfilled');
-
-      if (fulfilledPingResult.length > 0) {
-
-        fulfilledPingResult = fulfilledPingResult.map(result => result.value);
-        fulfilledPingResult = fulfilledPingResult.reduce((minimumResult, result) => Is.null(minimumResult) || result.cpuUsage < minimumResult.cpuUsage ? result : minimumResult, null);
-
-        return fulfilledPingResult;
-
-      } else {
-        throw pingResult[0].reason;
-      }
+      return pingResult;
 
     } else {
       throw new WorkerPoolDisconnectedError();
@@ -73,47 +59,47 @@ class WorkerPool extends ChildProcessPool {
 
   }
 
-  async import(url, option = {}) {
+  // async import(url, option = {}) {
 
-    let processInformation = this._getConnectedProcessInformation();
+  //   let processInformation = this._getConnectedProcessInformation()
 
-    if (processInformation.length > 0) {
+  //   if (processInformation.length > 0) {
 
-      let returnValue = await Promise.all(processInformation.map(({ process: workerClient }) => workerClient.import(url, option)));
+  //     let returnValue = await Promise.all(processInformation.map(({ process: workerClient }) => workerClient.import(url, option)))
 
-      this._module = new Proxy(this, WorkerPoolModuleHandler);
-      this._moduleUrl = url;
+  //     this._module = new Proxy(this, WorkerPoolModuleHandler)
+  //     this._moduleUrl = url
 
-      return returnValue;
+  //     return returnValue
 
-    } else {
-      throw new WorkerPoolDisconnectedError();
-    }
+  //   } else {
+  //     throw new WorkerPoolDisconnectedError()
+  //   }
 
-  }
+  // }
 
   async apply(methodName, parameter) {
     return (await this._selectProcessInformation(methodName, parameter)).process.apply(methodName, parameter);
   }
 
-  async release(option = {}) {
+  // async release(option = {}) {
 
-    let processInformation = this._getConnectedProcessInformation();
+  //   let processInformation = this._getConnectedProcessInformation()
 
-    if (processInformation.length > 0) {
+  //   if (processInformation.length > 0) {
 
-      let returnValue = await Promise.all(processInformation.map(({ process: workerClient }) => workerClient.release(option)));
+  //     let returnValue = await Promise.all(processInformation.map(({ process: workerClient }) => workerClient.release(option)))
 
-      this._module = null;
-      this._moduleUrl = null;
+  //     this._module = null
+  //     this._moduleUrl = null
 
-      return returnValue;
+  //     return returnValue
 
-    } else {
-      throw new WorkerPoolDisconnectedError();
-    }
+  //   } else {
+  //     throw new WorkerPoolDisconnectedError()
+  //   }
 
-  }
+  // }
 
   end(code = 0, option = {}) {
 
@@ -127,29 +113,29 @@ class WorkerPool extends ChildProcessPool {
 
   }
 
-  uncaughtException() {
+  // uncaughtException() {
 
-    let processInformation = this._getConnectedProcessInformation();
+  //   let processInformation = this._getConnectedProcessInformation()
 
-    if (processInformation.length > 0) {
-      return Promise.all(processInformation.map(({ process: workerClient }) => workerClient.uncaughtException()));
-    } else {
-      throw new WorkerPoolDisconnectedError();
-    }
+  //   if (processInformation.length > 0) {
+  //     return Promise.all(processInformation.map(({ process: workerClient }) => workerClient.uncaughtException()))
+  //   } else {
+  //     throw new WorkerPoolDisconnectedError()
+  //   }
 
-  }
+  // }
 
-  unhandledRejection() {
+  // unhandledRejection() {
 
-    let processInformation = this._getConnectedProcessInformation();
+  //   let processInformation = this._getConnectedProcessInformation()
 
-    if (processInformation.length > 0) {
-      return Promise.all(processInformation.map(({ process: workerClient }) => workerClient.unhandledRejection()));
-    } else {
-      throw new WorkerPoolDisconnectedError();
-    }
+  //   if (processInformation.length > 0) {
+  //     return Promise.all(processInformation.map(({ process: workerClient }) => workerClient.unhandledRejection()))
+  //   } else {
+  //     throw new WorkerPoolDisconnectedError()
+  //   }
 
-  }
+  // }
 
   disconnect() {
 

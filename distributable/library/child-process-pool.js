@@ -2,7 +2,6 @@ import { Configuration } from '@virtualpatterns/mablung-configuration';
 import { Console } from 'console';
 import EventEmitter from 'events';
 import FileSystem from 'fs-extra';
-// import Is from '@pwn/is'
 import OS from 'os';
 import Stream from 'stream';
 
@@ -34,6 +33,7 @@ class ChildProcessPool extends EventEmitter {
     this._processInformation = processInformation;
 
     this._console = new Null();
+
     this._stream = null;
     this._streamOption = null;
 
@@ -45,7 +45,7 @@ class ChildProcessPool extends EventEmitter {
 
     return {
       'index': index,
-      'numberOfCreate': 0,
+      'numberOfCreate': 1,
       'process': this._createProcess(index, path, parameter, option) };
 
 
@@ -81,13 +81,13 @@ class ChildProcessPool extends EventEmitter {
 
     }
 
-    return processInformation;
-
   }
 
   _attach(processInformation) {
 
-    processInformation.process.on('disconnect', processInformation.__onDisconnect = () => {
+    let { process } = processInformation;
+
+    process.on('disconnect', processInformation.__onDisconnect = () => {
       this._console.log('ChildProcessPool.on(\'disconnect\', processInformation.__onDisconnect = () => { ... })');
 
       try {
@@ -99,14 +99,12 @@ class ChildProcessPool extends EventEmitter {
 
     });
 
-    processInformation.process.on('error', processInformation.__onError = error => {
+    process.on('error', processInformation.__onError = error => {
       this._console.error('ChildProcessPool.on(\'error\', processInformation.__onError = (error) => { ... })');
       this._console.error(error);
 
       try {
-        this._detach(processInformation);
         this._onError(processInformation, error);
-        this._recreateProcess(processInformation);
         /* c8 ignore next 3 */
       } catch (error) {
         this._console.error(error);
@@ -114,12 +112,11 @@ class ChildProcessPool extends EventEmitter {
 
     });
 
-    processInformation.process.on('exit', processInformation.__onExit = code => {
+    process.on('exit', processInformation.__onExit = code => {
       this._console.log(`ChildProcessPool.on('exit', processInformation.__onExit = (${code}) => { ... })`);
 
       try {
 
-        this._detach(processInformation);
         this._onExit(processInformation, code);
 
         if (code > 0) {
@@ -133,11 +130,10 @@ class ChildProcessPool extends EventEmitter {
 
     });
 
-    processInformation.process.on('terminate', processInformation.__onTerminate = signal => {
+    process.on('terminate', processInformation.__onTerminate = signal => {
       this._console.log(`ChildProcessPool.on('terminate', processInformation.__onTerminate = ('${signal}') => { ... })`);
 
       try {
-        this._detach(processInformation);
         this._onTerminate(processInformation, signal);
         this._recreateProcess(processInformation);
         /* c8 ignore next 3 */
@@ -151,7 +147,7 @@ class ChildProcessPool extends EventEmitter {
 
   _detach(processInformation) {
 
-    let process = processInformation.process;
+    let { process } = processInformation;
 
     if (processInformation.__onTerminate) {
       process.off('terminate', processInformation.__onTerminate);
