@@ -172,6 +172,19 @@ Test('WorkerPool.release(option) throws WorkerPoolDisconnectedError', async test
 
 });
 
+Test.only('WorkerPool.end(option)', async test => {
+  await test.notThrowsAsync(new WorkerPool().end());
+});
+
+Test.only('WorkerPool.end(option) throws WorkerPoolDisconnectedError', async test => {
+
+  let pool = new WorkerPool();
+
+  await pool.end();
+  await test.throws(() => {pool.end();}, { 'instanceOf': WorkerPoolDisconnectedError });
+
+});
+
 Test.skip('new WorkerPool({ \'numberOfProcess\': 2 })', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 2 });
