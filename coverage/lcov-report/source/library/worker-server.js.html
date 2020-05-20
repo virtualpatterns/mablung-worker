@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for source/library/child-process.js</title>
+    <title>Code coverage report for source/library/worker-server.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">source/library</a> child-process.js</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">source/library</a> worker-server.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78.54% </span>
+                <span class="strong">84.72% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>205/261</span>
+                <span class='fraction'>305/360</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.36% </span>
+                <span class="strong">76% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>19/22</span>
+                <span class='fraction'>19/25</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.54% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>16/26</span>
+                <span class='fraction'>12/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78.54% </span>
+                <span class="strong">84.72% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>205/261</span>
+                <span class='fraction'>305/360</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -317,7 +317,366 @@
 <a name='L258'></a><a href='#L258'>258</a>
 <a name='L259'></a><a href='#L259'>259</a>
 <a name='L260'></a><a href='#L260'>260</a>
-<a name='L261'></a><a href='#L261'>261</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L261'></a><a href='#L261'>261</a>
+<a name='L262'></a><a href='#L262'>262</a>
+<a name='L263'></a><a href='#L263'>263</a>
+<a name='L264'></a><a href='#L264'>264</a>
+<a name='L265'></a><a href='#L265'>265</a>
+<a name='L266'></a><a href='#L266'>266</a>
+<a name='L267'></a><a href='#L267'>267</a>
+<a name='L268'></a><a href='#L268'>268</a>
+<a name='L269'></a><a href='#L269'>269</a>
+<a name='L270'></a><a href='#L270'>270</a>
+<a name='L271'></a><a href='#L271'>271</a>
+<a name='L272'></a><a href='#L272'>272</a>
+<a name='L273'></a><a href='#L273'>273</a>
+<a name='L274'></a><a href='#L274'>274</a>
+<a name='L275'></a><a href='#L275'>275</a>
+<a name='L276'></a><a href='#L276'>276</a>
+<a name='L277'></a><a href='#L277'>277</a>
+<a name='L278'></a><a href='#L278'>278</a>
+<a name='L279'></a><a href='#L279'>279</a>
+<a name='L280'></a><a href='#L280'>280</a>
+<a name='L281'></a><a href='#L281'>281</a>
+<a name='L282'></a><a href='#L282'>282</a>
+<a name='L283'></a><a href='#L283'>283</a>
+<a name='L284'></a><a href='#L284'>284</a>
+<a name='L285'></a><a href='#L285'>285</a>
+<a name='L286'></a><a href='#L286'>286</a>
+<a name='L287'></a><a href='#L287'>287</a>
+<a name='L288'></a><a href='#L288'>288</a>
+<a name='L289'></a><a href='#L289'>289</a>
+<a name='L290'></a><a href='#L290'>290</a>
+<a name='L291'></a><a href='#L291'>291</a>
+<a name='L292'></a><a href='#L292'>292</a>
+<a name='L293'></a><a href='#L293'>293</a>
+<a name='L294'></a><a href='#L294'>294</a>
+<a name='L295'></a><a href='#L295'>295</a>
+<a name='L296'></a><a href='#L296'>296</a>
+<a name='L297'></a><a href='#L297'>297</a>
+<a name='L298'></a><a href='#L298'>298</a>
+<a name='L299'></a><a href='#L299'>299</a>
+<a name='L300'></a><a href='#L300'>300</a>
+<a name='L301'></a><a href='#L301'>301</a>
+<a name='L302'></a><a href='#L302'>302</a>
+<a name='L303'></a><a href='#L303'>303</a>
+<a name='L304'></a><a href='#L304'>304</a>
+<a name='L305'></a><a href='#L305'>305</a>
+<a name='L306'></a><a href='#L306'>306</a>
+<a name='L307'></a><a href='#L307'>307</a>
+<a name='L308'></a><a href='#L308'>308</a>
+<a name='L309'></a><a href='#L309'>309</a>
+<a name='L310'></a><a href='#L310'>310</a>
+<a name='L311'></a><a href='#L311'>311</a>
+<a name='L312'></a><a href='#L312'>312</a>
+<a name='L313'></a><a href='#L313'>313</a>
+<a name='L314'></a><a href='#L314'>314</a>
+<a name='L315'></a><a href='#L315'>315</a>
+<a name='L316'></a><a href='#L316'>316</a>
+<a name='L317'></a><a href='#L317'>317</a>
+<a name='L318'></a><a href='#L318'>318</a>
+<a name='L319'></a><a href='#L319'>319</a>
+<a name='L320'></a><a href='#L320'>320</a>
+<a name='L321'></a><a href='#L321'>321</a>
+<a name='L322'></a><a href='#L322'>322</a>
+<a name='L323'></a><a href='#L323'>323</a>
+<a name='L324'></a><a href='#L324'>324</a>
+<a name='L325'></a><a href='#L325'>325</a>
+<a name='L326'></a><a href='#L326'>326</a>
+<a name='L327'></a><a href='#L327'>327</a>
+<a name='L328'></a><a href='#L328'>328</a>
+<a name='L329'></a><a href='#L329'>329</a>
+<a name='L330'></a><a href='#L330'>330</a>
+<a name='L331'></a><a href='#L331'>331</a>
+<a name='L332'></a><a href='#L332'>332</a>
+<a name='L333'></a><a href='#L333'>333</a>
+<a name='L334'></a><a href='#L334'>334</a>
+<a name='L335'></a><a href='#L335'>335</a>
+<a name='L336'></a><a href='#L336'>336</a>
+<a name='L337'></a><a href='#L337'>337</a>
+<a name='L338'></a><a href='#L338'>338</a>
+<a name='L339'></a><a href='#L339'>339</a>
+<a name='L340'></a><a href='#L340'>340</a>
+<a name='L341'></a><a href='#L341'>341</a>
+<a name='L342'></a><a href='#L342'>342</a>
+<a name='L343'></a><a href='#L343'>343</a>
+<a name='L344'></a><a href='#L344'>344</a>
+<a name='L345'></a><a href='#L345'>345</a>
+<a name='L346'></a><a href='#L346'>346</a>
+<a name='L347'></a><a href='#L347'>347</a>
+<a name='L348'></a><a href='#L348'>348</a>
+<a name='L349'></a><a href='#L349'>349</a>
+<a name='L350'></a><a href='#L350'>350</a>
+<a name='L351'></a><a href='#L351'>351</a>
+<a name='L352'></a><a href='#L352'>352</a>
+<a name='L353'></a><a href='#L353'>353</a>
+<a name='L354'></a><a href='#L354'>354</a>
+<a name='L355'></a><a href='#L355'>355</a>
+<a name='L356'></a><a href='#L356'>356</a>
+<a name='L357'></a><a href='#L357'>357</a>
+<a name='L358'></a><a href='#L358'>358</a>
+<a name='L359'></a><a href='#L359'>359</a>
+<a name='L360'></a><a href='#L360'>360</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -391,152 +750,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -557,287 +772,369 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">import { Configuration } from '@virtualpatterns/mablung-configuration'
-import { Console } from 'console'
-import EventEmitter from 'events'
-import FileSystem from 'fs-extra'
+<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">import ChangeCase from 'change-case'
+import { Configuration } from '@virtualpatterns/mablung-configuration'
 import Is from '@pwn/is'
-import Stream from 'stream'
+import OS from 'os'
 &nbsp;
-import { Null } from './null.js'
+import { WorkerServerNoIPCChannelError } from './error/worker-server-no-ipc-channel-error.js'
+// import { WorkerServerModuleImportedError } from './error/worker-server-module-imported-error.js'
+// import { WorkerServerNoModuleImportedError } from './error/worker-server-no-module-imported-error.js'
+// import { WorkerServerUncaughtExceptionError } from './error/worker-server-uncaught-exception-error.js'
+// import { WorkerServerUnhandledRejectionError } from './error/worker-server-unhandled-rejection-error.js'
+// import { WorkerServerModuleExportError } from './error/worker-server-module-export-error.js'
 &nbsp;
-import { ChildProcessSignalError } from './error/child-process-signal-error.js'
+const { pascalCase: PascalCase } = ChangeCase
+const Process = process
 &nbsp;
-class ChildProcess extends EventEmitter {
+class WorkerServer {
 &nbsp;
-  constructor(userPath, userParameter = {}, userOption = {}) { // 
-    super()
+  constructor(userOption = {}) {
 &nbsp;
-    let processPath = userPath
-    let processParameter = Configuration.getParameter(this._defaultParameter, userParameter)
-    let processOption = Configuration.getOption(this._defaultOption, userOption)
+    this._option = Configuration.getOption(this.defaultOption, userOption)
 &nbsp;
-    let process = this._createProcess(processPath, processParameter, processOption)
-&nbsp;
-    this._processPath = processPath
-    this._processParameter = processParameter
-    this._processOption = processOption
-&nbsp;
-    this._process = process
-&nbsp;
-    this._console = new Null()
-&nbsp;
-    this._stream = null
-    this._streamOption = null
+    this._module = null
+    this._modulePath = null
 &nbsp;
     this._attach()
 &nbsp;
   }
 &nbsp;
-  /* c8 ignore next 1 */
-  _createProcess(/* path, parameter, option */) {}
+  get defaultOption() {
+    return { 'readyInterval': 1000 }
+  }
 &nbsp;
   _attach() {
 &nbsp;
-    this._process.on('message', this.__onMessage = (message) =&gt; {
-      // this._console.log('ChildProcess.on(\'message\', this.__onMessage = (message) =&gt; { ... })')
-      // this._console.dir(message)
-  
+    Process.on('message', this.__onMessage = async (message) =&gt; {
+      console.log('WorkerServer.on(\'message\', this.__onMessage = async (message) =&gt; { ... })')
+      console.dir(message)
+&nbsp;
       try {
-        this._onMessage(message)
-        /* c8 ignore next 3 */
-      } catch (error) {
-        this._console.error(error)
+        this._detachReadyInterval()   
+<span class="branch-0 cbranch-no" title="branch not covered" >        await this._onMessage(message) </span>
+      /* c8 ignore next 3 */
+      } catch(error) {
+        console.error(error)
       }
-&nbsp;
-    })
-&nbsp;
-    this._process.on('disconnect', this.__onDisconnect = () =&gt; {
-      this._console.log('ChildProcess.on(\'disconnect\', this.__onDisconnect = () =&gt; { ... })')
-  
-      try {
-        this._onDisconnect()
-        /* c8 ignore next 3 */
-      } catch (error) {
-        this._console.error(error)
-      }
-&nbsp;
-    })
-&nbsp;
-    this._process.on('error', this.__onError = (<span class="fstat-no" title="function not covered" >error) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      this._console.error('ChildProcess.on(\'error\', this.__onError = (error) =&gt; { ... })')</span>
-<span class="cstat-no" title="statement not covered" >      this._console.error(error)</span>
-<span class="cstat-no" title="statement not covered" >  </span>
-<span class="cstat-no" title="statement not covered" >      try {</span>
-<span class="cstat-no" title="statement not covered" >        this._detach()</span>
-<span class="cstat-no" title="statement not covered" >        this._onError(error)</span>
-        /* c8 ignore next 3 */
-      } catch (error) {
-        this._console.error(error)
-      } finally {
-<span class="cstat-no" title="statement not covered" >        this._console = new Null()</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    })</span>
 &nbsp;
-    this._process.on('exit', this.__onExit = (code, signal) =&gt; {
-      this._console.log(`ChildProcess.on('exit', this.__onExit = (${code}, ${<span class="branch-0 cbranch-no" title="branch not covered" >Is.null(signal) ? signal : `'${signal}'`})</span> =&gt; { ... })`)
+    Process.on('disconnect', this.__onDisconnect = <span class="fstat-no" title="function not covered" >() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      console.log('WorkerServer.on(\'disconnect\', this.__onDisconnect = () =&gt; { ... })')</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >      try {</span>
+<span class="cstat-no" title="statement not covered" >        this._detachReadyInterval()   </span>
+<span class="cstat-no" title="statement not covered" >        this._detachDisconnect()    </span>
+      /* c8 ignore next 3 */
+      } catch(error) {
+        console.error(error)
+      }
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >    })</span>
+&nbsp;
+    Process.on('exit', this.__onExit = (code) =&gt; {
+      console.log(`WorkerServer.on('exit', this.__onExit = (${code}) =&gt; { ... })`)
 &nbsp;
       try {
-&nbsp;
         this._detach()
+      /* c8 ignore next 3 */
+      } catch(error) {
+        console.error(error)
+      }
+        
+    })
 &nbsp;
-<span class="branch-0 cbranch-no" title="branch not covered" >        if (Is.not.null(code)) {</span>
-<span class="cstat-no" title="statement not covered" >          this._onExit(code)</span>
-          /* c8 ignore next 5 */
-        } else if (Is.not.null(signal)) {
-          this._onTerminate(signal)
-        } else {
-          this._onExit(0)
-        }
+    this._readyInterval = setInterval(async () =&gt; {
 &nbsp;
-        /* c8 ignore next 3 */
+      try {
+        await this.send({ 'type': 'ready' })
+      /* c8 ignore next 4 */
       } catch (error) {
-        this._console.error(error)
-      } finally {
-        this._console = new Null()
+        this._detachReadyInterval()
+        console.error(error)
       }
 &nbsp;
-    })
+    }, this._option.readyInterval)
+&nbsp;
+  }
+&nbsp;
+  _detachReadyInterval() {
+&nbsp;
+    if (this._readyInterval) {
+      clearInterval(this._readyInterval)
+      delete this._readyInterval
+    }
+&nbsp;
+  }
+&nbsp;
+  _detachDisconnect() {
+&nbsp;
+    if (this.__onDisconnect) {
+      Process.off('disconnect', this.__onDisconnect)
+      delete this.__onDisconnect
+    }
 &nbsp;
   }
 &nbsp;
   _detach() {
 &nbsp;
+    this._detachReadyInterval()    
+&nbsp;
     if (this.__onExit) {
-      this._process.off('exit', this.__onExit)
+      Process.off('exit', this.__onExit)
       delete this.__onExit
     }
 &nbsp;
-    if (this.__onError) {
-      this._process.off('error', this.__onError)
-      delete this.__onError
-    }
-&nbsp;
-    if (this.__onDisconnect) {
-      this._process.off('disconnect', this.__onDisconnect)
-      delete this.__onDisconnect
-    }
+    this._detachDisconnect()
 &nbsp;
     if (this.__onMessage) {
-      this._process.off('message', this.__onMessage)
+      Process.off('message', this.__onMessage)
       delete this.__onMessage
     }
 &nbsp;
   }
 &nbsp;
-  _onMessage(message) {
-    this.emit('message', message)
+  async import(path) {
+&nbsp;
+    let module = null
+    module = await import(path)
+    module = <span class="branch-0 cbranch-no" title="branch not covered" >module.default ? module.default : m</span>odule
+&nbsp;
+    this._module = module
+    this._modulePath = path
+&nbsp;
   }
-&nbsp;
-  _onDisconnect() {
-    this.emit('disconnect')
-  }
-&nbsp;
-<span class="fstat-no" title="function not covered" >  _onError(error) {</span>
-<span class="cstat-no" title="statement not covered" >    this.emit('error', error)</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-  _onExit(code) {
-    this.emit('exit', code)
-  }
-&nbsp;
-<span class="fstat-no" title="function not covered" >  _onTerminate(signal) {</span>
-<span class="cstat-no" title="statement not covered" >    this.emit('terminate', signal)</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-  /* c8 ignore next 3 */
-  get path() {
-    return this._processPath
-  }
-&nbsp;
-  get _defaultParameter() {
-    return {}
-  }
-&nbsp;
-  /* c8 ignore next 3 */
-  get parameter() {
-    return this._processParameter
-  }
-&nbsp;
-  get _defaultOption() {
-    return {
-      'serialization': 'advanced',
-      'stdio': 'pipe'
-    }
-  }
-&nbsp;
-  get option() {
-    return this._processOption
-  }
-&nbsp;
-<span class="fstat-no" title="function not covered" >  get console() {</span>
-<span class="cstat-no" title="statement not covered" >    return this._console</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="fstat-no" title="function not covered" >  get pid() {</span>
-<span class="cstat-no" title="statement not covered" >    return this._process.pid</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="fstat-no" title="function not covered" >  get isConnected() {</span>
-<span class="cstat-no" title="statement not covered" >    return this._process.connected</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="fstat-no" title="function not covered" >  writeTo(path, option = { 'autoClose': true, 'emitClose': true, 'encoding': 'utf8', 'flags': 'a+' }) {</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    let stream = null</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    switch (true) {</span>
-      /* c8 ignore next 3 */
-      case path instanceof Stream.Writable:
-        stream = path
-        break
-<span class="cstat-no" title="statement not covered" >      default:</span>
-<span class="cstat-no" title="statement not covered" >        stream = FileSystem.createWriteStream(path, option)</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    this._process.stderr.pipe(stream, { 'end': false })</span>
-<span class="cstat-no" title="statement not covered" >    this._process.stdout.pipe(stream, { 'end': false })</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    this._console = new Console({</span>
-<span class="cstat-no" title="statement not covered" >      'colorMode': false,</span>
-<span class="cstat-no" title="statement not covered" >      'ignoreErrors': false,</span>
-<span class="cstat-no" title="statement not covered" >      'stderr': stream,</span>
-<span class="cstat-no" title="statement not covered" >      'stdout': stream</span>
-<span class="cstat-no" title="statement not covered" >    })</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    this._stream = stream</span>
-<span class="cstat-no" title="statement not covered" >    this._streamOption = option</span>
-<span class="cstat-no" title="statement not covered" >        </span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
   send(message) {
-    // this._console.log('ChildProcess.send(message) { ... }')
-    // this._console.dir(message)
+    console.log('WorkerServer.send(message) { ... }')
+    console.dir(message)
 &nbsp;
     return new Promise((resolve, reject) =&gt; {
-      
-      this._process.send(message, (error) =&gt; {
 &nbsp;
-<span class="branch-0 cbranch-no" title="branch not covered" >        if (Is.null(error)) {</span>
-<span class="cstat-no" title="statement not covered" >          resolve()</span>
-<span class="cstat-no" title="statement not covered" >        } else {</span>
-<span class="cstat-no" title="statement not covered" >          reject(error)</span>
-<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="branch-0 cbranch-no" title="branch not covered" >      if (Process.send) {</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >        Process.send(message, (error) =&gt; {</span>
 &nbsp;
-      })
+<span class="branch-0 cbranch-no" title="branch not covered" >          if (Is.null(error)) {</span>
+<span class="cstat-no" title="statement not covered" >            resolve()</span>
+          /* c8 ignore next 3 */
+          } else {
+            reject(error)
+          }
+&nbsp;
+        })
+<span class="cstat-no" title="statement not covered" ></span>
+      /* c8 ignore next 3 */
+      } else {
+        reject(new WorkerServerNoIPCChannelError())
+      }
 &nbsp;
     })
 &nbsp;
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  disconnect() {</span>
-<span class="cstat-no" title="statement not covered" >    this._process.disconnect()</span>
+  _onMessage(message) {
+    let methodName = `_on${PascalCase(message.type)}`
+    return this[methodName](message)
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  async _onPing(message) {</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    let cpuUsage = null</span>
+<span class="cstat-no" title="statement not covered" >    cpuUsage = Process.cpuUsage()</span>
+<span class="cstat-no" title="statement not covered" >    cpuUsage = (cpuUsage.user + cpuUsage.system) / 2.0</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    message.returnValue = { 'index': Process.env.WORKER_POOL_INDEX ? parseInt(Process.env.WORKER_POOL_INDEX) : 0, 'pid': Process.pid, 'cpuUsage': cpuUsage }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    await this.send(message)</span>
+<span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="fstat-no" title="function not covered" >  signal(signal) {</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    if (this._process.kill(signal)) {</span>
-<span class="cstat-no" title="statement not covered" >      // do nothing</span>
-      /* c8 ignore next 3 */
-    } else {
-      throw new ChildProcessSignalError(signal, this._process.pid)
-    }
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+  // async onImport(message) {
+&nbsp;
+  //   try {
+&nbsp;
+  //     if (Is.null(this._module)) {
+&nbsp;
+  //       let url = message.url
+  //       let option = message.option
+&nbsp;
+  //       let module = null
+  //       module = await import(url)
+  //       module = module.default ? module.default : module
+&nbsp;
+  //       let onImport = module['onImport']
+&nbsp;
+  //       if (onImport) {
+&nbsp;
+  //         let returnValue = null
+  //         returnValue = onImport.apply(module, [ option ])
+  //         returnValue = returnValue instanceof Promise ? await returnValue : returnValue
   
-<span class="fstat-no" title="function not covered" >  kill(signal = 'SIGINT') {</span>
-<span class="cstat-no" title="statement not covered" >    this.signal(signal)</span>
+  //         message.returnValue = returnValue
+      
+  //       }
+&nbsp;
+  //       delete message.error
+  
+  //       this._module = module
+  //       this._modulePath = url
+  
+  //     } else {
+  //       throw new WorkerServerModuleImportedError(this._modulePath)
+  //     }
+&nbsp;
+  //   } catch (error) {
+&nbsp;
+  //     message.error = error
+  //     delete message.returnValue
+&nbsp;
+  //   }
+&nbsp;
+  //   await this.send(message)
+&nbsp;
+  // }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  async _onApply(message) {</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >      let returnValue = null</span>
+<span class="cstat-no" title="statement not covered" >      returnValue = this._module[message.methodName].apply(this._module, message.parameter)</span>
+<span class="cstat-no" title="statement not covered" >      returnValue = returnValue instanceof Promise ? await returnValue : returnValue</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >      delete message.error</span>
+<span class="cstat-no" title="statement not covered" >      message.returnValue = returnValue</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    } catch (error) {</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >      message.error = error</span>
+<span class="cstat-no" title="statement not covered" >      delete message.returnValue</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    await this.send(message)</span>
+<span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  }</span>
+&nbsp;
+  // async onApply(message) {
+&nbsp;
+  //   try {
+&nbsp;
+  //     if (Is.not.null(this._module)) {
+&nbsp;
+  //       let method = this._module[message.methodName]
+&nbsp;
+  //       if (method) {
+&nbsp;
+  //         let returnValue = null
+  //         returnValue = method.apply(this._module, message.parameter)
+  //         returnValue = returnValue instanceof Promise ? await returnValue : returnValue
+  
+  //         delete message.error
+  //         message.returnValue = returnValue
+      
+  //       } else {
+  //         throw new WorkerServerModuleExportError(this._modulePath, message.methodName)
+  //       }
+&nbsp;
+  //     } else {
+  //       throw new WorkerServerNoModuleImportedError()
+  //     }
+&nbsp;
+  //   } catch (error) {
+&nbsp;
+  //     message.error = error
+  //     delete message.returnValue
+&nbsp;
+  //   }
+&nbsp;
+  //   await this.send(message)
+&nbsp;
+  // }
+&nbsp;
+  // async onRelease(message) {
+&nbsp;
+  //   try {
+&nbsp;
+  //     if (Is.not.null(this._module)) {
+&nbsp;
+  //       let option = message.option
+  //       let onRelease = this._module['onRelease']
+&nbsp;
+  //       if (onRelease) {
+&nbsp;
+  //         let returnValue = null
+  //         returnValue = onRelease.apply(this._module, [ option ])
+  //         returnValue = returnValue instanceof Promise ? await returnValue : returnValue
+  
+  //         message.returnValue = returnValue
+      
+  //       }
+  
+  //       delete message.error
+&nbsp;
+  //       this._module = null
+  //       this._modulePath = null
+  
+  //     } else {
+  //       throw new WorkerServerNoModuleImportedError()
+  //     }
+&nbsp;
+  //   } catch (error) {
+  //     message.error = error
+  //   }
+&nbsp;
+  //   await this.send(message)
+&nbsp;
+  // }
+&nbsp;
+  async _onEnd(message) {
+&nbsp;
+    try {
+&nbsp;
+      if (Is.not.null(this._module)) {
+&nbsp;
+        let option = message.option
+        let onEnd = this._module['onEnd']
+&nbsp;
+        if (onEnd) <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >          let returnValue = null</span>
+<span class="cstat-no" title="statement not covered" >          returnValue = onEnd.apply(this._module, [ option ])</span>
+<span class="cstat-no" title="statement not covered" >          returnValue = returnValue instanceof Promise ? await returnValue : returnValue</span>
+<span class="cstat-no" title="statement not covered" >  </span>
+<span class="cstat-no" title="statement not covered" >          message.returnValue = returnValue</span>
+<span class="cstat-no" title="statement not covered" >      </span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+        delete message.error
+&nbsp;
+      }
+&nbsp;
+      Process.exit(message.code || 0)
+&nbsp;
+    } <span class="branch-0 cbranch-no" title="branch not covered" >catch (error) {</span>
+<span class="cstat-no" title="statement not covered" >      console.error(error)</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+&nbsp;
+  // onUncaughtException() {
+  //   setImmediate(() =&gt; { throw new WorkerServerUncaughtExceptionError() })
+  // }
+&nbsp;
+  // onUnhandledRejection() {
+  //   setImmediate(() =&gt; Promise.reject(new WorkerServerUnhandledRejectionError()))
+  // }
 &nbsp;
 }
 &nbsp;
-export { ChildProcess }</pre></td></tr></table></pre>
+export default WorkerServer</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->

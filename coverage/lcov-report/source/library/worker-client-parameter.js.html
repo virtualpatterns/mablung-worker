@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">17.74% </span>
+                <span class="strong">51.61% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>11/62</span>
+                <span class='fraction'>32/62</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">40% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>2/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
-                <span class="quiet">Branches</span>
+                <span class="quiet">Functions</span>
                 <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
-                <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">17.74% </span>
+                <span class="strong">51.61% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>11/62</span>
+                <span class='fraction'>32/62</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -125,6 +125,19 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -139,6 +152,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -153,29 +167,15 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -185,20 +185,20 @@ const Require = __require
 &nbsp;
 class WorkerClientParameter {
 &nbsp;
-  static <span class="fstat-no" title="function not covered" >getConstructorParameter(...parameter) {</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    // the defaults</span>
-<span class="cstat-no" title="statement not covered" >    let _path = Require.resolve('./create-worker-server.js')</span>
-<span class="cstat-no" title="statement not covered" >    let _parameter = {}</span>
-<span class="cstat-no" title="statement not covered" >    let _option = {}</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    switch (parameter.length) {</span>
-<span class="cstat-no" title="statement not covered" >      case 0:</span>
-<span class="cstat-no" title="statement not covered" >        // _path = default</span>
-<span class="cstat-no" title="statement not covered" >        // _parameter = default</span>
-<span class="cstat-no" title="statement not covered" >        // _option = default</span>
-<span class="cstat-no" title="statement not covered" >        break</span>
-<span class="cstat-no" title="statement not covered" >      case 1:</span>
+  static getConstructorParameter(...parameter) {
+&nbsp;
+    // the defaults
+    let _path = Require.resolve('./create-worker-server.js')
+    let _parameter = {}
+    let _option = {}
+&nbsp;
+    switch (parameter.length) {
+      case 0:
+        // _path = default
+        // _parameter = default
+        // _option = default
+        break
+<span class="branch-0 cbranch-no" title="branch not covered" >      case 1:</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >        switch (true) {</span>
 <span class="cstat-no" title="statement not covered" >          case Is.string(parameter[0]):</span>
@@ -213,7 +213,7 @@ class WorkerClientParameter {
 <span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >        break</span>
-<span class="cstat-no" title="statement not covered" >      case 2:</span>
+<span class="branch-0 cbranch-no" title="branch not covered" >      case 2:</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >        switch (true) {</span>
 <span class="cstat-no" title="statement not covered" >          case Is.string(parameter[0]):</span>
@@ -228,15 +228,15 @@ class WorkerClientParameter {
 <span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >        break</span>
-<span class="cstat-no" title="statement not covered" >      default:</span>
+<span class="branch-0 cbranch-no" title="branch not covered" >      default:</span>
 <span class="cstat-no" title="statement not covered" >        _path = parameter[0]</span>
 <span class="cstat-no" title="statement not covered" >        _parameter = parameter[1]</span>
-<span class="cstat-no" title="statement not covered" >        _option = parameter[2]</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    return [ _path, _parameter, _option ]</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+        _option = parameter[2]
+    }
+&nbsp;
+    return [ _path, _parameter, _option ]
+&nbsp;
+  }
   
 }
 &nbsp;
@@ -247,7 +247,7 @@ export { WorkerClientParameter }</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue May 19 2020 23:47:20 GMT-0400 (Eastern Daylight Time)
+                at Tue May 19 2020 23:52:05 GMT-0400 (Eastern Daylight Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

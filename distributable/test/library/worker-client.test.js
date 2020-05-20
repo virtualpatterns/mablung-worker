@@ -9,15 +9,12 @@ import { WorkerClientRejectedError } from '../../library/error/worker-client-rej
 const Process = process;
 const Require = _createRequire(import.meta.url);
 
-Test.skip('new WorkerClient()', async test => {
+Test.only('new WorkerClient()', async test => {
 
-  let worker = new LoggedClient();
+  let worker = null;
 
-  try {
-    await test.notThrowsAsync(worker.ping());
-  } finally {
-    await worker.end();
-  }
+  test.notThrows(() => {worker = new WorkerClient();});
+  await test.notThrowsAsync(worker.end());
 
 });
 
