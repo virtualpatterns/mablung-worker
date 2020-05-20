@@ -112,6 +112,8 @@ Test.only('WorkerClient.end() throws WorkerClientDurationExceededError', async t
   await test.throwsAsync(worker.end(), { 'instanceOf': WorkerClientDurationExceededError });
   worker.maximumDuration = maximumDuration;
 
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
 });
 
 Test.skip('WorkerClient.import(url)', async test => {
