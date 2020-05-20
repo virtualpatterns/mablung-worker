@@ -136,6 +136,16 @@ Test('WorkerPool.module.rejectUnhandledException()', async test => {
 
 });
 
+Test.only('WorkerPool.disconnect()', async test => {
+
+  let pool = new WorkerPool();
+
+  await test.notThrowsAsync(pool.disconnect()); // the pool should recreate exited processes
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  await test.throwsAsync(pool.ping(), { 'instanceOf': WorkerPoolDisconnectedError });
+
+});
+
 Test.skip('WorkerPool.uncaughtException()', async test => {
 
   let pool = new WorkerPool();
@@ -307,16 +317,6 @@ Test.skip('WorkerPool.whenRejected() throws WorkerClientDurationExceededError', 
   pool.maximumDuration = 1;
   await test.throwsAsync(pool.end(), { 'instanceOf': WorkerClientDurationExceededError });
   pool.maximumDuration = maximumDuration;
-
-});
-
-Test.skip('WorkerPool.disconnect()', async test => {
-
-  let pool = new WorkerPool({ 'numberOfProcess': 2 });
-
-  await test.notThrowsAsync(pool.ping()); // establishes is ready
-  await pool.disconnect();
-  await test.throwsAsync(pool.ping(), { 'instanceOf': WorkerPoolDisconnectedError });
 
 });
 
