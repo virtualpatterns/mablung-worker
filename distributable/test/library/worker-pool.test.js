@@ -149,7 +149,7 @@ Test('WorkerPool.disconnect()', async test => {
 
 Test.only('WorkerPool.kill()', async test => {
 
-  let pool = new WorkerPool({ 'numberOfProcess': 1 });
+  let pool = new LoggedPool({ 'numberOfProcess': 1 });
   await new Promise(resolve => setTimeout(resolve, 2000));
 
   try {
