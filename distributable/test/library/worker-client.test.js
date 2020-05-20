@@ -52,6 +52,27 @@ Test('WorkerClient._onTerminate(signal)', async test => {
 
 });
 
+Test('WorkerClient.maximumDuration', async test => {
+
+  let maximumDuration = 2000;
+  let worker = new WorkerClient({ 'maximumDuration': maximumDuration });
+
+  try {
+
+    test.is(worker.maximumDuration, maximumDuration);
+    test.is(worker.option.maximumDuration, maximumDuration);
+
+    worker.maximumDuration = maximumDuration = 3000;
+
+    test.is(worker.maximumDuration, maximumDuration);
+    test.is(worker.option.maximumDuration, maximumDuration);
+
+  } finally {
+    await worker.end();
+  }
+
+});
+
 Test.skip('WorkerClient.ping() throws WorkerClientDurationExceededError', async test => {
 
   let worker = new WorkerClient({ 'maximumDuration': 1 });
