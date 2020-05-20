@@ -18,6 +18,18 @@ Test('new WorkerClient()', async test => {
 
 });
 
+Test('WorkerClient.ping()', async test => {
+
+  let worker = new WorkerClient();
+
+  try {
+    await test.notThrowsAsync(worker.ping());
+  } finally {
+    worker.end();
+  }
+
+});
+
 Test.skip('WorkerClient.ping() throws WorkerClientDurationExceededError', async test => {
 
   let worker = new WorkerClient({ 'maximumDuration': 1 });
