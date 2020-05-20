@@ -101,7 +101,7 @@ class WorkerPool extends ChildProcessPool {
 
   // }
 
-  end(code = 0, option = {}) {
+  async end(code = 0, option = {}) {
 
     let processInformation = this._getConnectedProcessInformation();
 
@@ -137,7 +137,7 @@ class WorkerPool extends ChildProcessPool {
 
   // }
 
-  disconnect() {
+  async disconnect() {
 
     let processInformation = this._getConnectedProcessInformation();
 
@@ -149,7 +149,7 @@ class WorkerPool extends ChildProcessPool {
 
   }
 
-  kill(...parameter) {
+  async kill(...parameter) {
 
     let processInformation = this._getConnectedProcessInformation();
 

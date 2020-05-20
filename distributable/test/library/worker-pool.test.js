@@ -142,12 +142,23 @@ Test('WorkerPool.module.rejectUnhandledException()', async test => {
 
 Test('WorkerPool.disconnect()', async test => {
 
-  let pool = new LoggedPool({ 'numberOfProcess': 1 });
+  let pool = new WorkerPool({ 'numberOfProcess': 1 });
   await new Promise(resolve => setTimeout(resolve, 2000));
 
   await test.notThrowsAsync(pool.disconnect()); // disconnect causes a normal code = 0 exit
   await new Promise(resolve => setTimeout(resolve, 1000));
   await test.throwsAsync(pool.ping(), { 'instanceOf': WorkerPoolDisconnectedError });
+
+});
+
+Test.only('WorkerPool.disconnect() throws WorkerPoolDisconnectedError', async test => {
+
+  let pool = new LoggedPool({ 'numberOfProcess': 1 });
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
+  await test.notThrowsAsync(pool.disconnect()); // disconnect causes a normal code = 0 exit
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  await test.throwsAsync(pool.disconnect(), { 'instanceOf': WorkerPoolDisconnectedError });
 
 });
 
