@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">67.16% </span>
+                <span class="strong">59.41% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>182/271</span>
+                <span class='fraction'>161/271</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.89% </span>
+                <span class="strong">86.67% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>16/18</span>
+                <span class='fraction'>13/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40.74% </span>
+                <span class="strong">37.04% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>11/27</span>
+                <span class='fraction'>10/27</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">67.16% </span>
+                <span class="strong">59.41% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>182/271</span>
+                <span class='fraction'>161/271</span>
             </div>
         
             
@@ -557,31 +557,31 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -826,32 +826,32 @@ class ChildProcessPool extends EventEmitter {
 <span class="cstat-no" title="statement not covered" >    return this._processInformation.filter(({ process }) =&gt; process.isConnected)</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-  writeTo(path, option = { 'autoClose': true, 'emitClose': true, 'encoding': 'utf8', 'flags': 'a+' }) {
- 
-    let stream = null
-&nbsp;
-    switch (true) {
+<span class="fstat-no" title="function not covered" >  writeTo(path, option = { 'autoClose': true, 'emitClose': true, 'encoding': 'utf8', 'flags': 'a+' }) {</span>
+<span class="cstat-no" title="statement not covered" > </span>
+<span class="cstat-no" title="statement not covered" >    let stream = null</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    switch (true) {</span>
       /* c8 ignore next 3 */
       case path instanceof Stream.Writable:
         stream = path
         break
-      default:
-        stream = FileSystem.createWriteStream(path, option)
-    }
-&nbsp;
-    this._processInformation.forEach(({ process }) =&gt; process.writeTo(stream, option))
-&nbsp;
-    this._console = new Console({
-      'colorMode': false,
-      'ignoreErrors': false,
-      'stderr': stream,
-      'stdout': stream
-    })
-&nbsp;
-    this._stream = stream
-    this._streamOption = option
-        
-  }
+<span class="cstat-no" title="statement not covered" >      default:</span>
+<span class="cstat-no" title="statement not covered" >        stream = FileSystem.createWriteStream(path, option)</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    this._processInformation.forEach(({ process }) =&gt; process.writeTo(stream, option))</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    this._console = new Console({</span>
+<span class="cstat-no" title="statement not covered" >      'colorMode': false,</span>
+<span class="cstat-no" title="statement not covered" >      'ignoreErrors': false,</span>
+<span class="cstat-no" title="statement not covered" >      'stderr': stream,</span>
+<span class="cstat-no" title="statement not covered" >      'stdout': stream</span>
+<span class="cstat-no" title="statement not covered" >    })</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    this._stream = stream</span>
+<span class="cstat-no" title="statement not covered" >    this._streamOption = option</span>
+<span class="cstat-no" title="statement not covered" >        </span>
+<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
 <span class="fstat-no" title="function not covered" >  disconnect() {</span>
 <span class="cstat-no" title="statement not covered" >    this._getConnectedProcessInformation().forEach(({ process }) =&gt; process.disconnect())</span>
@@ -874,7 +874,7 @@ export { ChildProcessPool }</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue May 19 2020 23:39:28 GMT-0400 (Eastern Daylight Time)
+                at Tue May 19 2020 23:40:37 GMT-0400 (Eastern Daylight Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

@@ -6,7 +6,7 @@ import { WorkerPool } from '../../index.js';
 
 const Process = process;
 
-class ExitPool extends LoggedPool {
+class ExitPool extends WorkerPool {
 
   constructor(...parameter) {
     super(...parameter);
