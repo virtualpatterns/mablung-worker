@@ -136,14 +136,30 @@ Test('WorkerPool.module.rejectUnhandledException()', async test => {
 
 });
 
-Test.only('WorkerPool.disconnect()', async test => {
+Test('WorkerPool.disconnect()', async test => {
 
   let pool = new LoggedPool({ 'numberOfProcess': 1 });
-
   await new Promise(resolve => setTimeout(resolve, 2000));
+
   await test.notThrowsAsync(pool.disconnect()); // disconnect causes a normal code = 0 exit
   await new Promise(resolve => setTimeout(resolve, 2000));
   await test.throwsAsync(pool.ping(), { 'instanceOf': WorkerPoolDisconnectedError });
+
+});
+
+Test.only('WorkerPool.kill()', async test => {
+
+  let pool = new WorkerPool({ 'numberOfProcess': 1 });
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
+  try {
+
+    await test.notThrowsAsync(pool.kill()); // the pool should recreate killed processes
+    await test.notThrowsAsync(pool.ping());
+
+  } finally {
+    await pool.end();
+  }
 
 });
 
@@ -330,22 +346,6 @@ Test.skip('WorkerPool.end()', async test => {
 
   await pool.end({ 'pid': 10000 }); // also establishes is ready
   await test.throwsAsync(pool.ping()); // , { 'instanceOf': WorkerPoolDisconnectedError })
-
-});
-
-Test.skip('WorkerPool.kill()', async test => {
-
-  let pool = new WorkerPool({ 'numberOfProcess': 2 });
-
-  try {
-
-    await test.notThrowsAsync(pool.ping()); // establishes is ready
-    await pool.kill();
-    await test.notThrowsAsync(pool.ping()); // the pool should recreate killed processes
-
-  } finally {
-    await pool.end();
-  }
 
 });
 
