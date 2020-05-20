@@ -179,6 +179,17 @@ Test('WorkerPool.kill()', async test => {
 
 });
 
+Test.only('WorkerPool.kill() throws WorkerPoolDisconnectedError', async test => {
+
+  let pool = new WorkerPool({ 'numberOfProcess': 1 });
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
+  await test.notThrowsAsync(pool.disconnect()); // disconnect causes a normal code = 0 exit, the pool will not recreate exited processes
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  await test.throwsAsync(pool.kill(), { 'instanceOf': WorkerPoolDisconnectedError });
+
+});
+
 Test.skip('WorkerPool.uncaughtException()', async test => {
 
   let pool = new WorkerPool();
