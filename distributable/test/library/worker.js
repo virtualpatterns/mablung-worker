@@ -3,12 +3,6 @@ import { WorkerUnhandledRejectionError } from './error/worker-unhandled-rejectio
 
 const Process = process;
 
-export function onImport(option = {}) {
-  console.log('Worker.onImport(option) { ... }');
-  console.dir(option);
-  return Process.pid;
-}
-
 export function getPid(duration = 0) {
 
   if (duration) {
@@ -35,15 +29,8 @@ export function rejectUnhandledException() {
   setImmediate(() => Promise.reject(new WorkerUnhandledRejectionError()));
 }
 
-export function onRelease(option = {}) {
-  console.log('Worker.onRelease(option) { ... }');
+export function onEnd(code = 0, option = {}) {
+  console.log(`Worker.onEnd(${code}, option) { ... }`);
   console.dir(option);
-  return Process.pid;
-}
-
-export function onEnd(option = {}) {
-  console.log('Worker.onEnd(option) { ... }');
-  console.dir(option);
-  return Process.pid;
 }
 //# sourceMappingURL=worker.js.map

@@ -18,14 +18,26 @@ Test('new WorkerClient()', async test => {
 
 });
 
-Test('WorkerClient.ping()', async test => {
+Test('WorkerClient._onPing(message)', async test => {
 
   let worker = new WorkerClient();
 
   try {
     await test.notThrowsAsync(worker.ping());
   } finally {
-    worker.end();
+    await worker.end();
+  }
+
+});
+
+Test('WorkerClient._onApply(message)', async test => {
+
+  let worker = new WorkerClient(Require.resolve('./worker.js'));
+
+  try {
+    test.is(await worker.module.getPid(), worker.pid);
+  } finally {
+    await worker.end();
   }
 
 });
