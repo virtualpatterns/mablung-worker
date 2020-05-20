@@ -9,7 +9,7 @@ import { WorkerClientRejectedError } from '../../library/error/worker-client-rej
 const Process = process;
 const Require = _createRequire(import.meta.url);
 
-Test('new WorkerClient()', async test => {
+Test.skip('new WorkerClient()', async test => {
 
   let worker = new LoggedClient();
 
@@ -21,7 +21,7 @@ Test('new WorkerClient()', async test => {
 
 });
 
-Test('WorkerClient.ping() throws WorkerClientDurationExceededError', async test => {
+Test.skip('WorkerClient.ping() throws WorkerClientDurationExceededError', async test => {
 
   let worker = new WorkerClient({ 'maximumDuration': 1 });
 
@@ -34,7 +34,7 @@ Test('WorkerClient.ping() throws WorkerClientDurationExceededError', async test 
 
 });
 
-Test('WorkerClient.import(url)', async test => {
+Test.skip('WorkerClient.import(url)', async test => {
 
   let worker = new WorkerClient();
 
@@ -52,7 +52,7 @@ Test('WorkerClient.import(url)', async test => {
 
 });
 
-Test('WorkerClient.import(url) throws Error', async test => {
+Test.skip('WorkerClient.import(url) throws Error', async test => {
 
   let worker = new WorkerClient();
 
@@ -68,7 +68,7 @@ Test('WorkerClient.import(url) throws Error', async test => {
 
 });
 
-Test('WorkerClient.release()', async test => {
+Test.skip('WorkerClient.release()', async test => {
 
   let worker = new WorkerClient();
 
@@ -87,7 +87,7 @@ Test('WorkerClient.release()', async test => {
 
 });
 
-Test('WorkerClient.release() throws Error', async test => {
+Test.skip('WorkerClient.release() throws Error', async test => {
 
   let worker = new WorkerClient();
 
@@ -104,7 +104,7 @@ Test('WorkerClient.release() throws Error', async test => {
 
 });
 
-Test('WorkerClient.getPid(duration) throws WorkerClientRejectedError', async test => {
+Test.skip('WorkerClient.getPid(duration) throws WorkerClientRejectedError', async test => {
 
   let worker = new WorkerClient();
 
@@ -113,7 +113,7 @@ Test('WorkerClient.getPid(duration) throws WorkerClientRejectedError', async tes
 
 });
 
-Test('WorkerClient.whenMessageType(type) throws WorkerClientDurationExceededError', async test => {
+Test.skip('WorkerClient.whenMessageType(type) throws WorkerClientDurationExceededError', async test => {
 
   let worker = new WorkerClient();
 
@@ -134,7 +134,7 @@ Test('WorkerClient.whenMessageType(type) throws WorkerClientDurationExceededErro
 
 });
 
-Test('WorkerClient.whenRejected() throws WorkerClientDurationExceededError', async test => {
+Test.skip('WorkerClient.whenRejected() throws WorkerClientDurationExceededError', async test => {
 
   let worker = new WorkerClient();
 
@@ -149,7 +149,7 @@ Test('WorkerClient.whenRejected() throws WorkerClientDurationExceededError', asy
 
 });
 
-Test('WorkerClient.disconnect()', async test => {
+Test.skip('WorkerClient.disconnect()', async test => {
 
   let worker = new WorkerClient();
 
@@ -159,7 +159,7 @@ Test('WorkerClient.disconnect()', async test => {
 
 });
 
-Test('WorkerClient.end()', async test => {
+Test.skip('WorkerClient.end()', async test => {
 
   let worker = new WorkerClient(); // LoggedClient() // 
 
@@ -171,7 +171,7 @@ Test('WorkerClient.end()', async test => {
 
 });
 
-Test('WorkerClient.kill()', async test => {
+Test.skip('WorkerClient.kill()', async test => {
 
   let worker = new WorkerClient();
 
@@ -181,7 +181,7 @@ Test('WorkerClient.kill()', async test => {
 
 });
 
-Test('WorkerClient.uncaughtException()', async test => {
+Test.skip('WorkerClient.uncaughtException()', async test => {
 
   let worker = new WorkerClient();
 
@@ -190,7 +190,7 @@ Test('WorkerClient.uncaughtException()', async test => {
 
 });
 
-Test('WorkerClient.unhandledRejection()', async test => {
+Test.skip('WorkerClient.unhandledRejection()', async test => {
 
   // this test requires that unhandled promises exit the node process
   // this is enabled by the --unhandled-rejections=strict argument
