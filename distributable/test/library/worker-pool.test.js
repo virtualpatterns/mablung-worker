@@ -179,7 +179,7 @@ Test('WorkerPool.kill()', async test => {
 
 });
 
-Test.only('WorkerPool.kill() throws WorkerPoolDisconnectedError', async test => {
+Test('WorkerPool.kill() throws WorkerPoolDisconnectedError', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 1 });
   await new Promise(resolve => setTimeout(resolve, 2000));
