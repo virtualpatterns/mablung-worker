@@ -106,6 +106,7 @@ class ChildProcessPool extends EventEmitter {
 
       try {
         this._onError(processInformation, error);
+        // do not recreate on error
         /* c8 ignore next 3 */
       } catch (error) {
         this._console.error(error);
