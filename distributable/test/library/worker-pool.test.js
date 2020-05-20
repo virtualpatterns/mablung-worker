@@ -138,7 +138,7 @@ Test('WorkerPool.module.rejectUnhandledException()', async test => {
 
 Test.only('WorkerPool.disconnect()', async test => {
 
-  let pool = new WorkerPool();
+  let pool = new LoggedPool({ 'numberOfProcess': 1 });
 
   await test.notThrowsAsync(pool.disconnect()); // the pool should recreate exited processes
   await new Promise(resolve => setTimeout(resolve, 1000));
