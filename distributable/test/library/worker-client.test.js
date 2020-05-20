@@ -81,15 +81,21 @@ Test.only('WorkerClient.module.getPid(duration) throws WorkerClientRejectedError
 
 });
 
-Test.skip('WorkerClient.ping() throws WorkerClientDurationExceededError', async test => {
+Test.only('WorkerClient.ping() throws WorkerClientDurationExceededError', async test => {
 
   let worker = new WorkerClient();
 
   try {
+
+    let maximumDuration = null;
+    maximumDuration = worker.maximumDuration;
+
+    worker.maximumDuration = 1000;
     await test.throwsAsync(worker.ping(), { 'instanceOf': WorkerClientDurationExceededError });
+    worker.maximumDuration = maximumDuration;
+
   } finally {
-    // we can't use worker.kill() because it'll timeout
-    Process.kill(worker.pid);
+    await worker.end();
   }
 
 });
