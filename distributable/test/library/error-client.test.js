@@ -9,7 +9,7 @@ Test('new ErrorClient()', async test => {
   let worker = new ErrorClient();
   let error = await worker.whenRejected(WorkerClientInternalError);
 
-  test.is(error.internalError.code, 'ENOENT');
+  test.is(error.internalError.code, 'EACCES');
 
 });
 //# sourceMappingURL=error-client.test.js.map
