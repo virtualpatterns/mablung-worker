@@ -42,6 +42,16 @@ Test('WorkerClient._onApply(message)', async test => {
 
 });
 
+Test('WorkerClient._onTerminate(signal)', async test => {
+
+  let worker = new WorkerClient();
+
+  await test.notThrowsAsync(worker.ping()); // establishes is ready
+  await worker.kill();
+  await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' });
+
+});
+
 Test.skip('WorkerClient.ping() throws WorkerClientDurationExceededError', async test => {
 
   let worker = new WorkerClient({ 'maximumDuration': 1 });
@@ -188,16 +198,6 @@ Test.skip('WorkerClient.end()', async test => {
   await worker.import(Require.resolve('./worker.js'));
 
   await worker.end({ 'pid': worker.pid }); // also establishes is ready
-  await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' });
-
-});
-
-Test.skip('WorkerClient.kill()', async test => {
-
-  let worker = new WorkerClient();
-
-  await test.notThrowsAsync(worker.ping()); // establishes is ready
-  await worker.kill();
   await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' });
 
 });
