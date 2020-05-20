@@ -164,6 +164,8 @@ Test('WorkerPool.disconnect() throws WorkerPoolDisconnectedError', async test =>
 
 Test('WorkerPool.kill()', async test => {
 
+  // use LoggedPool so that the if condition of _recreateProcess regarding the stream is called
+
   let pool = new LoggedPool({ 'numberOfProcess': 1 });
   await new Promise(resolve => setTimeout(resolve, 2000));
 

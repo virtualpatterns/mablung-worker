@@ -2,6 +2,7 @@ import { Configuration } from '@virtualpatterns/mablung-configuration';
 import { Console } from 'console';
 import EventEmitter from 'events';
 import FileSystem from 'fs-extra';
+import Is from '@pwn/is';
 import OS from 'os';
 import Stream from 'stream';
 
@@ -75,7 +76,7 @@ class ChildProcessPool extends EventEmitter {
 
       this._attach(processInformation);
 
-      if (stream) {
+      if (Is.not.null(stream)) {
         processInformation.process.writeTo(stream, streamOption);
       }
 
