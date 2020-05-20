@@ -3,7 +3,7 @@ import _URL from "url";import { Configuration } from '@virtualpatterns/mablung-c
 import { LoggedClient } from './logged-client.js';
 import { WorkerClient } from '../../index.js';
 
-class ErrorClient extends LoggedClient {
+class ErrorClient extends WorkerClient {
 
   constructor(...parameter) {
     super(...parameter);
