@@ -73,9 +73,17 @@ Test('WorkerClient.maximumDuration', async test => {
 
 });
 
+Test.only('WorkerClient.module.getPid(duration) throws WorkerClientRejectedError', async test => {
+
+  let worker = new WorkerClient(Require.resolve('./worker.js'));
+
+  await test.throwsAsync(Promise.all([worker.module.getPid(2500), worker.end()]), { 'instanceOf': WorkerClientRejectedError });
+
+});
+
 Test.skip('WorkerClient.ping() throws WorkerClientDurationExceededError', async test => {
 
-  let worker = new WorkerClient({ 'maximumDuration': 1 });
+  let worker = new WorkerClient();
 
   try {
     await test.throwsAsync(worker.ping(), { 'instanceOf': WorkerClientDurationExceededError });
