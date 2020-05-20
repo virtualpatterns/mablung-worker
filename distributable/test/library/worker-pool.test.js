@@ -104,6 +104,7 @@ Test('WorkerPool.end(option) throws WorkerPoolDisconnectedError', async test => 
   let pool = new WorkerPool({ 'numberOfProcess': 1 });
 
   await pool.end();
+  await new Promise(resolve => setTimeout(resolve, 1000));
   await test.throws(() => {pool.end();}, { 'instanceOf': WorkerPoolDisconnectedError });
 
 });
@@ -124,6 +125,9 @@ Test('WorkerPool.module.throwUncaughtException()', async test => {
 
 Test('WorkerPool.module.rejectUnhandledException()', async test => {
 
+  // this test requires that the node process exit when a Promise rejection is unhandled
+  // as established by the --unhandled-rejections=strict parameter to node
+
   let pool = new WorkerPool(Require.resolve('./worker.js'), { 'numberOfProcess': 1 });
 
   try {
@@ -142,19 +146,20 @@ Test('WorkerPool.disconnect()', async test => {
   await new Promise(resolve => setTimeout(resolve, 2000));
 
   await test.notThrowsAsync(pool.disconnect()); // disconnect causes a normal code = 0 exit
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise(resolve => setTimeout(resolve, 1000));
   await test.throwsAsync(pool.ping(), { 'instanceOf': WorkerPoolDisconnectedError });
 
 });
 
-Test.only('WorkerPool.kill()', async test => {
+Test('WorkerPool.kill()', async test => {
 
-  let pool = new LoggedPool({ 'numberOfProcess': 1 });
+  let pool = new WorkerPool({ 'numberOfProcess': 1 });
   await new Promise(resolve => setTimeout(resolve, 2000));
 
   try {
 
     await test.notThrowsAsync(pool.kill()); // the pool should recreate killed processes
+    await new Promise(resolve => setTimeout(resolve, 1000));
     await test.notThrowsAsync(pool.ping());
 
   } finally {
