@@ -140,9 +140,9 @@ Test.only('WorkerPool.disconnect()', async test => {
 
   let pool = new LoggedPool({ 'numberOfProcess': 1 });
 
-  await new Promise(resolve => setTimeout(resolve, 4000));
-  await test.notThrowsAsync(pool.disconnect()); // the pool should recreate exited processes
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  await test.notThrowsAsync(pool.disconnect()); // disconnect causes a normal code = 0 exit
+  await new Promise(resolve => setTimeout(resolve, 2000));
   await test.throwsAsync(pool.ping(), { 'instanceOf': WorkerPoolDisconnectedError });
 
 });
