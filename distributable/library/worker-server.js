@@ -342,6 +342,7 @@ class WorkerServer {
 
       Process.exit(message.code || 0);
 
+      /* c8 ignore next 3 */
     } catch (error) {
       console.error(error);
     }

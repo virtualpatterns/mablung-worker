@@ -101,7 +101,7 @@ Test('WorkerClient.maximumDuration', async test => {
     test.is(worker.maximumDuration, maximumDuration);
     test.is(worker.option.maximumDuration, maximumDuration);
 
-    worker.maximumDuration = maximumDuration = 3000;
+    worker.maximumDuration = maximumDuration = 15000;
 
     test.is(worker.maximumDuration, maximumDuration);
     test.is(worker.option.maximumDuration, maximumDuration);
