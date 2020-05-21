@@ -127,6 +127,16 @@ Test('WorkerClient.module.throwException(duration) throws WorkerExceptionError',
 
 });
 
+Test.only('WorkerClient.disconnect()', async test => {
+
+  let worker = new WorkerClient();
+
+  await worker.ping(); // establish ready
+
+  await test.notThrowsAsync(worker.disconnect());
+
+});
+
 Test.skip('WorkerClient.import(url)', async test => {
 
   let worker = new WorkerClient();
@@ -242,7 +252,7 @@ Test.skip('WorkerClient.whenRejected() throws WorkerClientDurationExceededError'
 
 });
 
-Test.skip('WorkerClient.disconnect()', async test => {
+Test.skip('WorkerClient.disconnect() ...', async test => {
 
   let worker = new WorkerClient();
 
