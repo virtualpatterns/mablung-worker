@@ -115,7 +115,7 @@ Test('WorkerClient.end() throws WorkerClientDurationExceededError', async test =
 
 });
 
-Test.only('WorkerClient.module.throwException(duration) throws WorkerExceptionError', async test => {
+Test('WorkerClient.module.throwException(duration) throws WorkerExceptionError', async test => {
 
   let worker = new LoggedClient(Require.resolve('./worker.js'));
 
