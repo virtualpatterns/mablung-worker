@@ -117,7 +117,7 @@ Test('WorkerClient.end() throws WorkerClientDurationExceededError', async test =
 
 Test('WorkerClient.module.throwException(duration) throws WorkerExceptionError', async test => {
 
-  let worker = new LoggedClient(Require.resolve('./worker.js'));
+  let worker = new WorkerClient(Require.resolve('./worker.js'));
 
   try {
     await test.throwsAsync(worker.module.throwException(), { 'message': 'WorkerExceptionError' });
@@ -129,7 +129,7 @@ Test('WorkerClient.module.throwException(duration) throws WorkerExceptionError',
 
 Test.only('WorkerClient.disconnect()', async test => {
 
-  let worker = new WorkerClient();
+  let worker = new LoggedClient();
 
   await worker.ping(); // establish ready
 
