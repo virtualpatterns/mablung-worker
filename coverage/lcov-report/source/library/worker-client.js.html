@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75.63% </span>
+                <span class="strong">78.16% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>239/316</span>
+                <span class='fraction'>247/316</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.48% </span>
+                <span class="strong">91.67% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>19/21</span>
+                <span class='fraction'>22/24</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">53.85% </span>
+                <span class="strong">65.38% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>14/26</span>
+                <span class='fraction'>17/26</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75.63% </span>
+                <span class="strong">78.16% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>239/316</span>
+                <span class='fraction'>247/316</span>
             </div>
         
             
@@ -438,14 +438,9 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -453,13 +448,18 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">10x</span>
@@ -752,29 +752,29 @@ class WorkerClient extends ForkedProcess {
   //   this.emit('release', message)
   // }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  _onDisconnect() {</span>
-<span class="cstat-no" title="statement not covered" >    this._onReject(new WorkerClientDisconnectedError())</span>
-<span class="cstat-no" title="statement not covered" >    super._onDisconnect()</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+  _onDisconnect() {
+    this._onReject(new WorkerClientDisconnectedError())
+    super._onDisconnect()
+  }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  _onError(error) {</span>
 <span class="cstat-no" title="statement not covered" >    this._onReject(new WorkerClientInternalError(error))</span>
 <span class="cstat-no" title="statement not covered" >    super._onError(error)</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="fstat-no" title="function not covered" >  _onExit(code) {</span>
-<span class="cstat-no" title="statement not covered" >    this._onReject(new WorkerClientExitedError(code))</span>
-<span class="cstat-no" title="statement not covered" >    super._onExit(code)</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+  _onExit(code) {
+    this._onReject(new WorkerClientExitedError(code))
+    super._onExit(code)
+  }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  _onTerminate(signal) {</span>
 <span class="cstat-no" title="statement not covered" >    this._onReject(new WorkerClientTerminatedError(signal))</span>
 <span class="cstat-no" title="statement not covered" >    super._onTerminate(signal)</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="fstat-no" title="function not covered" >  _onReject(error) {</span>
-<span class="cstat-no" title="statement not covered" >    this.emit('reject', error)</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+  _onReject(error) {
+    this.emit('reject', error)
+  }
 &nbsp;
   get maximumDuration() {
     return this.option.maximumDuration
@@ -1009,7 +1009,7 @@ export { WorkerClient }</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed May 20 2020 19:58:49 GMT-0400 (Eastern Daylight Time)
+                at Wed May 20 2020 21:36:47 GMT-0400 (Eastern Daylight Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
