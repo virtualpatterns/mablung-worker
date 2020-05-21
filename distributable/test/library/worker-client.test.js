@@ -136,15 +136,24 @@ Test('WorkerClient.disconnect()', async test => {
 
 });
 
-Test('...', async test => {
+Test('WorkerClient.module.then', async test => {
 
-  let worker = new LoggedClient();
+  let worker = new WorkerClient();
 
   try {
     test.falsy(worker.module.then);
   } finally {
     await worker.end();
   }
+
+});
+
+Test.only('new WorkerClient(string, option)', async test => {
+
+  let worker = null;
+
+  test.notThrows(() => {worker = new LoggedClient(Require.resolve('./worker.js'), { 'maximumDuration': 5000 });});
+  await test.notThrowsAsync(worker.end());
 
 });
 
