@@ -36,11 +36,11 @@ Test('new WorkerClient(option, option)', async test => {
 
 });
 
-Test.only('new WorkerClient(string, option, option)', async test => {
+Test('new WorkerClient(string, option, option)', async test => {
 
   let worker = null;
 
-  test.notThrows(() => {worker = new LoggedClient(Require.resolve('../../library/create-worker-server.js'), { '--import-path': Require.resolve('./worker.js') }, { 'maximumDuration': 5000 });});
+  test.notThrows(() => {worker = new WorkerClient(Require.resolve('../../library/create-worker-server.js'), { '--import-path': Require.resolve('./worker.js') }, { 'maximumDuration': 5000 });});
   await test.notThrowsAsync(worker.end());
 
 });
