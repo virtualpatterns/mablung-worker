@@ -7,19 +7,19 @@ class NextWorkerPool extends WorkerPool {
   constructor(...parameter) {
     super(...parameter);
 
-    this._nextProcess = 0;
+    this._nextIndex = 0;
 
   }
 
-  selectProcess() {
+  _selectProcessInformation() {
 
-    let process = null;
+    let processInformation = null;
 
-    while (Is.null(process) || !process.process.isConnected) {
-      process = this._getProcessInformation(this._nextProcess++ % this.numberOfProcess);
+    while (Is.null(processInformation) || !processInformation.process.isConnected) {
+      processInformation = this._getProcessInformation(this._nextIndex++ % this.numberOfProcess);
     }
 
-    return process;
+    return processInformation;
 
   }}
 
