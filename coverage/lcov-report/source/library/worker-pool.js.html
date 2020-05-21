@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.69% </span>
+                <span class="strong">67.47% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>119/166</span>
+                <span class='fraction'>112/166</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>12/14</span>
+                <span class='fraction'>5/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">45.45% </span>
+                <span class="strong">27.27% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/11</span>
+                <span class='fraction'>3/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.69% </span>
+                <span class="strong">67.47% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>119/166</span>
+                <span class='fraction'>112/166</span>
             </div>
         
             
@@ -248,15 +248,6 @@
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -266,10 +257,19 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -412,10 +412,10 @@ class WorkerPool extends ChildProcessPool {
     return new WorkerClient(path, parameter, Configuration.merge(option, { 'env': Configuration.merge(Process.env, { 'WORKER_POOL_INDEX': index }) }))
   }
 &nbsp;
-  async _selectProcessInformation(/* methodName, parameter */) {
-    let { index } = await this.ping()
-    return this._getProcessInformation(index)
-  }
+<span class="fstat-no" title="function not covered" >  async _selectProcessInformation(/* methodName, parameter */) {</span>
+<span class="cstat-no" title="statement not covered" >    let { index } = await this.ping()</span>
+<span class="cstat-no" title="statement not covered" >    return this._getProcessInformation(index)</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
 <span class="fstat-no" title="function not covered" >  get maximumDuration() {</span>
 <span class="cstat-no" title="statement not covered" >    return this.option.maximumDuration</span>
@@ -430,11 +430,11 @@ class WorkerPool extends ChildProcessPool {
 <span class="cstat-no" title="statement not covered" >    return this._module</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-  async ping() {
-&nbsp;
-    let processInformation = this._getConnectedProcessInformation()
-&nbsp;
-<span class="branch-0 cbranch-no" title="branch not covered" >    if (processInformation.length &gt; 0) {</span>
+<span class="fstat-no" title="function not covered" >  async ping() {</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    let processInformation = this._getConnectedProcessInformation()</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    if (processInformation.length &gt; 0) {</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      let pingResult = null</span>
 <span class="cstat-no" title="statement not covered" >      pingResult = await Promise.all(processInformation.map(({ process: workerClient }) =&gt; workerClient.ping()))</span>
@@ -559,7 +559,7 @@ export { WorkerPool }</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 21 2020 01:22:14 GMT-0400 (Eastern Daylight Time)
+                at Thu May 21 2020 01:25:57 GMT-0400 (Eastern Daylight Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
