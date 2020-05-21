@@ -36,7 +36,7 @@ Test('new WorkerClient(option, option)', async test => {
 
 });
 
-Test.only('new WorkerClient(path, option, option)', async test => {
+Test('new WorkerClient(path, option, option)', async test => {
 
   let worker = null;
 
@@ -45,12 +45,12 @@ Test.only('new WorkerClient(path, option, option)', async test => {
 
 });
 
-Test('WorkerClient.module.getPid()', async test => {
+Test.only('WorkerClient.module.getPid()', async test => {
 
   let worker = new WorkerClient();
 
   try {
-    test.is(await worker.getPid(), worker.pid);
+    test.is(await worker.module.getPid(), worker.pid);
   } finally {
     await worker.end();
   }
