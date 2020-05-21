@@ -135,6 +135,8 @@ Test.only('WorkerClient.disconnect()', async test => {
 
   await test.notThrowsAsync(worker.disconnect());
 
+  await new Promise(resolve => setTimeout(resolve, 4000));
+
 });
 
 Test.skip('WorkerClient.import(url)', async test => {
