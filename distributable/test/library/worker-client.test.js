@@ -102,7 +102,7 @@ Test('WorkerClient.ping() throws WorkerClientDurationExceededError', async test 
 
 Test('WorkerClient.end() throws WorkerClientDurationExceededError', async test => {
 
-  let worker = new LoggedClient();
+  let worker = new WorkerClient();
 
   await worker.ping(); // establish ready
 
@@ -112,6 +112,18 @@ Test('WorkerClient.end() throws WorkerClientDurationExceededError', async test =
   worker.maximumDuration = 1;
   await test.throwsAsync(worker.end(), { 'instanceOf': WorkerClientDurationExceededError });
   worker.maximumDuration = maximumDuration;
+
+});
+
+Test.only('WorkerClient.module.throwException(duration) throws WorkerExceptionError', async test => {
+
+  let worker = new LoggedClient(Require.resolve('./worker.js'));
+
+  try {
+    await test.throwsAsync(worker.module.throwException(), { 'message': 'WorkerExceptionError' });
+  } finally {
+    await worker.end();
+  }
 
 });
 
