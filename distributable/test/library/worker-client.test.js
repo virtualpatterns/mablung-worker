@@ -18,6 +18,24 @@ Test('new WorkerClient()', async test => {
 
 });
 
+Test('new WorkerClient(string, option)', async test => {
+
+  let worker = null;
+
+  test.notThrows(() => {worker = new LoggedClient(Require.resolve('./worker.js'), { 'maximumDuration': 5000 });});
+  await test.notThrowsAsync(worker.end());
+
+});
+
+Test('new WorkerClient(option, option)', async test => {
+
+  let worker = null;
+
+  test.notThrows(() => {worker = new LoggedClient({}, { 'maximumDuration': 5000 });});
+  await test.notThrowsAsync(worker.end());
+
+});
+
 Test('WorkerClient._onPing(message)', async test => {
 
   let worker = new WorkerClient();
@@ -145,15 +163,6 @@ Test('WorkerClient.module.then', async test => {
   } finally {
     await worker.end();
   }
-
-});
-
-Test.only('new WorkerClient(string, option)', async test => {
-
-  let worker = null;
-
-  test.notThrows(() => {worker = new LoggedClient(Require.resolve('./worker.js'), { 'maximumDuration': 5000 });});
-  await test.notThrowsAsync(worker.end());
 
 });
 
