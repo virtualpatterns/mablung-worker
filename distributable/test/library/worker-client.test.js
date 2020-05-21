@@ -127,15 +127,13 @@ Test('WorkerClient.module.throwException(duration) throws WorkerExceptionError',
 
 });
 
-Test.only('WorkerClient.disconnect()', async test => {
+Test('WorkerClient.disconnect()', async test => {
 
   let worker = new LoggedClient();
 
   await worker.ping(); // establish ready
 
   await test.notThrowsAsync(worker.disconnect());
-
-  await new Promise(resolve => setTimeout(resolve, 4000));
 
 });
 
