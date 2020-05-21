@@ -100,7 +100,7 @@ Test('WorkerClient.ping() throws WorkerClientDurationExceededError', async test 
 
 });
 
-Test.only('WorkerClient.end() throws WorkerClientDurationExceededError', async test => {
+Test('WorkerClient.end() throws WorkerClientDurationExceededError', async test => {
 
   let worker = new LoggedClient();
 
@@ -112,8 +112,6 @@ Test.only('WorkerClient.end() throws WorkerClientDurationExceededError', async t
   worker.maximumDuration = 1;
   await test.throwsAsync(worker.end(), { 'instanceOf': WorkerClientDurationExceededError });
   worker.maximumDuration = maximumDuration;
-
-  await new Promise(resolve => setTimeout(resolve, 4000));
 
 });
 
