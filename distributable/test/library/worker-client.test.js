@@ -136,7 +136,7 @@ Test('WorkerClient.disconnect()', async test => {
 
 });
 
-Test.only('...', async test => {
+Test('...', async test => {
 
   let worker = new LoggedClient();
 
