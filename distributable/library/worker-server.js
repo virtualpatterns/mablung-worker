@@ -322,13 +322,14 @@ class WorkerServer {
 
       if (Is.not.null(this._module)) {
 
+        let code = message.code;
         let option = message.option;
         let onEnd = this._module['onEnd'];
 
         if (onEnd) {
 
           let returnValue = null;
-          returnValue = onEnd.apply(this._module, [option]);
+          returnValue = onEnd.apply(this._module, [code, option]);
           returnValue = returnValue instanceof Promise ? await returnValue : returnValue;
 
           message.returnValue = returnValue;
