@@ -1,17 +1,34 @@
+import { createRequire as _createRequire } from "module";import Sinon from 'sinon';
 import Test from 'ava';
 
 import { RandomWorkerPool } from '../../../index.js';
 
-Test('RandomWorkerPool._selectProcess()', async test => {
+const Require = _createRequire(import.meta.url);
 
-  let pool = new RandomWorkerPool();
+Test('RandomWorkerPool._selectProcess(methodName, parameter)', async test => {
+
+  const sandbox = Sinon.createSandbox();
 
   try {
-    await test.notThrows(() => pool._selectProcess());
-  } finally {
-    await pool.end();
-  }
 
+    let pool = new RandomWorkerPool(Require.resolve('../worker.js'));
+
+    try {
+
+      sandbox.spy(pool, '_selectProcess');
+
+      await pool.module.getPid();
+
+      test.true(pool._selectProcess.calledOnce);
+      test.true(pool._selectProcess.calledWith('getPid', []));
+
+    } finally {
+      await pool.end();
+    }
+
+  } finally {
+    sandbox.restore();
+  }
 
 });
 //# sourceMappingURL=random-worker-pool.test.js.map

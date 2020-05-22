@@ -58,9 +58,14 @@ Test('WorkerPool._selectProcess(methodName, parameter)', async test => {
     let pool = new WorkerPool(Require.resolve('./worker.js'));
 
     try {
+
       sandbox.spy(pool, '_selectProcess');
+
       await pool.module.getPid();
+
       test.true(pool._selectProcess.calledOnce);
+      test.true(pool._selectProcess.calledWith('getPid', []));
+
     } finally {
       await pool.end();
     }

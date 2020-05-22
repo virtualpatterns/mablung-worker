@@ -5,18 +5,6 @@ import { NextWorkerPool } from '../../../index.js';
 
 const Require = _createRequire(import.meta.url);
 
-// Test('NextWorkerPool._selectProcess()', async (test) => {
-
-//   let pool = new NextWorkerPool()
-
-//   try {
-//     await test.notThrows(() => pool._selectProcess())
-//   } finally {
-//     await pool.end()
-//   }
-
-// })
-
 Test('NextWorkerPool._selectProcess(methodName, parameter)', async test => {
 
   const sandbox = Sinon.createSandbox();
