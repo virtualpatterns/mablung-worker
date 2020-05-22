@@ -6,7 +6,6 @@ import { WorkerClient } from '../../index.js';
 import { WorkerClientDurationExceededError } from '../../index.js';
 import { WorkerClientRejectedError } from '../../library/error/worker-client-rejected-error.js';
 
-const Process = process;
 const Require = _createRequire(import.meta.url);
 
 Test('new WorkerClient()', async test => {

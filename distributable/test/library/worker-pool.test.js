@@ -4,10 +4,8 @@ import Test from 'ava';
 import { LoggedPool } from './logged-pool.js';
 import { WorkerPool } from '../../index.js';
 
-import { WorkerClientDurationExceededError, WorkerPoolDisconnectedError } from '../../index.js';
-import { WorkerClientRejectedError } from '../../library/error/worker-client-rejected-error.js';
+import { WorkerPoolDisconnectedError } from '../../index.js';
 
-const Process = process;
 const Require = _createRequire(import.meta.url);
 
 Test('new WorkerPool()', async test => {
@@ -51,7 +49,7 @@ Test('WorkerPool.maximumDuration', async test => {
 
 });
 
-Test('WorkerPool._selectProcessInformation(methodName, parameter)', async test => {
+Test('WorkerPool._selectProcess(methodName, parameter)', async test => {
 
   const sandbox = Sinon.createSandbox();
 
@@ -60,9 +58,9 @@ Test('WorkerPool._selectProcessInformation(methodName, parameter)', async test =
     let pool = new WorkerPool(Require.resolve('./worker.js'));
 
     try {
-      sandbox.spy(pool, '_selectProcessInformation');
+      sandbox.spy(pool, '_selectProcess');
       await pool.module.getPid();
-      test.true(pool._selectProcessInformation.calledOnce);
+      test.true(pool._selectProcess.calledOnce);
     } finally {
       await pool.end();
     }

@@ -38,7 +38,7 @@ class ChildProcessPool extends EventEmitter {
     this._stream = null;
     this._streamOption = null;
 
-    this._processInformation.forEach(processInformation => this._attach(processInformation));
+    this._processInformation.forEach(processInformation => this._attachProcessInformation(processInformation));
 
   }
 
@@ -46,7 +46,7 @@ class ChildProcessPool extends EventEmitter {
 
     return {
       'index': index,
-      'numberOfCreate': 1,
+      'numberOfCreate': 0,
       'process': this._createProcess(index, path, parameter, option) };
 
 
@@ -67,14 +67,14 @@ class ChildProcessPool extends EventEmitter {
     let stream = this._stream;
     let streamOption = this._streamOption;
 
-    this._detach(processInformation);
+    this._detachProcessInformation(processInformation);
 
     if (processInformation.numberOfCreate < processOption.maximumNumberOfCreate) {
 
       processInformation.process = this._createProcess(index, processPath, processParameter, processOption);
       processInformation.numberOfCreate++;
 
-      this._attach(processInformation);
+      this._attachProcessInformation(processInformation);
 
       if (Is.not.null(stream)) {
         processInformation.process.writeTo(stream, streamOption);
@@ -84,15 +84,15 @@ class ChildProcessPool extends EventEmitter {
 
   }
 
-  _attach(processInformation) {
+  _attachProcessInformation(processInformation) {
 
-    let { process } = processInformation;
+    let { index, process } = processInformation;
 
     process.on('disconnect', processInformation.__onDisconnect = () => {
       this._console.log('ChildProcessPool.on(\'disconnect\', processInformation.__onDisconnect = () => { ... })');
 
       try {
-        this._onDisconnect(processInformation);
+        this._onDisconnect(index, process);
         /* c8 ignore next 3 */
       } catch (error) {
         this._console.error(error);
@@ -105,7 +105,7 @@ class ChildProcessPool extends EventEmitter {
       this._console.error(error);
 
       try {
-        this._onError(processInformation, error);
+        this._onError(index, process, error);
         // do not recreate on error
         /* c8 ignore next 3 */
       } catch (error) {
@@ -119,7 +119,7 @@ class ChildProcessPool extends EventEmitter {
 
       try {
 
-        this._onExit(processInformation, code);
+        this._onExit(index, process, code);
 
         if (code > 0) {
           this._recreateProcess(processInformation);
@@ -136,7 +136,7 @@ class ChildProcessPool extends EventEmitter {
       this._console.log(`ChildProcessPool.on('terminate', processInformation.__onTerminate = ('${signal}') => { ... })`);
 
       try {
-        this._onTerminate(processInformation, signal);
+        this._onTerminate(index, process, signal);
         this._recreateProcess(processInformation);
         /* c8 ignore next 3 */
       } catch (error) {
@@ -147,7 +147,7 @@ class ChildProcessPool extends EventEmitter {
 
   }
 
-  _detach(processInformation) {
+  _detachProcessInformation(processInformation) {
 
     let { process } = processInformation;
 
@@ -173,20 +173,20 @@ class ChildProcessPool extends EventEmitter {
 
   }
 
-  _onDisconnect(processInformation) {
-    this.emit('disconnect', processInformation);
+  _onDisconnect(index, process) {
+    this.emit('disconnect', index, process);
   }
 
-  _onError(processInformation, error) {
-    this.emit('error', processInformation, error);
+  _onError(index, process, error) {
+    this.emit('error', index, process, error);
   }
 
-  _onExit(processInformation, code) {
-    this.emit('exit', processInformation, code);
+  _onExit(index, process, code) {
+    this.emit('exit', index, process, code);
   }
 
-  _onTerminate(processInformation, signal) {
-    this.emit('terminate', processInformation, signal);
+  _onTerminate(index, process, signal) {
+    this.emit('terminate', index, process, signal);
   }
 
   get _defaultParameter() {
@@ -217,14 +217,16 @@ class ChildProcessPool extends EventEmitter {
     return this._processOption.numberOfProcess;
   }
 
-  _selectProcessInformation() {}
+  _selectProcess() {}
 
-  _getProcessInformation(index) {
-    return this._processInformation[index];
+  _getProcess(index) {
+    return this._processInformation[index].process;
   }
 
-  _getConnectedProcessInformation() {
-    return this._processInformation.filter(({ process }) => process.isConnected);
+  _getConnectedProcess() {
+    return this._processInformation.
+    filter(({ process }) => process.isConnected).
+    map(({ process }) => process);
   }
 
   writeTo(path, option = { 'autoClose': true, 'emitClose': true, 'encoding': 'utf8', 'flags': 'a+' }) {
@@ -255,11 +257,11 @@ class ChildProcessPool extends EventEmitter {
   }
 
   disconnect() {
-    this._getConnectedProcessInformation().forEach(({ process }) => process.disconnect());
+    this._getConnectedProcess().forEach(process => process.disconnect());
   }
 
   signal(signal) {
-    this._getConnectedProcessInformation().forEach(({ process }) => process.signal(signal));
+    this._getConnectedProcess().forEach(process => process.signal(signal));
   }
 
   kill(signal = 'SIGINT') {

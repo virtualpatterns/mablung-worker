@@ -11,15 +11,15 @@ class NextWorkerPool extends WorkerPool {
 
   }
 
-  _selectProcessInformation() {
+  _selectProcess() {
 
-    let processInformation = null;
+    let process = null;
 
-    while (Is.null(processInformation) || !processInformation.process.isConnected) {
-      processInformation = this._getProcessInformation(this._nextIndex++ % this.numberOfProcess);
+    while (Is.null(process) || !process.isConnected) {
+      process = this._getProcess(this._nextIndex++ % this.numberOfProcess);
     }
 
-    return processInformation;
+    return process;
 
   }}
 

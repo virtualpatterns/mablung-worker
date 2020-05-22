@@ -8,15 +8,15 @@ class RandomWorkerPool extends WorkerPool {
     super(...parameter);
   }
 
-  async _selectProcessInformation() {
+  async _selectProcess() {
 
-    let processInformation = null;
+    let process = null;
 
-    while (Is.null(processInformation) || !processInformation.process.isConnected) {
-      processInformation = this._getProcessInformation(Math.round(Math.random() * (this.numberOfProcess - 1)));
+    while (Is.null(process) || !process.isConnected) {
+      process = this._getProcess(Math.round(Math.random() * (this.numberOfProcess - 1)));
     }
 
-    return processInformation;
+    return process;
 
   }}
 
