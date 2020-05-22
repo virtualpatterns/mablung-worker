@@ -10,7 +10,7 @@ import { WorkerClientRejectedError } from './error/worker-client-rejected-error.
 import { WorkerClientDisconnectedError } from './error/worker-client-disconnected-error.js';
 import { WorkerClientInternalError } from './error/worker-client-internal-error.js';
 import { WorkerClientExitedError } from './error/worker-client-exited-error.js';
-import { WorkerClientTerminatedError } from './error/worker-client-terminated-error.js';
+import { WorkerClientKilledError } from './error/worker-client-killed-error.js';
 
 const { pascalCase: PascalCase } = ChangeCase;
 const Require = _createRequire(import.meta.url);
@@ -63,14 +63,14 @@ class WorkerClient extends ForkedProcess {
   //   this.emit('release', message)
   // }
 
-  _onDisconnect() {
-    this._onReject(new WorkerClientDisconnectedError());
-    super._onDisconnect();
-  }
-
   _onError(error) {
     this._onReject(new WorkerClientInternalError(error));
     super._onError(error);
+  }
+
+  _onDisconnect() {
+    this._onReject(new WorkerClientDisconnectedError());
+    super._onDisconnect();
   }
 
   _onExit(code) {
@@ -78,9 +78,9 @@ class WorkerClient extends ForkedProcess {
     super._onExit(code);
   }
 
-  _onTerminate(signal) {
-    this._onReject(new WorkerClientTerminatedError(signal));
-    super._onTerminate(signal);
+  _onKill(signal) {
+    this._onReject(new WorkerClientKilledError(signal));
+    super._onKill(signal);
   }
 
   _onReject(error) {
@@ -283,9 +283,9 @@ class WorkerClient extends ForkedProcess {
 
   // }
 
-  async end(code = 0, option = {}) {
+  async exit(code = 0) {
     await this.whenReady();
-    await super.send({ 'type': 'end', 'code': code, 'option': option }); // there will be no response
+    await super.send({ 'type': 'exit', 'code': code }); // there will be no response
     await this.whenRejected(WorkerClientExitedError);
   }
 
@@ -308,7 +308,7 @@ class WorkerClient extends ForkedProcess {
 
   kill(...parameter) {
     super.kill(...parameter);
-    return this.whenRejected(WorkerClientTerminatedError);
+    return this.whenRejected(WorkerClientKilledError);
   }}
 
 

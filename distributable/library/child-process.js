@@ -53,18 +53,6 @@ class ChildProcess extends EventEmitter {
 
     });
 
-    this._process.on('disconnect', this.__onDisconnect = () => {
-      this._console.log('ChildProcess.on(\'disconnect\', this.__onDisconnect = () => { ... })');
-
-      try {
-        this._onDisconnect();
-        /* c8 ignore next 3 */
-      } catch (error) {
-        this._console.error(error);
-      }
-
-    });
-
     this._process.on('error', this.__onError = error => {
       this._console.error('ChildProcess.on(\'error\', this.__onError = (error) => { ... })');
       this._console.error(error);
@@ -81,6 +69,18 @@ class ChildProcess extends EventEmitter {
 
     });
 
+    this._process.on('disconnect', this.__onDisconnect = () => {
+      this._console.log('ChildProcess.on(\'disconnect\', this.__onDisconnect = () => { ... })');
+
+      try {
+        this._onDisconnect();
+        /* c8 ignore next 3 */
+      } catch (error) {
+        this._console.error(error);
+      }
+
+    });
+
     this._process.on('exit', this.__onExit = (code, signal) => {
       this._console.log(`ChildProcess.on('exit', this.__onExit = (${code}, ${Is.null(signal) ? signal : `'${signal}'`}) => { ... })`);
 
@@ -92,7 +92,7 @@ class ChildProcess extends EventEmitter {
           this._onExit(code);
           /* c8 ignore next 5 */
         } else if (Is.not.null(signal)) {
-          this._onTerminate(signal);
+          this._onKill(signal);
         } else {
           this._onExit(0);
         }
@@ -115,14 +115,14 @@ class ChildProcess extends EventEmitter {
       delete this.__onExit;
     }
 
-    if (this.__onError) {
-      this._process.off('error', this.__onError);
-      delete this.__onError;
-    }
-
     if (this.__onDisconnect) {
       this._process.off('disconnect', this.__onDisconnect);
       delete this.__onDisconnect;
+    }
+
+    if (this.__onError) {
+      this._process.off('error', this.__onError);
+      delete this.__onError;
     }
 
     if (this.__onMessage) {
@@ -136,20 +136,20 @@ class ChildProcess extends EventEmitter {
     this.emit('message', message);
   }
 
-  _onDisconnect() {
-    this.emit('disconnect');
-  }
-
   _onError(error) {
     this.emit('error', error);
+  }
+
+  _onDisconnect() {
+    this.emit('disconnect');
   }
 
   _onExit(code) {
     this.emit('exit', code);
   }
 
-  _onTerminate(signal) {
-    this.emit('terminate', signal);
+  _onKill(signal) {
+    this.emit('kill', signal);
   }
 
   /* c8 ignore next 3 */

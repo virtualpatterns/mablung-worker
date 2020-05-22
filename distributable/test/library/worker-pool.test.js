@@ -13,7 +13,7 @@ Test('new WorkerPool()', async test => {
   let pool = null;
 
   test.notThrows(() => {pool = new WorkerPool();});
-  await test.notThrowsAsync(pool.end());
+  await test.notThrowsAsync(pool.exit());
 
 });
 
@@ -25,7 +25,7 @@ Test('new WorkerPool({ \'maximumDuration\': N })', async test => {
   try {
     test.is(pool.maximumDuration, longMaximumDuration);
   } finally {
-    await pool.end();
+    await pool.exit();
   }
 
 });
@@ -44,7 +44,7 @@ Test('WorkerPool.maximumDuration', async test => {
     pool.maximumDuration = longMaximumDuration;
 
   } finally {
-    await pool.end();
+    await pool.exit();
   }
 
 });
@@ -67,7 +67,7 @@ Test('WorkerPool._selectProcess(methodName, parameter)', async test => {
       test.true(pool._selectProcess.calledWith('getPid', []));
 
     } finally {
-      await pool.end();
+      await pool.exit();
     }
 
   } finally {
@@ -84,7 +84,7 @@ Test('WorkerPool.ping()', async test => {
     // does not show the code as executed :-(
     await test.notThrowsAsync(pool.ping());
   } finally {
-    await pool.end();
+    await pool.exit();
   }
 
 });
@@ -93,22 +93,22 @@ Test('WorkerPool.ping() throws WorkerPoolDisconnectedError', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 1 });
 
-  await pool.end();
+  await pool.exit();
   await test.throwsAsync(pool.ping(), { 'instanceOf': WorkerPoolDisconnectedError });
 
 });
 
-Test('WorkerPool.end(option)', async test => {
-  await test.notThrowsAsync(new WorkerPool().end());
+Test('WorkerPool.exit(option)', async test => {
+  await test.notThrowsAsync(new WorkerPool().exit());
 });
 
-Test('WorkerPool.end(option) throws WorkerPoolDisconnectedError', async test => {
+Test('WorkerPool.exit(option) throws WorkerPoolDisconnectedError', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 1 });
 
-  await pool.end();
+  await pool.exit();
   await new Promise(resolve => setTimeout(resolve, 1000));
-  await test.throwsAsync(pool.end(), { 'instanceOf': WorkerPoolDisconnectedError });
+  await test.throwsAsync(pool.exit(), { 'instanceOf': WorkerPoolDisconnectedError });
 
 });
 
@@ -121,7 +121,7 @@ Test('WorkerPool.module.throwUncaughtException()', async test => {
     await new Promise(resolve => setTimeout(resolve, 1000));
     await test.notThrowsAsync(pool.ping());
   } finally {
-    await pool.end();
+    await pool.exit();
   }
 
 });
@@ -138,7 +138,7 @@ Test('WorkerPool.module.rejectUnhandledException()', async test => {
     await new Promise(resolve => setTimeout(resolve, 1000));
     await test.notThrowsAsync(pool.ping());
   } finally {
-    await pool.end();
+    await pool.exit();
   }
 
 });
@@ -179,7 +179,7 @@ Test('WorkerPool.kill()', async test => {
     await test.notThrowsAsync(pool.ping());
 
   } finally {
-    await pool.end();
+    await pool.exit();
   }
 
 });
@@ -205,7 +205,7 @@ Test('WorkerPool.kill() throws WorkerPoolDisconnectedError', async test => {
 //     await test.notThrowsAsync(pool.ping()) // the pool should recreate exited processes
 
 //   } finally {
-//     await pool.end()
+//     await pool.exit()
 //   }
 
 // })
@@ -223,7 +223,7 @@ Test('WorkerPool.kill() throws WorkerPoolDisconnectedError', async test => {
 //     await test.notThrowsAsync(pool.ping()) // the pool should recreate exited processes
 
 //   } finally {
-//     await pool.end()
+//     await pool.exit()
 //   }
 
 // })
@@ -235,7 +235,7 @@ Test('WorkerPool.kill() throws WorkerPoolDisconnectedError', async test => {
 //   try {
 //     test.is(pool._getConnectedProcessInformation().length, 2)
 //   } finally {
-//     await pool.end()
+//     await pool.exit()
 //   }
 
 // })
@@ -256,7 +256,7 @@ Test('WorkerPool.kill() throws WorkerPoolDisconnectedError', async test => {
 //     pool.maximumDuration = maximumDuration
 
 //   } finally {
-//     await pool.end()
+//     await pool.exit()
 //   }
 
 // })
@@ -287,7 +287,7 @@ Test('WorkerPool.kill() throws WorkerPoolDisconnectedError', async test => {
 //     await test.throwsAsync(pool.import(Require.resolve('./worker.js')), { 'instanceOf': Error })
 
 //   } finally {
-//     await pool.end()
+//     await pool.exit()
 //   }
 
 // })
@@ -303,7 +303,7 @@ Test('WorkerPool.kill() throws WorkerPoolDisconnectedError', async test => {
 //     await test.throwsAsync(pool.module._getPid(), { 'instanceOf': Error })
 
 //   } finally {
-//     await pool.end()
+//     await pool.exit()
 //   }
 
 // })
@@ -323,7 +323,7 @@ Test('WorkerPool.kill() throws WorkerPoolDisconnectedError', async test => {
 //     test.is(pool.module, null)
 
 //   } finally {
-//     await pool.end()
+//     await pool.exit()
 //   }
 
 // })
@@ -340,7 +340,7 @@ Test('WorkerPool.kill() throws WorkerPoolDisconnectedError', async test => {
 //     await test.throwsAsync(pool.release(), { 'instanceOf': Error })
 
 //   } finally {
-//     await pool.end()
+//     await pool.exit()
 //   }
 
 // })
@@ -350,7 +350,7 @@ Test('WorkerPool.kill() throws WorkerPoolDisconnectedError', async test => {
 //   let pool = new WorkerPool({ 'numberOfProcess': 2 })
 
 //   await pool.import(Require.resolve('./worker.js'))
-//   await test.throwsAsync(Promise.all([ pool.module.getPid(2500), pool.end() ]), { 'instanceOf': WorkerClientRejectedError })
+//   await test.throwsAsync(Promise.all([ pool.module.getPid(2500), pool.exit() ]), { 'instanceOf': WorkerClientRejectedError })
 
 // })
 
@@ -364,19 +364,19 @@ Test('WorkerPool.kill() throws WorkerPoolDisconnectedError', async test => {
 //   maximumDuration = pool.maximumDuration
 
 //   pool.maximumDuration = 1
-//   await test.throwsAsync(pool.end(), { 'instanceOf': WorkerClientDurationExceededError })
+//   await test.throwsAsync(pool.exit(), { 'instanceOf': WorkerClientDurationExceededError })
 //   pool.maximumDuration = maximumDuration
 
 // })
 
-// Test.skip('WorkerPool.end()', async (test) => {
+// Test.skip('WorkerPool.exit()', async (test) => {
 
 //   let pool = new WorkerPool({ 'numberOfProcess': 2 })
 
 //   // this import is required because it contains the onEnd method
 //   await pool.import(Require.resolve('./worker.js'))
 
-//   await pool.end({ 'pid': 10000 }) // also establishes is ready
+//   await pool.exit({ 'pid': 10000 }) // also establishes is ready
 //   await test.throwsAsync(pool.ping()) // , { 'instanceOf': WorkerPoolDisconnectedError })
 
 // })

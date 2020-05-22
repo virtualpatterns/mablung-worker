@@ -1,14 +1,8 @@
 import ChangeCase from 'change-case';
 import { Configuration } from '@virtualpatterns/mablung-configuration';
 import Is from '@pwn/is';
-import OS from 'os';
 
 import { WorkerServerNoIPCChannelError } from './error/worker-server-no-ipc-channel-error.js';
-// import { WorkerServerModuleImportedError } from './error/worker-server-module-imported-error.js'
-// import { WorkerServerNoModuleImportedError } from './error/worker-server-no-module-imported-error.js'
-// import { WorkerServerUncaughtExceptionError } from './error/worker-server-uncaught-exception-error.js'
-// import { WorkerServerUnhandledRejectionError } from './error/worker-server-unhandled-rejection-error.js'
-// import { WorkerServerModuleExportError } from './error/worker-server-module-export-error.js'
 
 const { pascalCase: PascalCase } = ChangeCase;
 const Process = process;
@@ -316,32 +310,10 @@ class WorkerServer {
 
   // }
 
-  async _onEnd(message) {
+  async _onExit(message) {
 
     try {
-
-      if (Is.not.null(this._module)) {
-
-        let code = message.code;
-        let option = message.option;
-        let onEnd = this._module['onEnd'];
-
-        if (onEnd) {
-
-          let returnValue = null;
-          returnValue = onEnd.apply(this._module, [code, option]);
-          returnValue = returnValue instanceof Promise ? await returnValue : returnValue;
-
-          message.returnValue = returnValue;
-
-        }
-
-        delete message.error;
-
-      }
-
       Process.exit(message.code || 0);
-
       /* c8 ignore next 3 */
     } catch (error) {
       console.error(error);
