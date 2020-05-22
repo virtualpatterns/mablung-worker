@@ -9,7 +9,8 @@ Test('new ExitPool()', async test => {
 
     let onExit = null;
 
-    pool.on('exit', onExit = (processInformation, code) => {
+    pool.on('exit', onExit = (index, process, code) => {
+      test.log(`pool.on('exit', onExit = (${index}, process, ${code}) => { ... })`);
 
       pool.off('exit', onExit);
       onExit = null;
