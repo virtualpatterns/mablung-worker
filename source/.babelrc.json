@@ -7,6 +7,23 @@
       {
         "rule": [
           {
+            "searchFor": "__filePath",
+            "replaceWith": "__importIdentifier.fileURLToPath(import.meta.url)",
+            "parserOption": { 
+              "plugins": [ "importMeta" ], 
+              "sourceType": "module" 
+            },
+            "addImport": [
+              {
+                "type": "default",
+                "source": "url",
+                "option": {
+                  "nameHint": "URL"
+                }                          
+              }
+            ]
+          },
+          {
             "searchFor": "__require",
             "replaceWith": "__importIdentifier(import.meta.url)",
             "parserOption": { 

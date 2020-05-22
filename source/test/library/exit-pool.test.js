@@ -4,29 +4,23 @@ import { ExitPool } from './exit-pool.js'
 
 Test('new ExitPool()', async (test) => {
 
-  let pool = new ExitPool({ 'numberOfProcess': 2 })
+  let pool = new ExitPool({ 'numberOfProcess': 1 })
   let code = await new Promise((resolve) => {
 
-    let code = []
     let onExit = null
 
-    pool.on('exit', onExit = (processInformation, _code) => {
+    pool.on('exit', onExit = (index, process, code) => {
+      test.log(`pool.on('exit', onExit = (${index}, process, ${code}) => { ... })`)
 
-      code.push(_code)
+      pool.off('exit', onExit)
+      onExit = null
 
-      if (code.length === pool.numberOfProcess) {
-
-        pool.off('exit', onExit)
-        onExit = null
-
-        resolve(code)
-
-      }
+      resolve(code)
 
     })
 
   })
 
-  test.is(code[0], 0)
+  test.is(code, 0)
 
 })

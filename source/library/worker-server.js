@@ -4,11 +4,11 @@ import Is from '@pwn/is'
 import OS from 'os'
 
 import { WorkerServerNoIPCChannelError } from './error/worker-server-no-ipc-channel-error.js'
-import { WorkerServerModuleImportedError } from './error/worker-server-module-imported-error.js'
-import { WorkerServerNoModuleImportedError } from './error/worker-server-no-module-imported-error.js'
-import { WorkerServerUncaughtExceptionError } from './error/worker-server-uncaught-exception-error.js'
-import { WorkerServerUnhandledRejectionError } from './error/worker-server-unhandled-rejection-error.js'
-import { WorkerServerModuleExportError } from './error/worker-server-module-export-error.js'
+// import { WorkerServerModuleImportedError } from './error/worker-server-module-imported-error.js'
+// import { WorkerServerNoModuleImportedError } from './error/worker-server-no-module-imported-error.js'
+// import { WorkerServerUncaughtExceptionError } from './error/worker-server-uncaught-exception-error.js'
+// import { WorkerServerUnhandledRejectionError } from './error/worker-server-unhandled-rejection-error.js'
+// import { WorkerServerModuleExportError } from './error/worker-server-module-export-error.js'
 
 const { pascalCase: PascalCase } = ChangeCase
 const Process = process
@@ -18,9 +18,11 @@ class WorkerServer {
   constructor(userOption = {}) {
 
     this._option = Configuration.getOption(this.defaultOption, userOption)
-    this._module = null
 
-    this.attach()
+    this._module = null
+    this._modulePath = null
+
+    this._attach()
 
   }
 
@@ -28,15 +30,15 @@ class WorkerServer {
     return { 'readyInterval': 1000 }
   }
 
-  attach() {
+  _attach() {
 
-    Process.on('message', this._onMessage = async (message) => {
-      console.log('WorkerServer.on(\'message\', this._onMessage = async (message) => { ... })')
+    Process.on('message', this.__onMessage = async (message) => {
+      console.log('WorkerServer.on(\'message\', this.__onMessage = async (message) => { ... })')
       console.dir(message)
 
       try {
         this._detachReadyInterval()   
-        await this.onMessage(message) 
+        await this._onMessage(message) 
       /* c8 ignore next 3 */
       } catch(error) {
         console.error(error)
@@ -44,8 +46,8 @@ class WorkerServer {
 
     })
 
-    Process.on('disconnect', this._onDisconnect = () => {
-      console.log('WorkerServer.on(\'disconnect\', this._onDisconnect = () => { ... })')
+    Process.on('disconnect', this.__onDisconnect = () => {
+      console.log('WorkerServer.on(\'disconnect\', this.__onDisconnect = () => { ... })')
 
       try {
         this._detachReadyInterval()   
@@ -57,11 +59,11 @@ class WorkerServer {
       
     })
 
-    Process.on('exit', this._onExit = (code) => {
-      console.log(`WorkerServer.on('exit', this._onExit = (${code}) => { ... })`)
+    Process.on('exit', this.__onExit = (code) => {
+      console.log(`WorkerServer.on('exit', this.__onExit = (${code}) => { ... })`)
 
       try {
-        this.detach()
+        this._detach()
       /* c8 ignore next 3 */
       } catch(error) {
         console.error(error)
@@ -94,27 +96,27 @@ class WorkerServer {
 
   _detachDisconnect() {
 
-    if (this._onDisconnect) {
-      Process.off('disconnect', this._onDisconnect)
-      delete this._onDisconnect
+    if (this.__onDisconnect) {
+      Process.off('disconnect', this.__onDisconnect)
+      delete this.__onDisconnect
     }
 
   }
 
-  detach() {
+  _detach() {
 
     this._detachReadyInterval()    
 
-    if (this._onExit) {
-      Process.off('exit', this._onExit)
-      delete this._onExit
+    if (this.__onExit) {
+      Process.off('exit', this.__onExit)
+      delete this.__onExit
     }
 
     this._detachDisconnect()
 
-    if (this._onMessage) {
-      Process.off('message', this._onMessage)
-      delete this._onMessage
+    if (this.__onMessage) {
+      Process.off('message', this.__onMessage)
+      delete this.__onMessage
     }
 
   }
@@ -126,6 +128,7 @@ class WorkerServer {
     module = module.default ? module.default : module
 
     this._module = module
+    this._modulePath = path
 
   }
 
@@ -157,12 +160,12 @@ class WorkerServer {
 
   }
 
-  onMessage(message) {
-    let methodName = `on${PascalCase(message.type)}`
+  _onMessage(message) {
+    let methodName = `_on${PascalCase(message.type)}`
     return this[methodName](message)
   }
 
-  async onPing(message) {
+  async _onPing(message) {
 
     let cpuUsage = null
     cpuUsage = Process.cpuUsage()
@@ -202,10 +205,10 @@ class WorkerServer {
   //       delete message.error
   
   //       this._module = module
-  //       this._moduleUrl = url
+  //       this._modulePath = url
   
   //     } else {
-  //       throw new WorkerServerModuleImportedError(this._moduleUrl)
+  //       throw new WorkerServerModuleImportedError(this._modulePath)
   //     }
 
   //   } catch (error) {
@@ -219,7 +222,7 @@ class WorkerServer {
 
   // }
 
-  async onApply(message) {
+  async _onApply(message) {
 
     try {
 
@@ -259,7 +262,7 @@ class WorkerServer {
   //         message.returnValue = returnValue
       
   //       } else {
-  //         throw new WorkerServerModuleExportError(this._moduleUrl, message.methodName)
+  //         throw new WorkerServerModuleExportError(this._modulePath, message.methodName)
   //       }
 
   //     } else {
@@ -299,7 +302,7 @@ class WorkerServer {
   //       delete message.error
 
   //       this._module = null
-  //       this._moduleUrl = null
+  //       this._modulePath = null
   
   //     } else {
   //       throw new WorkerServerNoModuleImportedError()
@@ -313,19 +316,20 @@ class WorkerServer {
 
   // }
 
-  async onEnd(message) {
+  async _onEnd(message) {
 
     try {
 
       if (Is.not.null(this._module)) {
 
+        let code = message.code
         let option = message.option
         let onEnd = this._module['onEnd']
 
         if (onEnd) {
 
           let returnValue = null
-          returnValue = onEnd.apply(this._module, [ option ])
+          returnValue = onEnd.apply(this._module, [ code, option ])
           returnValue = returnValue instanceof Promise ? await returnValue : returnValue
   
           message.returnValue = returnValue
@@ -338,6 +342,7 @@ class WorkerServer {
 
       Process.exit(message.code || 0)
 
+    /* c8 ignore next 3 */
     } catch (error) {
       console.error(error)
     }

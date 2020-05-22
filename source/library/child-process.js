@@ -46,7 +46,7 @@ class ChildProcess extends EventEmitter {
   
       try {
         this._onMessage(message)
-        /* c8 ignore next 3 */
+      /* c8 ignore next 3 */
       } catch (error) {
         this._console.error(error)
       }
@@ -58,7 +58,7 @@ class ChildProcess extends EventEmitter {
   
       try {
         this._onDisconnect()
-        /* c8 ignore next 3 */
+      /* c8 ignore next 3 */
       } catch (error) {
         this._console.error(error)
       }
@@ -72,7 +72,7 @@ class ChildProcess extends EventEmitter {
       try {
         this._detach()
         this._onError(error)
-        /* c8 ignore next 3 */
+      /* c8 ignore next 3 */
       } catch (error) {
         this._console.error(error)
       } finally {
@@ -97,7 +97,7 @@ class ChildProcess extends EventEmitter {
           this._onExit(0)
         }
 
-        /* c8 ignore next 3 */
+      /* c8 ignore next 3 */
       } catch (error) {
         this._console.error(error)
       } finally {
@@ -245,7 +245,7 @@ class ChildProcess extends EventEmitter {
 
     if (this._process.kill(signal)) {
       // do nothing
-      /* c8 ignore next 3 */
+    /* c8 ignore next 3 */
     } else {
       throw new ChildProcessSignalError(signal, this._process.pid)
     }

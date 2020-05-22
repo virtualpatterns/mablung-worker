@@ -4,29 +4,23 @@ import { ErrorPool } from './error-pool.js'
 
 Test('new ErrorPool()', async (test) => {
 
-  let pool = new ErrorPool({ 'maximumNumberOfCreate': 0, 'numberOfProcess': 2 })
+  let pool = new ErrorPool({ 'numberOfProcess': 1 })
   let error = await new Promise((resolve) => {
 
-    let error = []
     let onError = null
 
-    pool.on('error', onError = (processInformation, _error) => {
+    pool.on('error', onError = (index, process, error) => {
+      test.log(`pool.on('error', onError = (${index}, process, '${error.code}') => { ... })`)
 
-      error.push(_error)
+      pool.off('error', onError)
+      onError = null
 
-      if (error.length === pool.numberOfProcess) {
-
-        pool.off('error', onError)
-        onError = null
-
-        resolve(error)
-
-      }
+      resolve(error)
 
     })
 
   })
 
-  test.is(error[0].code, 'ENOENT')
+  test.is(error.code, 'EACCES')
 
 })

@@ -14,7 +14,7 @@ const Package = JSON5.parse(FileSystem.readFileSync(Require.resolve('../../packa
 
   Command.version(Package.version)
   Command.option('--worker-server-class-path <path>', 'Path to the server class to import/create', Require.resolve('./worker-server.js'))
-  Command.option('--import-path <path>', 'Path to the module for the server to import', Require.resolve('./worker.js'))
+  Command.option('--import-path <path>', 'Path to the module to import', Require.resolve('./worker.js'))
 
   Command.parse(Process.argv)
 

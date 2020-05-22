@@ -8,12 +8,12 @@ class RandomWorkerPool extends WorkerPool {
     super(...parameter)
   }
 
-  async selectProcess() {
+  async _selectProcess() {
 
     let process = null
 
-    while (Is.null(process) || !process.process.isConnected) {
-      process = this._getProcessInformation(Math.round(Math.random() * (this.numberOfProcess - 1)))
+    while (Is.null(process) || !process.isConnected) {
+      process = this._getProcess(Math.round(Math.random() * (this.numberOfProcess - 1)))
     }
 
     return process

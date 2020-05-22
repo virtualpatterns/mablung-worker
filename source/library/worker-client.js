@@ -22,14 +22,13 @@ class WorkerClient extends ForkedProcess {
 
     this._isReady = false
 
-    this._module = null
-    this._moduleUrl = null
+    this._module = new Proxy(this, WorkerClientModuleHandler)
 
   }
 
-  get _defaultParameter() {
-    return Configuration.merge(super._defaultParameter, { '--worker-server-class-path': Require.resolve('./worker-server.js') })
-  }
+  // get _defaultParameter() {
+  //   return Configuration.merge(super._defaultParameter, { '--worker-server-class-path': Require.resolve('./worker-server.js') })
+  // }
 
   get _defaultOption() {
     return Configuration.merge(super._defaultOption, { 'maximumDuration': 5000 })
@@ -52,17 +51,17 @@ class WorkerClient extends ForkedProcess {
     this.emit('ping', message)
   }
 
-  _onImport(message) {
-    this.emit('import', message)
-  }
+  // _onImport(message) {
+  //   this.emit('import', message)
+  // }
 
   _onApply(message) {
     this.emit('apply', message)
   }
 
-  _onRelease(message) {
-    this.emit('release', message)
-  }
+  // _onRelease(message) {
+  //   this.emit('release', message)
+  // }
 
   _onDisconnect() {
     this._onReject(new WorkerClientDisconnectedError())
@@ -100,9 +99,9 @@ class WorkerClient extends ForkedProcess {
     return this._module
   }
 
-  get moduleUrl() {
-    return this._moduleUrl
-  }
+  // get moduleUrl() {
+  //   return this._moduleUrl
+  // }
 
   async whenReady() {
 
@@ -255,34 +254,34 @@ class WorkerClient extends ForkedProcess {
     return this.send({ 'type': 'ping' })
   }
 
-  async import(url, option = {}) {
+  // async import(url, option = {}) {
 
-    await this.whenReady()
-    let returnValue = await this.send({ 'type': 'import', 'url': url, 'option': option })
+  //   await this.whenReady()
+  //   let returnValue = await this.send({ 'type': 'import', 'url': url, 'option': option })
 
-    this._module = new Proxy(this, WorkerClientModuleHandler)
-    this._moduleUrl = url
+  //   this._module = new Proxy(this, WorkerClientModuleHandler)
+  //   this._moduleUrl = url
 
-    return returnValue
+  //   return returnValue
 
-  }
+  // }
 
   async apply(methodName, parameter) {
     await this.whenReady()
     return this.send({ 'type': 'apply', 'methodName': methodName, 'parameter': parameter })
   }
 
-  async release(option = {}) {
+  // async release(option = {}) {
 
-    await this.whenReady()
-    let returnValue = await this.send({ 'type': 'release', 'option': option })
+  //   await this.whenReady()
+  //   let returnValue = await this.send({ 'type': 'release', 'option': option })
 
-    this._module = null
-    this._moduleUrl = null
+  //   this._module = null
+  //   this._moduleUrl = null
 
-    return returnValue
+  //   return returnValue
 
-  }
+  // }
 
   async end(code = 0, option = {}) {
     await this.whenReady()
@@ -290,17 +289,17 @@ class WorkerClient extends ForkedProcess {
     await this.whenRejected(WorkerClientExitedError)
   }
 
-  async uncaughtException() {
-    await this.whenReady()
-    await super.send({ 'type': 'uncaughtException' }) // there will be no response
-    await this.whenRejected(WorkerClientExitedError)
-  }
+  // async uncaughtException() {
+  //   await this.whenReady()
+  //   await super.send({ 'type': 'uncaughtException' }) // there will be no response
+  //   await this.whenRejected(WorkerClientExitedError)
+  // }
 
-  async unhandledRejection() {
-    await this.whenReady()
-    await super.send({ 'type': 'unhandledRejection' }) // there will be no response
-    await this.whenRejected(WorkerClientExitedError)
-  }
+  // async unhandledRejection() {
+  //   await this.whenReady()
+  //   await super.send({ 'type': 'unhandledRejection' }) // there will be no response
+  //   await this.whenRejected(WorkerClientExitedError)
+  // }
 
   disconnect() {
     super.disconnect()
