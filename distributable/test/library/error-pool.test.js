@@ -9,7 +9,8 @@ Test('new ErrorPool()', async test => {
 
     let onError = null;
 
-    pool.on('error', onError = (processInformation, error) => {
+    pool.on('error', onError = (index, process, error) => {
+      test.log(`pool.on('error', onError = (${index}, process, '${error.code}') => { ... })`);
 
       pool.off('error', onError);
       onError = null;

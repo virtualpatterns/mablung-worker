@@ -186,161 +186,161 @@ Test('WorkerClient.module.then', async test => {
 
 });
 
-Test.skip('WorkerClient.import(url)', async test => {
+// Test.skip('WorkerClient.import(url)', async (test) => {
 
-  let worker = new WorkerClient();
+//   let worker = new WorkerClient()
 
-  try {
+//   try {
 
-    let pid = await worker.import(Require.resolve('./worker.js'));
-    test.is(pid, worker.pid);
+//     let pid = await worker.import(Require.resolve('./worker.js'))
+//     test.is(pid, worker.pid)
 
-    await test.throwsAsync(worker.import(Require.resolve('./worker.js')), { 'instanceOf': Error });
-    test.is(await worker.module.getPid(), worker.pid);
+//     await test.throwsAsync(worker.import(Require.resolve('./worker.js')), { 'instanceOf': Error })
+//     test.is(await worker.module.getPid(), worker.pid)
 
-  } finally {
-    await worker.end();
-  }
+//   } finally {
+//     await worker.end()
+//   }
 
-});
+// })
 
-Test.skip('WorkerClient.import(url) throws Error', async test => {
+// Test.skip('WorkerClient.import(url) throws Error', async (test) => {
 
-  let worker = new WorkerClient();
+//   let worker = new WorkerClient()
 
-  try {
+//   try {
 
-    await worker.import(Require.resolve('./worker.js'));
+//     await worker.import(Require.resolve('./worker.js'))
 
-    await test.throwsAsync(worker.module._getPid(), { 'instanceOf': Error });
+//     await test.throwsAsync(worker.module._getPid(), { 'instanceOf': Error })
 
-  } finally {
-    await worker.end();
-  }
+//   } finally {
+//     await worker.end()
+//   }
 
-});
+// })
 
-Test.skip('WorkerClient.release()', async test => {
+// Test.skip('WorkerClient.release()', async (test) => {
 
-  let worker = new WorkerClient();
+//   let worker = new WorkerClient()
 
-  try {
+//   try {
 
-    let pid = null;
-    pid = await worker.import(Require.resolve('./worker.js'));
-    pid = await worker.release();
+//     let pid = null
+//     pid = await worker.import(Require.resolve('./worker.js'))
+//     pid = await worker.release()
 
-    test.is(pid, worker.pid);
-    test.is(worker.module, null);
+//     test.is(pid, worker.pid)
+//     test.is(worker.module, null)
 
-  } finally {
-    await worker.end();
-  }
+//   } finally {
+//     await worker.end()
+//   }
 
-});
+// })
 
-Test.skip('WorkerClient.release() throws Error', async test => {
+// Test.skip('WorkerClient.release() throws Error', async (test) => {
 
-  let worker = new WorkerClient();
+//   let worker = new WorkerClient()
 
-  try {
+//   try {
 
-    await worker.import(Require.resolve('./worker.js'));
-    await worker.release();
+//     await worker.import(Require.resolve('./worker.js'))
+//     await worker.release()
 
-    await test.throwsAsync(worker.release(), { 'instanceOf': Error });
+//     await test.throwsAsync(worker.release(), { 'instanceOf': Error })
 
-  } finally {
-    await worker.end();
-  }
+//   } finally {
+//     await worker.end()
+//   }
 
-});
+// })
 
-Test.skip('WorkerClient.getPid(duration) throws WorkerClientRejectedError', async test => {
+// Test.skip('WorkerClient.getPid(duration) throws WorkerClientRejectedError', async (test) => {
 
-  let worker = new WorkerClient();
+//   let worker = new WorkerClient()
 
-  await worker.import(Require.resolve('./worker.js'));
-  await test.throwsAsync(Promise.all([worker.module.getPid(2500), worker.end()]), { 'instanceOf': WorkerClientRejectedError });
+//   await worker.import(Require.resolve('./worker.js'))
+//   await test.throwsAsync(Promise.all([ worker.module.getPid(2500), worker.end() ]), { 'instanceOf': WorkerClientRejectedError })
 
-});
+// })
 
-Test.skip('WorkerClient.whenMessageType(type) throws WorkerClientDurationExceededError', async test => {
+// Test.skip('WorkerClient.whenMessageType(type) throws WorkerClientDurationExceededError', async (test) => {
 
-  let worker = new WorkerClient();
+//   let worker = new WorkerClient()
 
-  try {
+//   try {
 
-    await worker.import(Require.resolve('./worker.js'));
+//     await worker.import(Require.resolve('./worker.js'))
 
-    let maximumDuration = null;
-    maximumDuration = worker.maximumDuration;
+//     let maximumDuration = null
+//     maximumDuration = worker.maximumDuration
 
-    worker.maximumDuration = 2000;
-    await test.throwsAsync(worker.module.getPid(2500), { 'instanceOf': WorkerClientDurationExceededError });
-    worker.maximumDuration = maximumDuration;
+//     worker.maximumDuration = 2000
+//     await test.throwsAsync(worker.module.getPid(2500), { 'instanceOf': WorkerClientDurationExceededError })
+//     worker.maximumDuration = maximumDuration
 
-  } finally {
-    await worker.end();
-  }
+//   } finally {
+//     await worker.end()
+//   }
 
-});
+// })
 
-Test.skip('WorkerClient.whenRejected() throws WorkerClientDurationExceededError', async test => {
+// Test.skip('WorkerClient.whenRejected() throws WorkerClientDurationExceededError', async (test) => {
 
-  let worker = new WorkerClient();
+//   let worker = new WorkerClient()
 
-  await worker.ping(); // establish is ready before call to end
+//   await worker.ping() // establish is ready before call to end
 
-  let maximumDuration = null;
-  maximumDuration = worker.maximumDuration;
+//   let maximumDuration = null
+//   maximumDuration = worker.maximumDuration
 
-  worker.maximumDuration = 1;
-  await test.throwsAsync(worker.end(), { 'instanceOf': WorkerClientDurationExceededError });
-  worker.maximumDuration = maximumDuration;
+//   worker.maximumDuration = 1
+//   await test.throwsAsync(worker.end(), { 'instanceOf': WorkerClientDurationExceededError })
+//   worker.maximumDuration = maximumDuration
 
-});
+// })
 
-Test.skip('WorkerClient.disconnect() ...', async test => {
+// Test.skip('WorkerClient.disconnect() ...', async (test) => {
 
-  let worker = new WorkerClient();
+//   let worker = new WorkerClient()
 
-  await test.notThrowsAsync(worker.ping()); // establishes is ready
-  await worker.disconnect();
-  await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' });
+//   await test.notThrowsAsync(worker.ping()) // establishes is ready
+//   await worker.disconnect()
+//   await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' })
 
-});
+// })
 
-Test.skip('WorkerClient.end()', async test => {
+// Test.skip('WorkerClient.end()', async (test) => {
 
-  let worker = new WorkerClient(); // LoggedClient() // 
+//   let worker = new WorkerClient() // LoggedClient() // 
 
-  // this import is required because it contains the onEnd method
-  await worker.import(Require.resolve('./worker.js'));
+//   // this import is required because it contains the onEnd method
+//   await worker.import(Require.resolve('./worker.js'))
 
-  await worker.end({ 'pid': worker.pid }); // also establishes is ready
-  await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' });
+//   await worker.end({ 'pid': worker.pid }) // also establishes is ready
+//   await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' })
 
-});
+// })
 
-Test.skip('WorkerClient.uncaughtException()', async test => {
+// Test.skip('WorkerClient.uncaughtException()', async (test) => {
 
-  let worker = new WorkerClient();
+//   let worker = new WorkerClient()
 
-  await worker.uncaughtException(); // also establishes is ready
-  await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' });
+//   await worker.uncaughtException() // also establishes is ready
+//   await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' })
 
-});
+// })
 
-Test.skip('WorkerClient.unhandledRejection()', async test => {
+// Test.skip('WorkerClient.unhandledRejection()', async (test) => {
 
-  // this test requires that unhandled promises exit the node process
-  // this is enabled by the --unhandled-rejections=strict argument
+//   // this test requires that unhandled promises exit the node process
+//   // this is enabled by the --unhandled-rejections=strict argument
 
-  let worker = new WorkerClient();
+//   let worker = new WorkerClient()
 
-  await worker.unhandledRejection(); // also establishes is ready
-  await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' });
+//   await worker.unhandledRejection() // also establishes is ready
+//   await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' })
 
-});
+// })
 //# sourceMappingURL=worker-client.test.js.map
