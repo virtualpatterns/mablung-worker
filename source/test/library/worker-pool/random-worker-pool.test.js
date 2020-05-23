@@ -23,7 +23,7 @@ Test('RandomWorkerPool._selectProcess(methodName, parameter)', async (test) => {
       test.true(pool._selectProcess.calledWith('getPid', []))
 
     } finally {
-      await pool.end()
+      await pool.exit()
     }
   
   } finally {

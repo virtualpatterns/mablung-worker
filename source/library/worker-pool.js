@@ -101,12 +101,12 @@ class WorkerPool extends ChildProcessPool {
 
   // }
 
-  async end(code = 0, option = {}) {
+  async exit(code = 0) {
 
     let process = this._getConnectedProcess()
 
     if (process.length > 0) {
-      return Promise.all(process.map((workerClient) => workerClient.end(code, option)))
+      return Promise.all(process.map((workerClient) => workerClient.exit(code)))
     } else {
       throw new WorkerPoolDisconnectedError()
     }

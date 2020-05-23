@@ -13,7 +13,7 @@ Test('new WorkerClient()', async (test) => {
   let worker = null
   
   test.notThrows(() => { worker = new WorkerClient()})
-  await test.notThrowsAsync(worker.end())
+  await test.notThrowsAsync(worker.exit())
 
 })
 
@@ -22,7 +22,7 @@ Test('new WorkerClient(path, option)', async (test) => {
   let worker = null
   
   test.notThrows(() => { worker = new WorkerClient(Require.resolve('./worker.js'), { 'maximumDuration': 5000 })})
-  await test.notThrowsAsync(worker.end())
+  await test.notThrowsAsync(worker.exit())
 
 })
 
@@ -31,7 +31,7 @@ Test('new WorkerClient(option, option)', async (test) => {
   let worker = null
   
   test.notThrows(() => { worker = new WorkerClient({ '--import-path': Require.resolve('./worker.js') }, { 'maximumDuration': 5000 })})
-  await test.notThrowsAsync(worker.end())
+  await test.notThrowsAsync(worker.exit())
 
 })
 
@@ -40,7 +40,7 @@ Test('new WorkerClient(path, option, option)', async (test) => {
   let worker = null
   
   test.notThrows(() => { worker = new WorkerClient(Require.resolve('../../library/create-worker-server.js'), { '--import-path': Require.resolve('./worker.js') }, { 'maximumDuration': 5000 })})
-  await test.notThrowsAsync(worker.end())
+  await test.notThrowsAsync(worker.exit())
 
 })
 
@@ -51,7 +51,7 @@ Test('WorkerClient.module.getPid()', async (test) => {
   try {
     test.is(await worker.module.getPid(), worker.pid)
   } finally {
-    await worker.end()
+    await worker.exit()
   }
   
 })
@@ -63,7 +63,7 @@ Test('WorkerClient._onPing(message)', async (test) => {
   try {
     await test.notThrowsAsync(worker.ping())
   } finally {
-    await worker.end()
+    await worker.exit()
   }
 
 })
@@ -75,7 +75,7 @@ Test('WorkerClient._onApply(message)', async (test) => {
   try {
     test.is(await worker.module.getPid(), worker.pid)
   } finally {
-    await worker.end()
+    await worker.exit()
   }
 
 })
@@ -106,7 +106,7 @@ Test('WorkerClient.maximumDuration', async (test) => {
     test.is(worker.option.maximumDuration, maximumDuration)
 
   } finally {
-    await worker.end()
+    await worker.exit()
   }
 
 })
@@ -115,7 +115,7 @@ Test('WorkerClient.module.getPid(duration) throws WorkerClientRejectedError', as
 
   let worker = new WorkerClient(Require.resolve('./worker.js'))
 
-  await test.throwsAsync(Promise.all([ worker.module.getPid(2500), worker.end() ]), { 'instanceOf': WorkerClientRejectedError })
+  await test.throwsAsync(Promise.all([ worker.module.getPid(2500), worker.exit() ]), { 'instanceOf': WorkerClientRejectedError })
 
 })
 
@@ -133,12 +133,12 @@ Test('WorkerClient.ping() throws WorkerClientDurationExceededError', async (test
     worker.maximumDuration = maximumDuration    
 
   } finally {
-    await worker.end()
+    await worker.exit()
   }
 
 })
 
-Test('WorkerClient.end() throws WorkerClientDurationExceededError', async (test) => {
+Test('WorkerClient.exit() throws WorkerClientDurationExceededError', async (test) => {
 
   let worker = new WorkerClient()
 
@@ -148,7 +148,7 @@ Test('WorkerClient.end() throws WorkerClientDurationExceededError', async (test)
   maximumDuration = worker.maximumDuration
 
   worker.maximumDuration = 1    
-  await test.throwsAsync(worker.end(), { 'instanceOf': WorkerClientDurationExceededError })
+  await test.throwsAsync(worker.exit(), { 'instanceOf': WorkerClientDurationExceededError })
   worker.maximumDuration = maximumDuration    
 
 })
@@ -160,7 +160,7 @@ Test('WorkerClient.module.throwException(duration) throws WorkerExceptionError',
   try {
     await test.throwsAsync(worker.module.throwException(), { 'message': 'WorkerExceptionError' })
   } finally {
-    await worker.end()
+    await worker.exit()
   }
 
 })
@@ -181,7 +181,7 @@ Test('WorkerClient.module.then', async (test) => {
   try {
     test.falsy(worker.module.then)
   } finally {
-    await worker.end()
+    await worker.exit()
   }
 
 })
@@ -199,7 +199,7 @@ Test('WorkerClient.module.then', async (test) => {
 //     test.is(await worker.module.getPid(), worker.pid)
 
 //   } finally {
-//     await worker.end()
+//     await worker.exit()
 //   }
 
 // })
@@ -215,7 +215,7 @@ Test('WorkerClient.module.then', async (test) => {
 //     await test.throwsAsync(worker.module._getPid(), { 'instanceOf': Error })
 
 //   } finally {
-//     await worker.end()
+//     await worker.exit()
 //   }
 
 // })
@@ -234,7 +234,7 @@ Test('WorkerClient.module.then', async (test) => {
 //     test.is(worker.module, null)
 
 //   } finally {
-//     await worker.end()
+//     await worker.exit()
 //   }
 
 // })
@@ -251,7 +251,7 @@ Test('WorkerClient.module.then', async (test) => {
 //     await test.throwsAsync(worker.release(), { 'instanceOf': Error })
 
 //   } finally {
-//     await worker.end()
+//     await worker.exit()
 //   }
 
 // })
@@ -261,7 +261,7 @@ Test('WorkerClient.module.then', async (test) => {
 //   let worker = new WorkerClient()
 
 //   await worker.import(Require.resolve('./worker.js'))
-//   await test.throwsAsync(Promise.all([ worker.module.getPid(2500), worker.end() ]), { 'instanceOf': WorkerClientRejectedError })
+//   await test.throwsAsync(Promise.all([ worker.module.getPid(2500), worker.exit() ]), { 'instanceOf': WorkerClientRejectedError })
 
 // })
 
@@ -281,7 +281,7 @@ Test('WorkerClient.module.then', async (test) => {
 //     worker.maximumDuration = maximumDuration
 
 //   } finally {
-//     await worker.end()
+//     await worker.exit()
 //   }
 
 // })
@@ -296,7 +296,7 @@ Test('WorkerClient.module.then', async (test) => {
 //   maximumDuration = worker.maximumDuration
 
 //   worker.maximumDuration = 1
-//   await test.throwsAsync(worker.end(), { 'instanceOf': WorkerClientDurationExceededError })
+//   await test.throwsAsync(worker.exit(), { 'instanceOf': WorkerClientDurationExceededError })
 //   worker.maximumDuration = maximumDuration
 
 // })
@@ -311,14 +311,14 @@ Test('WorkerClient.module.then', async (test) => {
 
 // })
 
-// Test.skip('WorkerClient.end()', async (test) => {
+// Test.skip('WorkerClient.exit()', async (test) => {
 
 //   let worker = new WorkerClient() // LoggedClient() // 
 
 //   // this import is required because it contains the onEnd method
 //   await worker.import(Require.resolve('./worker.js'))
 
-//   await worker.end({ 'pid': worker.pid }) // also establishes is ready
+//   await worker.exit({ 'pid': worker.pid }) // also establishes is ready
 //   await test.throwsAsync(worker.ping(), { 'code': 'ERR_IPC_CHANNEL_CLOSED' })
 
 // })
