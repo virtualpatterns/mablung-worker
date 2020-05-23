@@ -186,6 +186,15 @@ Test('WorkerClient.module.then', async test => {
 
 });
 
+Test.only('WorkerClient.disconnect() ...', async test => {
+
+  let worker = new LoggedClient();
+
+  await test.notThrowsAsync(worker.disconnect());
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
+});
+
 // Test.skip('WorkerClient.import(url)', async (test) => {
 
 //   let worker = new WorkerClient()
