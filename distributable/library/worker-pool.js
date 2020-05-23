@@ -59,83 +59,9 @@ class WorkerPool extends ChildProcessPool {
 
   }
 
-  // async import(url, option = {}) {
-
-  //   let process = this._getConnectedProcess()
-
-  //   if (process.length > 0) {
-
-  //     let returnValue = await Promise.all(process.map((workerClient) => workerClient.import(url, option)))
-
-  //     this._module = new Proxy(this, WorkerPoolModuleHandler)
-  //     this._moduleUrl = url
-
-  //     return returnValue
-
-  //   } else {
-  //     throw new WorkerPoolDisconnectedError()
-  //   }
-
-  // }
-
   async apply(methodName, parameter) {
     return (await this._selectProcess(methodName, parameter)).apply(methodName, parameter);
   }
-
-  // async release(option = {}) {
-
-  //   let process = this._getConnectedProcess()
-
-  //   if (process.length > 0) {
-
-  //     let returnValue = await Promise.all(process.map((workerClient) => workerClient.release(option)))
-
-  //     this._module = null
-  //     this._moduleUrl = null
-
-  //     return returnValue
-
-  //   } else {
-  //     throw new WorkerPoolDisconnectedError()
-  //   }
-
-  // }
-
-  async exit(code = 0) {
-
-    let process = this._getConnectedProcess();
-
-    if (process.length > 0) {
-      return Promise.all(process.map(workerClient => workerClient.exit(code)));
-    } else {
-      throw new WorkerPoolDisconnectedError();
-    }
-
-  }
-
-  // uncaughtException() {
-
-  //   let process = this._getConnectedProcess()
-
-  //   if (process.length > 0) {
-  //     return Promise.all(process.map((workerClient) => workerClient.uncaughtException()))
-  //   } else {
-  //     throw new WorkerPoolDisconnectedError()
-  //   }
-
-  // }
-
-  // unhandledRejection() {
-
-  //   let process = this._getConnectedProcess()
-
-  //   if (process.length > 0) {
-  //     return Promise.all(process.map((workerClient) => workerClient.unhandledRejection()))
-  //   } else {
-  //     throw new WorkerPoolDisconnectedError()
-  //   }
-
-  // }
 
   async disconnect() {
 
@@ -143,6 +69,18 @@ class WorkerPool extends ChildProcessPool {
 
     if (process.length > 0) {
       return Promise.all(process.map(workerClient => workerClient.disconnect()));
+    } else {
+      throw new WorkerPoolDisconnectedError();
+    }
+
+  }
+
+  async exit(code = 0) {
+
+    let process = this._getConnectedProcess();
+
+    if (process.length > 0) {
+      return Promise.all(process.map(workerClient => workerClient.exit(code)));
     } else {
       throw new WorkerPoolDisconnectedError();
     }

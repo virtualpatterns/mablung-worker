@@ -1,4 +1,4 @@
-import { createRequire as _createRequire } from "module";import ChangeCase from 'change-case';
+import ChangeCase from 'change-case';
 import { Configuration } from '@virtualpatterns/mablung-configuration';
 
 import { ForkedProcess } from './forked-process.js';
@@ -13,7 +13,7 @@ import { WorkerClientExitedError } from './error/worker-client-exited-error.js';
 import { WorkerClientKilledError } from './error/worker-client-killed-error.js';
 
 const { pascalCase: PascalCase } = ChangeCase;
-const Require = _createRequire(import.meta.url);
+// const Require = __require
 
 class WorkerClient extends ForkedProcess {
 
@@ -51,17 +51,9 @@ class WorkerClient extends ForkedProcess {
     this.emit('ping', message);
   }
 
-  // _onImport(message) {
-  //   this.emit('import', message)
-  // }
-
   _onApply(message) {
     this.emit('apply', message);
   }
-
-  // _onRelease(message) {
-  //   this.emit('release', message)
-  // }
 
   _onError(error) {
     this._onReject(new WorkerClientInternalError(error));
@@ -98,10 +90,6 @@ class WorkerClient extends ForkedProcess {
   get module() {
     return this._module;
   }
-
-  // get moduleUrl() {
-  //   return this._moduleUrl
-  // }
 
   async whenReady() {
 
@@ -254,56 +242,20 @@ class WorkerClient extends ForkedProcess {
     return this.send({ 'type': 'ping' });
   }
 
-  // async import(url, option = {}) {
-
-  //   await this.whenReady()
-  //   let returnValue = await this.send({ 'type': 'import', 'url': url, 'option': option })
-
-  //   this._module = new Proxy(this, WorkerClientModuleHandler)
-  //   this._moduleUrl = url
-
-  //   return returnValue
-
-  // }
-
   async apply(methodName, parameter) {
     await this.whenReady();
     return this.send({ 'type': 'apply', 'methodName': methodName, 'parameter': parameter });
   }
 
-  // async release(option = {}) {
-
-  //   await this.whenReady()
-  //   let returnValue = await this.send({ 'type': 'release', 'option': option })
-
-  //   this._module = null
-  //   this._moduleUrl = null
-
-  //   return returnValue
-
-  // }
+  disconnect() {
+    super.disconnect();
+    return this.whenRejected(WorkerClientDisconnectedError);
+  }
 
   async exit(code = 0) {
     await this.whenReady();
     await super.send({ 'type': 'exit', 'code': code }); // there will be no response
     await this.whenRejected(WorkerClientExitedError);
-  }
-
-  // async uncaughtException() {
-  //   await this.whenReady()
-  //   await super.send({ 'type': 'uncaughtException' }) // there will be no response
-  //   await this.whenRejected(WorkerClientExitedError)
-  // }
-
-  // async unhandledRejection() {
-  //   await this.whenReady()
-  //   await super.send({ 'type': 'unhandledRejection' }) // there will be no response
-  //   await this.whenRejected(WorkerClientExitedError)
-  // }
-
-  disconnect() {
-    super.disconnect();
-    return this.whenRejected(WorkerClientDisconnectedError);
   }
 
   kill(...parameter) {

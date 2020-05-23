@@ -49,9 +49,4 @@ export function throwUncaughtException() {
 export function rejectUnhandledException() {
   setImmediate(() => Promise.reject(new WorkerUnhandledRejectionError()));
 }
-
-export function onEnd(code = 0, option = {}) {
-  console.log(`Worker.onEnd(${code}, option) { ... }`);
-  console.dir(option);
-}
 //# sourceMappingURL=worker.js.map
