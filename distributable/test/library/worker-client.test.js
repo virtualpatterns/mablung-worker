@@ -189,6 +189,7 @@ Test('WorkerClient.module.then', async test => {
 Test.only('WorkerClient.disconnect() ...', async test => {
 
   let worker = new LoggedClient();
+  await new Promise(resolve => setTimeout(resolve, 2000));
 
   await test.notThrowsAsync(worker.disconnect());
   await new Promise(resolve => setTimeout(resolve, 2000));
