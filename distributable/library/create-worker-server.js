@@ -1,4 +1,4 @@
-import { createRequire as _createRequire } from "module";import '@virtualpatterns/mablung-source-map-support/distributable/install.js';
+import { createRequire as _createRequire } from "module";import '@virtualpatterns/mablung-source-map-support/install.js';
 import Command from 'commander';
 import FileSystem from 'fs';
 import JSON5 from 'json5';
