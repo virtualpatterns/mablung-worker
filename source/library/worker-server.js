@@ -1,6 +1,7 @@
 import ChangeCase from 'change-case'
 import { Configuration } from '@virtualpatterns/mablung-configuration'
 import Is from '@pwn/is'
+import URL from 'url'
 
 import { WorkerServerNoIPCChannelError } from './error/worker-server-no-ipc-channel-error.js'
 
@@ -118,7 +119,7 @@ class WorkerServer {
   async import(path) {
 
     let module = null
-    module = await import(path)
+    module = await import(URL.pathToFileURL(path))
     module = module.default ? module.default : module
 
     this._module = module

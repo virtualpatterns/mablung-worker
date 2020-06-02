@@ -1,6 +1,6 @@
 import { Configuration } from '@virtualpatterns/mablung-configuration'
 
-import { LoggedClient } from './logged-client.js'
+// import { LoggedClient } from './logged-client.js'
 import { WorkerClient } from '../../index.js'
 
 const Require = __require

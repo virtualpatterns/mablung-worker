@@ -31,7 +31,7 @@ class WorkerClient extends ForkedProcess {
   // }
 
   get _defaultOption() {
-    return Configuration.merge(super._defaultOption, { 'maximumDuration': 5000 })
+    return Configuration.merge(super._defaultOption, { 'maximumDuration': 10000 })
   }
 
   _onMessage(message) {

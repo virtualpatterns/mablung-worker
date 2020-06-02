@@ -1,26 +1,33 @@
+import { Is } from '@virtualpatterns/mablung-is'
 import Test from 'ava'
 
 import { ErrorPool } from './error-pool.js'
 
 Test('new ErrorPool()', async (test) => {
 
-  let pool = new ErrorPool({ 'numberOfProcess': 1 })
-  let error = await new Promise((resolve) => {
+  if (Is.windows()) {
+    test.throws(() => new ErrorPool({ 'numberOfProcess': 1 }), { 'code': 'UNKNOWN'})
+  } else {
 
-    let onError = null
+    let pool = new ErrorPool({ 'numberOfProcess': 1 })
+    let error = await new Promise((resolve) => {
 
-    pool.on('error', onError = (index, process, error) => {
-      test.log(`pool.on('error', onError = (${index}, process, '${error.code}') => { ... })`)
+      let onError = null
 
-      pool.off('error', onError)
-      onError = null
+      pool.on('error', onError = (index, process, error) => {
+        test.log(`pool.on('error', onError = (${index}, process, '${error.code}') => { ... })`)
 
-      resolve(error)
+        pool.off('error', onError)
+        onError = null
+
+        resolve(error)
+
+      })
 
     })
 
-  })
+    test.is(error.code, 'EACCES')
 
-  test.is(error.code, 'EACCES')
+  }
 
 })
