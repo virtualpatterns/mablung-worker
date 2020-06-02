@@ -19,7 +19,7 @@ Test('new WorkerPool()', async test => {
 
 Test('new WorkerPool({ \'maximumDuration\': N })', async test => {
 
-  let longMaximumDuration = 5000;
+  let longMaximumDuration = 15000;
   let pool = new WorkerPool({ 'maximumDuration': longMaximumDuration });
 
   try {
@@ -32,8 +32,8 @@ Test('new WorkerPool({ \'maximumDuration\': N })', async test => {
 
 Test('WorkerPool.maximumDuration', async test => {
 
-  let shortMaximumDuration = 1000;
-  let longMaximumDuration = 5000;
+  let shortMaximumDuration = 5000;
+  let longMaximumDuration = 15000;
 
   let pool = new WorkerPool();
 
@@ -81,7 +81,6 @@ Test('WorkerPool.ping()', async test => {
   let pool = new WorkerPool();
 
   try {
-    // does not show the code as executed :-(
     await test.notThrowsAsync(pool.ping());
   } finally {
     await pool.exit();
@@ -146,7 +145,7 @@ Test('WorkerPool.module.rejectUnhandledException()', async test => {
 Test('WorkerPool.disconnect()', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 1 });
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise(resolve => setTimeout(resolve, 1000));
 
   await test.notThrowsAsync(pool.disconnect()); // disconnect causes a normal code = 0 exit, the pool will not recreate exited processes
   await new Promise(resolve => setTimeout(resolve, 1000));
@@ -157,7 +156,7 @@ Test('WorkerPool.disconnect()', async test => {
 Test('WorkerPool.disconnect() throws WorkerPoolDisconnectedError', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 1 });
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise(resolve => setTimeout(resolve, 1000));
 
   await test.notThrowsAsync(pool.disconnect()); // disconnect causes a normal code = 0 exit, the pool will not recreate exited processes
   await new Promise(resolve => setTimeout(resolve, 1000));
@@ -170,7 +169,7 @@ Test('WorkerPool.kill()', async test => {
   // use LoggedPool so that the if condition of _recreateProcess regarding the stream is called
 
   let pool = new LoggedPool({ 'numberOfProcess': 1 });
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise(resolve => setTimeout(resolve, 1000));
 
   try {
 
@@ -187,207 +186,11 @@ Test('WorkerPool.kill()', async test => {
 Test('WorkerPool.kill() throws WorkerPoolDisconnectedError', async test => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 1 });
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise(resolve => setTimeout(resolve, 1000));
 
   await test.notThrowsAsync(pool.disconnect()); // disconnect causes a normal code = 0 exit, the pool will not recreate exited processes
   await new Promise(resolve => setTimeout(resolve, 1000));
   await test.throwsAsync(pool.kill(), { 'instanceOf': WorkerPoolDisconnectedError });
 
 });
-
-// Test.skip('WorkerPool.uncaughtException()', async (test) => {
-
-//   let pool = new WorkerPool()
-
-//   try {
-
-//     await pool.uncaughtException()
-//     await test.notThrowsAsync(pool.ping()) // the pool should recreate exited processes
-
-//   } finally {
-//     await pool.exit()
-//   }
-
-// })
-
-// Test.skip('WorkerPool.unhandledRejection()', async (test) => {
-
-//   // this test requires that unhandled promises exit the node process
-//   // this is enabled by the --unhandled-rejections=strict argument
-
-//   let pool = new LoggedPool()
-
-//   try {
-
-//     await pool.unhandledRejection()
-//     await test.notThrowsAsync(pool.ping()) // the pool should recreate exited processes
-
-//   } finally {
-//     await pool.exit()
-//   }
-
-// })
-
-// Test.skip('new WorkerPool({ \'numberOfProcess\': 2 })', async (test) => {
-
-//   let pool = new WorkerPool({ 'numberOfProcess': 2 })
-
-//   try {
-//     test.is(pool._getConnectedProcessInformation().length, 2)
-//   } finally {
-//     await pool.exit()
-//   }
-
-// })
-
-// Test.skip('WorkerPool.whenMessageType(type) throws WorkerClientDurationExceededError', async (test) => {
-
-//   let pool = new WorkerPool({ 'numberOfProcess': 2 })
-
-//   try {
-
-//     await pool.import(Require.resolve('./worker.js'))
-
-//     let maximumDuration = null
-//     maximumDuration = pool.maximumDuration
-
-//     pool.maximumDuration = 2000
-//     await test.throwsAsync(pool.module.getPid(2500), { 'instanceOf': WorkerClientDurationExceededError })
-//     pool.maximumDuration = maximumDuration
-
-//   } finally {
-//     await pool.exit()
-//   }
-
-// })
-
-// Test.skip('WorkerPool.ping() throws WorkerClientDurationExceededError', async (test) => {
-
-//   let pool = new WorkerPool({ 'maximumDuration': 1, 'numberOfProcess': 2 })
-
-//   try {
-//     await test.throwsAsync(pool.ping(), { 'instanceOf': WorkerClientDurationExceededError })
-//   } finally {
-//     // we can't use pool.kill() because it'll timeout
-//     pool._getConnectedProcessInformation().forEach(({ process: worker }) => Process.kill(worker.pid)) 
-//   }
-
-// })
-
-// Test.skip('WorkerPool.import(url)', async (test) => {
-
-//   let pool = new WorkerPool({ 'numberOfProcess': 2 })
-
-//   try {
-
-//     let allPid = await pool.import(Require.resolve('./worker.js'))
-//     let onePid = await pool.module.getPid()
-
-//     test.assert(allPid.includes(onePid))
-//     await test.throwsAsync(pool.import(Require.resolve('./worker.js')), { 'instanceOf': Error })
-
-//   } finally {
-//     await pool.exit()
-//   }
-
-// })
-
-// Test.skip('WorkerPool.import(url) throws Error', async (test) => {
-
-//   let pool = new WorkerPool({ 'numberOfProcess': 2 })
-
-//   try {
-
-//     await pool.import(Require.resolve('./worker.js'))
-
-//     await test.throwsAsync(pool.module._getPid(), { 'instanceOf': Error })
-
-//   } finally {
-//     await pool.exit()
-//   }
-
-// })
-
-// Test.skip('WorkerPool.release()', async (test) => {
-
-//   let pool = new WorkerPool({ 'numberOfProcess': 2 })
-
-//   try {
-
-//     let allPid = await pool.import(Require.resolve('./worker.js'))
-//     let onePid = await pool.module.getPid()
-
-//     allPid = await pool.release()
-
-//     test.assert(allPid.includes(onePid))
-//     test.is(pool.module, null)
-
-//   } finally {
-//     await pool.exit()
-//   }
-
-// })
-
-// Test.skip('WorkerPool.release() throws Error', async (test) => {
-
-//   let pool = new WorkerPool({ 'numberOfProcess': 2 })
-
-//   try {
-
-//     await pool.import(Require.resolve('./worker.js'))
-//     await pool.release()
-
-//     await test.throwsAsync(pool.release(), { 'instanceOf': Error })
-
-//   } finally {
-//     await pool.exit()
-//   }
-
-// })
-
-// Test.skip('WorkerPool.getPid(duration) throws WorkerClientRejectedError', async (test) => {
-
-//   let pool = new WorkerPool({ 'numberOfProcess': 2 })
-
-//   await pool.import(Require.resolve('./worker.js'))
-//   await test.throwsAsync(Promise.all([ pool.module.getPid(2500), pool.exit() ]), { 'instanceOf': WorkerClientRejectedError })
-
-// })
-
-// Test.skip('WorkerPool.whenRejected() throws WorkerClientDurationExceededError', async (test) => {
-
-//   let pool = new WorkerPool({ 'numberOfProcess': 2 })
-
-//   await pool.ping() // establish is ready before call to end
-
-//   let maximumDuration = null
-//   maximumDuration = pool.maximumDuration
-
-//   pool.maximumDuration = 1
-//   await test.throwsAsync(pool.exit(), { 'instanceOf': WorkerClientDurationExceededError })
-//   pool.maximumDuration = maximumDuration
-
-// })
-
-// Test.skip('WorkerPool.exit()', async (test) => {
-
-//   let pool = new WorkerPool({ 'numberOfProcess': 2 })
-
-//   // this import is required because it contains the onEnd method
-//   await pool.import(Require.resolve('./worker.js'))
-
-//   await pool.exit({ 'pid': 10000 }) // also establishes is ready
-//   await test.throwsAsync(pool.ping()) // , { 'instanceOf': WorkerPoolDisconnectedError })
-
-// })
-
-// Test.skip('WorkerPool.kill() when maximumNumberOfCreate is 0', async (test) => {
-
-//   let pool = new WorkerPool({ 'maximumNumberOfCreate': 0, 'numberOfProcess': 2 })
-
-//   await test.notThrowsAsync(pool.ping()) // establishes is ready
-//   await pool.kill()
-//   await test.throwsAsync(pool.ping()) // the pool will not recreate killed processes
-
-// })
 //# sourceMappingURL=worker-pool.test.js.map

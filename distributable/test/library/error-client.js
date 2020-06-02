@@ -1,6 +1,6 @@
 import _URL from "url";import { Configuration } from '@virtualpatterns/mablung-configuration';
 
-import { LoggedClient } from './logged-client.js';
+// import { LoggedClient } from './logged-client.js'
 import { WorkerClient } from '../../index.js';
 
 class ErrorClient extends WorkerClient {
