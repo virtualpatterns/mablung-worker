@@ -1,4 +1,4 @@
-import { createRequire as _createRequire } from "module";import Is from '@pwn/is';
+import { createRequire as _createRequire } from "module";import { Is } from '@virtualpatterns/mablung-is';
 
 const Require = _createRequire(import.meta.url);
 
