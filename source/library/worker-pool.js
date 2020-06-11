@@ -1,5 +1,5 @@
 import { Configuration } from '@virtualpatterns/mablung-configuration'
-import Is from '@pwn/is'
+import { Is } from '@virtualpatterns/mablung-is'
 
 import { ChildProcessPool } from './child-process-pool.js'
 import { WorkerClient } from './worker-client.js'

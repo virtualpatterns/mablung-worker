@@ -2,7 +2,7 @@ import { Configuration } from '@virtualpatterns/mablung-configuration'
 import { Console } from 'console'
 import EventEmitter from 'events'
 import FileSystem from 'fs-extra'
-import Is from '@pwn/is'
+import { Is } from '@virtualpatterns/mablung-is'
 import OS from 'os'
 import Stream from 'stream'
 
@@ -21,11 +21,7 @@ class ChildProcessPool extends EventEmitter {
     let option = Configuration.getOption(this._defaultOption, userOption)
 
     let numberOfProcess = option.numberOfProcess || OS.cpus().length - 1
-    let processInformation = []
-
-    for (let index = 0; index < numberOfProcess; index++) {
-      processInformation.push(this._createProcessInformation(index, path, parameter, option))
-    }
+    let processInformation = (new Array(numberOfProcess)).fill().map((value, index) => this._createProcessInformation(index, path, parameter, option))
 
     this._processPath = path
     this._processParameter = parameter

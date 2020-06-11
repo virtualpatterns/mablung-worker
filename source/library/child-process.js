@@ -2,7 +2,7 @@ import { Configuration } from '@virtualpatterns/mablung-configuration'
 import { Console } from 'console'
 import EventEmitter from 'events'
 import FileSystem from 'fs-extra'
-import Is from '@pwn/is'
+import { Is } from '@virtualpatterns/mablung-is'
 import Stream from 'stream'
 
 import { Null } from './null.js'

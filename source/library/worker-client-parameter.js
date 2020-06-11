@@ -1,4 +1,4 @@
-import Is from '@pwn/is'
+import { Is } from '@virtualpatterns/mablung-is'
 
 const Require = __require
 

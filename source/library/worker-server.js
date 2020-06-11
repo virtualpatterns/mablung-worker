@@ -1,6 +1,6 @@
 import ChangeCase from 'change-case'
 import { Configuration } from '@virtualpatterns/mablung-configuration'
-import Is from '@pwn/is'
+import { Is } from '@virtualpatterns/mablung-is'
 import URL from 'url'
 
 import { WorkerServerNoIPCChannelError } from './error/worker-server-no-ipc-channel-error.js'

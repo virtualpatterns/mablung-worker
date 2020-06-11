@@ -1,4 +1,4 @@
-import Is from '@pwn/is'
+import { Is } from '@virtualpatterns/mablung-is'
 
 import { WorkerPool } from '../worker-pool.js'
 
