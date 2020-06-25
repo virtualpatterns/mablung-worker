@@ -5,6 +5,8 @@ Test.before(async (test) => {
 })
 
 ;[
+  'ChildProcess',
+  'ForkedProcess',
   'WorkerClient',
   'WorkerPool',
   'NextWorkerPool',
@@ -14,7 +16,9 @@ Test.before(async (test) => {
   'WorkerClientExitedError',
   'WorkerClientInternalError',
   'WorkerClientKilledError',
-  'WorkerPoolDisconnectedError'
+  'WorkerPoolDisconnectedError',
+  'LoggedClient',
+  'LoggedPool'
 ].forEach((name) => {
 
   Test(name, async (test) => {
