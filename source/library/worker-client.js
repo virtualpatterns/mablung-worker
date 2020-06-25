@@ -13,7 +13,6 @@ import { WorkerClientExitedError } from './error/worker-client-exited-error.js'
 import { WorkerClientKilledError } from './error/worker-client-killed-error.js'
 
 const { pascalCase: PascalCase } = ChangeCase
-// const Require = __require
 
 class WorkerClient extends ForkedProcess {
 
@@ -25,10 +24,6 @@ class WorkerClient extends ForkedProcess {
     this._module = new Proxy(this, WorkerClientModuleHandler)
 
   }
-
-  // get _defaultParameter() {
-  //   return Configuration.merge(super._defaultParameter, { '--worker-server-class-path': Require.resolve('./worker-server.js') })
-  // }
 
   get _defaultOption() {
     return Configuration.merge(super._defaultOption, { 'maximumDuration': 10000 })
