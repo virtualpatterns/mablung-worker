@@ -24,9 +24,7 @@
   },
   "description": "TBD",
   "exports": {
-    ".": "./distributable/index.js",
-    "./logged-client.js": "./distributable/test/library/logged-client.js",
-    "./logged-pool.js": "./distributable/test/library/logged-pool.js"
+    ".": "./distributable/index.js"
   },
   "license": "GPL-3.0+",
   "name": "@virtualpatterns/mablung-worker",
