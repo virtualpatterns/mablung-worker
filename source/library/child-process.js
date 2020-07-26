@@ -3,6 +3,7 @@ import { Console } from 'console'
 import EventEmitter from 'events'
 import FileSystem from 'fs-extra'
 import { Is } from '@virtualpatterns/mablung-is'
+import Path from 'path'
 import Stream from 'stream'
 
 import { Null } from './null.js'
@@ -199,6 +200,7 @@ class ChildProcess extends EventEmitter {
         stream = path
         break
       default:
+        FileSystem.ensureDirSync(Path.dirname(path))
         stream = FileSystem.createWriteStream(path, option)
     }
 
