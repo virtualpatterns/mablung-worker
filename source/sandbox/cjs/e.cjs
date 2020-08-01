@@ -1,21 +1,21 @@
-import Source from 'source-map-support'
+// import Source from 'source-map-support'
 
-const Process = process
+// const Process = process
 
-Source.install({ 'environment': 'node', 'handleUncaughtExceptions': false, 'hookRequire': false })
+// Source.install({ 'environment': 'node', 'handleUncaughtExceptions': false, 'hookRequire': false })
 
-Process.on('exit', () => {
-  console.log('Process.on(\'exit\', () => { ... })')
-})
+// Process.on('exit', () => {
+//   console.log('Process.on(\'exit\', () => { ... })')
+// })
 
-;(async () => {
+// ;(async () => {
 
-  try {
+//   try {
 
-    throw new Error('You suck!')
+//     throw new Error('You suck!')
 
-  } catch (error) {
-    console.error(error)
-  }
+//   } catch (error) {
+//     console.error(error)
+//   }
 
-})()
+// })()
