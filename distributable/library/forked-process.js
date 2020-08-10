@@ -1,4 +1,4 @@
-import _ChildProcess from 'child_process';
+import BaseChildProcess from 'child_process';
 
 import { ChildProcess } from './child-process.js';
 
@@ -9,7 +9,7 @@ class ForkedProcess extends ChildProcess {
   }
 
   _createProcess(path, parameter, option) {
-    return _ChildProcess.fork(path, parameter, option);
+    return BaseChildProcess.fork(path, parameter, option);
   }}
 
 
