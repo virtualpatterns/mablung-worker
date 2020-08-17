@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.31% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>96/104</span>
+                <span class='fraction'>104/104</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.88% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>29/33</span>
+                <span class='fraction'>28/28</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.31% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>96/104</span>
+                <span class='fraction'>104/104</span>
             </div>
         
             
@@ -218,8 +218,8 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">5x</span>
@@ -234,8 +234,8 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">14x</span>
@@ -246,8 +246,8 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -258,8 +258,8 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -320,9 +320,9 @@ class WorkerPool extends ChildProcessPool {
 &nbsp;
     } else {
       throw new WorkerPoolDisconnectedError()
-    }<span class="branch-0 cbranch-no" title="branch not covered" ></span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+    }
+&nbsp;
+  }
   
   async apply(methodName, parameter) {
     return (await this._selectProcess(methodName, parameter)).apply(methodName, parameter)
@@ -336,9 +336,9 @@ class WorkerPool extends ChildProcessPool {
       return Promise.all(process.map((workerClient) =&gt; workerClient.disconnect()))
     } else {
       throw new WorkerPoolDisconnectedError()
-    }<span class="branch-0 cbranch-no" title="branch not covered" ></span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+    }
+&nbsp;
+  }
 &nbsp;
   async exit(code = 0) {
 &nbsp;
@@ -348,9 +348,9 @@ class WorkerPool extends ChildProcessPool {
       return Promise.all(process.map((workerClient) =&gt; workerClient.exit(code)))
     } else {
       throw new WorkerPoolDisconnectedError()
-    }<span class="branch-0 cbranch-no" title="branch not covered" ></span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+    }
+&nbsp;
+  }
 &nbsp;
   async kill(...parameter) {
 &nbsp;
@@ -360,9 +360,9 @@ class WorkerPool extends ChildProcessPool {
       return Promise.all(process.map((workerClient) =&gt; workerClient.kill(...parameter)))
     } else {
       throw new WorkerPoolDisconnectedError()
-    }<span class="branch-0 cbranch-no" title="branch not covered" ></span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+    }
+&nbsp;
+  }
 &nbsp;
 }
 &nbsp;
@@ -373,7 +373,7 @@ export { WorkerPool }</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sun Aug 09 2020 22:57:51 GMT-0400 (Eastern Daylight Time)
+                at Sun Aug 16 2020 23:30:04 GMT-0400 (Eastern Daylight Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
