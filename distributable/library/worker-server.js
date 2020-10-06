@@ -28,8 +28,8 @@ class WorkerServer {
   _attach() {
 
     Process.on('message', this.__onMessage = async message => {
-      console.log('WorkerServer.on(\'message\', this.__onMessage = async (message) => { ... })');
-      console.dir(message);
+      // console.log('WorkerServer.on(\'message\', this.__onMessage = async (message) => { ... })')
+      // console.dir(message)
 
       try {
         this._detachReadyInterval();
@@ -42,7 +42,7 @@ class WorkerServer {
     });
 
     Process.on('disconnect', this.__onDisconnect = () => {
-      console.log('WorkerServer.on(\'disconnect\', this.__onDisconnect = () => { ... })');
+      // console.log('WorkerServer.on(\'disconnect\', this.__onDisconnect = () => { ... })')
 
       try {
         this._detachReadyInterval();
@@ -55,7 +55,7 @@ class WorkerServer {
     });
 
     Process.on('exit', this.__onExit = code => {
-      console.log(`WorkerServer.on('exit', this.__onExit = (${code}) => { ... })`);
+      // console.log(`WorkerServer.on('exit', this.__onExit = (${code}) => { ... })`)
 
       try {
         this._detach();
@@ -128,8 +128,8 @@ class WorkerServer {
   }
 
   send(message) {
-    console.log('WorkerServer.send(message) { ... }');
-    console.dir(message);
+    // console.log('WorkerServer.send(message) { ... }')
+    // console.dir(message)
 
     return new Promise((resolve, reject) => {
 
@@ -172,51 +172,6 @@ class WorkerServer {
 
   }
 
-  // async onImport(message) {
-
-  //   try {
-
-  //     if (Is.null(this._module)) {
-
-  //       let url = message.url
-  //       let option = message.option
-
-  //       let module = null
-  //       module = await import(url)
-  //       module = module.default ? module.default : module
-
-  //       let onImport = module['onImport']
-
-  //       if (onImport) {
-
-  //         let returnValue = null
-  //         returnValue = onImport.apply(module, [ option ])
-  //         returnValue = returnValue instanceof Promise ? await returnValue : returnValue
-
-  //         message.returnValue = returnValue
-
-  //       }
-
-  //       delete message.error
-
-  //       this._module = module
-  //       this._modulePath = url
-
-  //     } else {
-  //       throw new WorkerServerModuleImportedError(this._modulePath)
-  //     }
-
-  //   } catch (error) {
-
-  //     message.error = error
-  //     delete message.returnValue
-
-  //   }
-
-  //   await this.send(message)
-
-  // }
-
   async _onApply(message) {
 
     try {
@@ -239,78 +194,6 @@ class WorkerServer {
 
   }
 
-  // async onApply(message) {
-
-  //   try {
-
-  //     if (Is.not.null(this._module)) {
-
-  //       let method = this._module[message.methodName]
-
-  //       if (method) {
-
-  //         let returnValue = null
-  //         returnValue = method.apply(this._module, message.parameter)
-  //         returnValue = returnValue instanceof Promise ? await returnValue : returnValue
-
-  //         delete message.error
-  //         message.returnValue = returnValue
-
-  //       } else {
-  //         throw new WorkerServerModuleExportError(this._modulePath, message.methodName)
-  //       }
-
-  //     } else {
-  //       throw new WorkerServerNoModuleImportedError()
-  //     }
-
-  //   } catch (error) {
-
-  //     message.error = error
-  //     delete message.returnValue
-
-  //   }
-
-  //   await this.send(message)
-
-  // }
-
-  // async onRelease(message) {
-
-  //   try {
-
-  //     if (Is.not.null(this._module)) {
-
-  //       let option = message.option
-  //       let onRelease = this._module['onRelease']
-
-  //       if (onRelease) {
-
-  //         let returnValue = null
-  //         returnValue = onRelease.apply(this._module, [ option ])
-  //         returnValue = returnValue instanceof Promise ? await returnValue : returnValue
-
-  //         message.returnValue = returnValue
-
-  //       }
-
-  //       delete message.error
-
-  //       this._module = null
-  //       this._modulePath = null
-
-  //     } else {
-  //       throw new WorkerServerNoModuleImportedError()
-  //     }
-
-  //   } catch (error) {
-  //     message.error = error
-  //   }
-
-  //   await this.send(message)
-
-  // }
-
   async _onExit(message) {
 
     try {
@@ -320,16 +203,8 @@ class WorkerServer {
       console.error(error);
     }
 
-  }
+  }}
 
-  // onUncaughtException() {
-  //   setImmediate(() => { throw new WorkerServerUncaughtExceptionError() })
-  // }
-
-  // onUnhandledRejection() {
-  //   setImmediate(() => Promise.reject(new WorkerServerUnhandledRejectionError()))
-  // }
-}
 
 
 export default WorkerServer;
