@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../source/library/worker.js"],"names":["Process","process","getPid","pid"],"mappings":";;;;;;AAAA,MAAMA,OAAO,GAAGC,OAAhB;;AAEO,SAASC,MAAT,GAAkB;AACvB,SAAOF,OAAO,CAACG,GAAf;AACD","sourcesContent":["const Process = process\n\nexport function getPid() {\n  return Process.pid\n}\n"],"file":"worker.cjs"}
