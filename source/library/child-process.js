@@ -1,8 +1,8 @@
 import { Configuration } from '@virtualpatterns/mablung-configuration'
 import { Console } from 'console'
+import { Is } from '@virtualpatterns/mablung-is'
 import EventEmitter from 'events'
 import FileSystem from 'fs-extra'
-import { Is } from '@virtualpatterns/mablung-is'
 import Path from 'path'
 import Stream from 'stream'
 

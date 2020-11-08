@@ -1,11 +1,11 @@
-import ChangeCase from 'change-case'
 import { Configuration } from '@virtualpatterns/mablung-configuration'
 import { Is } from '@virtualpatterns/mablung-is'
+import DefaultChangeCase, * as ModuleChangeCase from 'change-case'
 import URL from 'url'
 
 import { WorkerServerNoIPCChannelError } from './error/worker-server-no-ipc-channel-error.js'
 
-const { pascalCase: PascalCase } = ChangeCase
+const { 'pascalCase': PascalCase } = DefaultChangeCase || ModuleChangeCase
 const Process = process
 
 class WorkerServer {
@@ -119,8 +119,8 @@ class WorkerServer {
   async import(path) {
 
     let module = null
-    module = await import(URL.pathToFileURL(path))
-    module = module.default ? module.default : module
+    module = await import(path) // URL.pathToFileURL(path))
+    module = module.default || module
 
     this._module = module
     this._modulePath = path

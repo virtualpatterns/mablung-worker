@@ -10,23 +10,27 @@
     "__filePath": "readonly",
     "__require": "readonly"
   },
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
-    "requireConfigFile": true,
+    "requireConfigFile": false,
     "sourceType": "module"
   },
   "plugins": [
-    "babel"
+    "@babel"
   ],
   "rules": {
-    "arrow-parens": "error",
+    // to avoid error
+    "template-curly-spacing" : "off",
+    "indent" : "off",
+    // to avoid error
+    "arrow-parens": [ "error", "always" ],
     "comma-dangle": [ "error", "never" ],
-    "no-debugger": "warn",
-    "indent": [ "error", 2, { "SwitchCase": 1 } ],
     "linebreak-style": [ "error", "unix" ],
     "no-console": "warn",
+    "no-debugger": "warn",
     "no-unused-vars": "warn",
-    "quotes": [ "error", "single" ],
+    "quote-props": [ "error", "always" ],
+    "quotes": [ "warn", "single" ],
     "semi": [ "error", "never" ]
   }
 }

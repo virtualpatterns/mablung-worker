@@ -1,5 +1,4 @@
 import { Configuration } from '@virtualpatterns/mablung-configuration'
-
 import { ErrorClient } from './error-client.js'
 // import { LoggedPool } from './logged-pool.js'
 import { WorkerPool } from '../../index.js'

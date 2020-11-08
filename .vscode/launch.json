@@ -7,31 +7,29 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch p.js",
+      "name": "Launch ...",
       "autoAttachChildProcesses": false,
       "internalConsoleOptions": "openOnSessionStart",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/distributable/sandbox/p.js",
-      "skipFiles": [ "<node_internals>/**" ]
+      "program": "${workspaceFolder}/distributable-commonjs/sandbox/importq.cjs",
+      "skipFiles": [ "<node_internals>/**" ],
+      "stopOnEntry": false,
+      "args": []
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Test",
-      "autoAttachChildProcesses": false,
-      "internalConsoleOptions": "openOnSessionStart",
-      "outputCapture": "std",
-      "port": 9229,
+      "name": "Test ...",
       "preLaunchTask": "build",
-      "runtimeArgs": [
-        "debug",
-        "--break",
-        "distributable/test/library/worker-pool.test.js"
-      ],
       "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ava",
+      "runtimeArgs": [
+        "--serial",
+        "distributable-commonjs/test/**/scenario-00.test.*"
+      ],
+      "outputCapture": "std",
       "skipFiles": [
         "<node_internals>/**/*.js"
       ]
-    }  
+    } 
   ]
 }

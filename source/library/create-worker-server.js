@@ -2,9 +2,9 @@ import '@virtualpatterns/mablung-source-map-support/install'
 import Command from 'commander'
 import FileSystem from 'fs'
 import JSON5 from 'json5'
-import Path from 'path'
-import URL from 'url'
-import Utilities from 'util'
+// import Path from 'path'
+// import URL from 'url'
+// import Utilities from 'util'
 
 const Process = process
 const Require = __require
@@ -29,8 +29,8 @@ const Package = JSON5.parse(FileSystem.readFileSync(Require.resolve('../../packa
   // console.log(`Command.importPath            = '${Path.relative(Process.cwd(), Command.importPath)}'`)
 
   let workerServerClass = null
-  workerServerClass = await import(URL.pathToFileURL(Command.workerServerClassPath))
-  workerServerClass = workerServerClass.default ? workerServerClass.default : workerServerClass
+  workerServerClass = await import(Command.workerServerClassPath) // URL.pathToFileURL(Command.workerServerClassPath))
+  workerServerClass = workerServerClass.default || workerServerClass
 
   // console.log(`workerServerClass.name        = ${workerServerClass.name}`)
   // console.log('-'.repeat(80))

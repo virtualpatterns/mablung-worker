@@ -1,9 +1,8 @@
-import ChangeCase from 'change-case'
 import { Configuration } from '@virtualpatterns/mablung-configuration'
-
 import { ForkedProcess } from './forked-process.js'
 import { WorkerClientModuleHandler } from './worker-client-module-handler.js'
 import { WorkerClientParameter } from './worker-client-parameter.js'
+import DefaultChangeCase, * as ModuleChangeCase from 'change-case'
 
 import { WorkerClientDurationExceededError } from './error/worker-client-duration-exceeded-error.js'
 import { WorkerClientRejectedError } from './error/worker-client-rejected-error.js'
@@ -12,7 +11,7 @@ import { WorkerClientInternalError } from './error/worker-client-internal-error.
 import { WorkerClientExitedError } from './error/worker-client-exited-error.js'
 import { WorkerClientKilledError } from './error/worker-client-killed-error.js'
 
-const { pascalCase: PascalCase } = ChangeCase
+const { 'pascalCase': PascalCase } = DefaultChangeCase || ModuleChangeCase
 
 class WorkerClient extends ForkedProcess {
 

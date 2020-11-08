@@ -1,5 +1,4 @@
 import { Configuration } from '@virtualpatterns/mablung-configuration'
-
 import { ExitClient } from './exit-client.js'
 // import { LoggedPool } from './logged-pool.js'
 import { WorkerPool } from '../../index.js'

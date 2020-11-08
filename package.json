@@ -3,7 +3,8 @@
   "ava": {
     "failFast": true,
     "files": [
-      "distributable/test/**/*.test.*"
+      "distributable-commonjs/test/**/*.test.*",
+      "distributable-esmodule/test/**/*.test.*"
     ],
     "nodeArguments": [
       "--no-warnings",
@@ -15,19 +16,29 @@
     "verbose": true
   },
   "c8": {
+    "all": true,
     "exclude": [
-      "distributable/test"
+      "distributable-commonjs/sandbox",
+      "distributable-commonjs/test",
+      "distributable-esmodule/sandbox",
+      "distributable-esmodule/test",
+      "source/sandbox",
+      "source/test"
     ],
     "reporter": [
-      "lcov"
+      "html"
     ]
   },
   "description": "TBD",
   "exports": {
-    ".": "./distributable/index.js",
+    ".": {
+      "import": "./distributable-esmodule/index.js",
+      "require": "./distributable-commonjs/index.cjs"
+    },
     "./package.json": "./package.json"
   },
   "license": "GPL-3.0+",
+  "main": "distributable-commonjs/index.cjs",
   "name": "@virtualpatterns/mablung-worker",
   "repository": {
     "type": "git",
@@ -43,18 +54,19 @@
     "upgrade:20": "shx rm -f package-lock.json",
     "upgrade:30": "npm install",
     "upgrade": "run-s --silent upgrade:*",
-    "clean:10": "shx rm -Rf coverage distributable process",
+    "clean:10": "shx rm -Rf coverage distributable-commonjs distributable-esmodule process",
     "clean": "run-s --silent clean:*",
     "lint:10": "eslint --ignore-path .gitignore source",
     "lint:20": "check-dependency",
     "lint": "run-s --silent lint:*",
-    "build:10": "babel source --copy-files --extensions .cjs,.js --keep-file-extension --out-dir distributable --source-maps",
+    "build:10": "cross-env NODE_ENV=commonjs babel source --copy-files --extensions .js                       --out-dir distributable-commonjs --out-file-extension .cjs --source-maps",
+    "build:20": "cross-env NODE_ENV=esmodule babel source --copy-files --extensions .js --keep-file-extension --out-dir distributable-esmodule                           --source-maps",
     "build": "run-s --silent clean lint build:*",
     "test:10": "c8 ava",
     "test": "run-s --silent build \"test:10 {@}\" --",
     "run:10": "node --no-warnings --unhandled-rejections=strict",
     "run": "run-s --silent build \"run:10 {@}\" --",
-    "pre:push:10": "git add coverage distributable",
+    "pre:push:10": "git add coverage distributable-commonjs distributable-esmodule",
     "pre:push:20": "git commit --message=\"post-test\"",
     "pre:push": "run-s --silent test pre:push:*",
     "push:10": "npm version prerelease",
@@ -64,27 +76,30 @@
   "type": "module",
   "version": "0.0.2-28",
   "devDependencies": {
-    "@babel/cli": "^7.11.6",
-    "@babel/core": "^7.11.6",
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/eslint-parser": "^7.12.1",
+    "@babel/eslint-plugin": "7.12.1",
     "@babel/plugin-syntax-import-meta": "^7.10.4",
+    "@babel/preset-env": "^7.12.1",
     "@virtualpatterns/mablung-babel-plugin-replace-identifier": "git+https://github.com/virtualpatterns/mablung-babel-plugin-replace-identifier.git",
+    "@virtualpatterns/mablung-babel-plugin-replace-string-literal": "git+https://github.com/virtualpatterns/mablung-babel-plugin-replace-string-literal",
     "@virtualpatterns/mablung-check-dependency": "git+https://github.com/virtualpatterns/mablung-check-dependency",
     "@virtualpatterns/mablung-source-map-support": "git+https://github.com/virtualpatterns/mablung-source-map-support.git",
     "ava": "^3.13.0",
-    "babel-eslint": "^10.1.0",
-    "c8": "^7.3.1",
-    "eslint": "^7.10.0",
-    "eslint-plugin-babel": "^5.3.1",
-    "npm-check-updates": "^9.0.4",
+    "c8": "^7.3.5",
+    "cross-env": "^7.0.2",
+    "eslint": "^7.13.0",
+    "npm-check-updates": "^9.2.4",
     "npm-run-all": "^4.1.5",
-    "shx": "^0.3.2",
-    "sinon": "^9.1.0"
+    "shx": "^0.3.3",
+    "sinon": "^9.2.1"
   },
   "dependencies": {
     "@virtualpatterns/mablung-configuration": "git+https://github.com/virtualpatterns/mablung-configuration.git",
     "@virtualpatterns/mablung-is": "git+https://github.com/virtualpatterns/mablung-is.git",
     "change-case": "^4.1.1",
-    "commander": "^6.1.0",
+    "commander": "^6.2.0",
     "fs-extra": "^9.0.1",
     "json5": "^2.1.3"
   }
