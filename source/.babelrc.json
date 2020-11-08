@@ -1,47 +1,92 @@
 {
-  "plugins": [
-    "@babel/plugin-syntax-import-meta",
-    [
-      "@virtualpatterns/mablung-babel-plugin-replace-identifier",
-      {
-        "rule": [
+  "env": {
+    "commonjs": {
+      "plugins": [
+        [
+          "@virtualpatterns/mablung-babel-plugin-replace-identifier",
           {
-            "searchFor": "__filePath",
-            "replaceWith": "__importIdentifier.fileURLToPath(import.meta.url)",
-            "parserOption": { 
-              "plugins": [ "importMeta" ], 
-              "sourceType": "module" 
-            },
-            "addImport": [
+            "rule": [
               {
-                "type": "default",
-                "source": "url",
-                "option": {
-                  "nameHint": "URL"
-                }                          
+                "searchFor": "__filePath",
+                "replaceWith": "__filename"
+              },
+              {
+                "searchFor": "__require",
+                "replaceWith": "require"
               }
             ]
-          },
+          }
+        ],
+        [
+          "@virtualpatterns/mablung-babel-plugin-replace-string-literal",
           {
-            "searchFor": "__require",
-            "replaceWith": "__importIdentifier(import.meta.url)",
-            "parserOption": { 
-              "plugins": [ "importMeta" ], 
-              "sourceType": "module" 
-            },
-            "addImport": [
+            "rule": [
               {
-                "type": "named",
-                "name": "createRequire",
-                "source": "module"
+                "searchFor": "^(\\.{1,2}\\/.*?)\\.js$",
+                "replaceWith": "$1.cjs"
+              }
+            ]
+          }      
+        ]
+      ],
+      "presets": [
+        [
+          "@babel/preset-env",
+          {
+            "targets": { 
+              "node": "current" 
+            } 
+          }
+        ]
+      ],
+      "sourceType": "module"
+    },
+    "esmodule": {
+      "plugins": [
+        "@babel/plugin-syntax-import-meta",
+        [
+          "@virtualpatterns/mablung-babel-plugin-replace-identifier",
+          {
+            "rule": [
+              {
+                "searchFor": "__filePath",
+                "replaceWith": "__importIdentifier.fileURLToPath(import.meta.url)",
+                "parserOption": { 
+                  "plugins": [ "importMeta" ], 
+                  "sourceType": "module" 
+                },
+                "addImport": [
+                  {
+                    "type": "default",
+                    "source": "url",
+                    "option": {
+                      "nameHint": "URL"
+                    }
+                  }
+                ]
+              },
+              {
+                "searchFor": "__require",
+                "replaceWith": "__importIdentifier(import.meta.url)",
+                "parserOption": { 
+                  "plugins": [ "importMeta" ], 
+                  "sourceType": "module" 
+                },
+                "addImport": [
+                  {
+                    "type": "named",
+                    "name": "createRequire",
+                    "source": "module"
+                  }
+                ]
               }
             ]
           }
         ]
-      }
-    ]
-  ],
-  "presets": [],
-  "retainLines": true,
-  "sourceType": "module"
+      ],
+      "presets": [],
+      "retainLines": true,
+      "sourceType": "module"
+    }
+  }
 }
