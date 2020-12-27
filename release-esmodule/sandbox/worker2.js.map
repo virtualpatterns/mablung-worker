@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../source/sandbox/worker2.js"],"names":["getIt"],"mappings":"AAAA,OAAO,SAASA,KAAT,GAAiB;AACtB,SAAO,GAAP;AACD","sourcesContent":["export function getIt() {\n  return 123\n}"],"file":"worker2.js"}
