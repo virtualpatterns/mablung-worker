@@ -73,7 +73,7 @@
     "push": "run-s --silent pre:push push:*"
   },
   "type": "module",
-  "version": "0.0.2-29",
+  "version": "0.0.2-30",
   "devDependencies": {
     "@babel/cli": "^7.12.10",
     "@babel/core": "^7.12.10",
