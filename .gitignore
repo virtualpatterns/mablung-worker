@@ -1,5 +1,6 @@
 .DS_Store
-/distributable-commonjs/sandbox
-/distributable-esmodule/sandbox
 /node_modules
 /process
+/release-commonjs/sandbox
+/release-esmodule/sandbox
+/source/sandbox
