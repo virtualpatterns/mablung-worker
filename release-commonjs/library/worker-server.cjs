@@ -11,11 +11,7 @@ var _mablungIs = require("@virtualpatterns/mablung-is");
 
 var ModuleChangeCase = _interopRequireWildcard(require("change-case"));
 
-var _url = _interopRequireDefault(require("url"));
-
 var _workerServerNoIpcChannelError = require("./error/worker-server-no-ipc-channel-error.cjs");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
@@ -66,7 +62,9 @@ class WorkerServer {
         console.error(error);
       }
     });
-    Process.on('exit', this.__onExit = code => {
+    Process.on('exit', this.__onExit = () =>
+    /* code */
+    {
       // console.log(`WorkerServer.on('exit', this.__onExit = (${code}) => { ... })`)
       try {
         this._detach();

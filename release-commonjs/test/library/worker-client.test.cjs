@@ -2,18 +2,19 @@
 
 var _ava = _interopRequireDefault(require("ava"));
 
+var _loggedClient = require("./logged-client.cjs");
+
 var _index = require("../../index.cjs");
 
 var _workerClientRejectedError = require("../../library/error/worker-client-rejected-error.cjs");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import { LoggedClient } from './logged-client.js'
 const Require = require;
 (0, _ava.default)('new WorkerClient()', async test => {
   let worker = null;
   test.notThrows(() => {
-    worker = new _index.WorkerClient();
+    worker = new _loggedClient.LoggedClient();
   });
   await test.notThrowsAsync(worker.exit());
 });
