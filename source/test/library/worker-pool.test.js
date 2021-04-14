@@ -88,7 +88,7 @@ Test('WorkerPool.ping()', async (test) => {
 
 })
 
-Test('WorkerPool.ping() throws WorkerPoolDisconnectedError', async (test) => {
+Test.only('WorkerPool.ping() throws WorkerPoolDisconnectedError', async (test) => {
 
   let pool = new WorkerPool({ 'numberOfProcess': 1 })
 
