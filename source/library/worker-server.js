@@ -1,7 +1,7 @@
 import { Configuration } from '@virtualpatterns/mablung-configuration'
 import { Is } from '@virtualpatterns/mablung-is'
 import DefaultChangeCase, * as ModuleChangeCase from 'change-case'
-import URL from 'url'
+// import URL from 'url'
 
 import { WorkerServerNoIPCChannelError } from './error/worker-server-no-ipc-channel-error.js'
 
@@ -54,7 +54,7 @@ class WorkerServer {
       
     })
 
-    Process.on('exit', this.__onExit = (code) => {
+    Process.on('exit', this.__onExit = (/* code */) => {
       // console.log(`WorkerServer.on('exit', this.__onExit = (${code}) => { ... })`)
 
       try {

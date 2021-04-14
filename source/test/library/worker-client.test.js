@@ -1,6 +1,6 @@
 import Test from 'ava'
 
-// import { LoggedClient } from './logged-client.js'
+import { LoggedClient } from './logged-client.js'
 import { WorkerClient } from '../../index.js'
 
 import { WorkerClientDurationExceededError } from '../../index.js'
@@ -12,7 +12,7 @@ Test('new WorkerClient()', async (test) => {
 
   let worker = null
   
-  test.notThrows(() => { worker = new WorkerClient()})
+  test.notThrows(() => { worker = new LoggedClient()})
   await test.notThrowsAsync(worker.exit())
 
 })
