@@ -70,7 +70,8 @@ const Require = require;
     await pool.exit();
   }
 });
-(0, _ava.default)('WorkerPool.ping() throws WorkerPoolDisconnectedError', async test => {
+
+_ava.default.only('WorkerPool.ping() throws WorkerPoolDisconnectedError', async test => {
   let pool = new _index.WorkerPool({
     'numberOfProcess': 1
   });
@@ -79,6 +80,7 @@ const Require = require;
     'instanceOf': _index.WorkerPoolDisconnectedError
   });
 });
+
 (0, _ava.default)('WorkerPool.exit(option)', async test => {
   await test.notThrowsAsync(new _index.WorkerPool().exit());
 });
