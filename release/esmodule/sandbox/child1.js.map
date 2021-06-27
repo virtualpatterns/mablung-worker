@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../source/esmodule/sandbox/child1.js"],"names":[],"mappings":";AACA,MAAM,OAAO,GAAG,OAAhB;;AAEA,OAAO,SAAS,QAAT,GAAoB;AACzB,SAAO,OAAO,CAAC,KAAf;AACD","file":"child1.js","sourcesContent":["\nconst Process = process\n\nexport function getTitle() {\n  return Process.title\n}"]}

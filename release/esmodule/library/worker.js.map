@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../source/esmodule/library/worker.js"],"names":[],"mappings":"AAAA,MAAM,OAAO,GAAG,OAAhB;;AAEA,OAAO,SAAS,MAAT,GAAkB;AACvB,SAAO,OAAO,CAAC,GAAf;AACD","file":"worker.js","sourcesContent":["const Process = process\n\nexport function getPid() {\n  return Process.pid\n}\n"]}

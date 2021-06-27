@@ -16,13 +16,9 @@
     "sourceType": "module"
   },
   "plugins": [
-    "@babel"
+    "eslint-plugin-babel"
   ],
   "rules": {
-    // to avoid error
-    "template-curly-spacing" : "off",
-    "indent" : "off",
-    // to avoid error
     "arrow-parens": [ "error", "always" ],
     "comma-dangle": [ "error", "never" ],
     "linebreak-style": [ "error", "unix" ],
