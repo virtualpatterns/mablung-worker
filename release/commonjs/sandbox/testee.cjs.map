@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../source/esmodule/sandbox/testee.js"],"names":[],"mappings":";;;;;;;AAAe,SAAS,GAAT,CAAa,CAAb,EAAgB,CAAhB,EAAmB;AAChC,SAAO,CAAC,GAAG,CAAX;AACD","file":"testee.cjs","sourcesContent":["export default function add(a, b) {\n  return a + b\n}"]}

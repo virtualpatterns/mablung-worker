@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../source/esmodule/sandbox/child2.js"],"names":[],"mappings":";AACA,MAAM,OAAO,GAAG,OAAhB;;AAEA,OAAO,SAAS,MAAT,GAAkB;AACvB,SAAO,OAAO,CAAC,GAAf;AACD","file":"child2.js","sourcesContent":["\nconst Process = process\n\nexport function getPid() {\n  return Process.pid\n}"]}

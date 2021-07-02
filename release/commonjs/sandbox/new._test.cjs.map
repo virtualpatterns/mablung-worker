@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../source/esmodule/sandbox/new._test.js"],"names":[],"mappings":";;AAAA;;;;AAEA,kBAAK,KAAL,EAAa,CAAD,IAAO;AACjB,EAAA,CAAC,CAAC,IAAF;AACD,CAFD","file":"new._test.cjs","sourcesContent":["import Test from 'ava'\n\nTest('...', (t) => {\n  t.pass()\n})"]}
