@@ -38,8 +38,7 @@
             } 
           }
         ]
-      ],
-      "sourceType": "module"
+      ]
     },
     "esmodule": {
       "plugins": [
@@ -84,9 +83,7 @@
           }
         ]
       ],
-      "presets": [],
-      "retainLines": true,
-      "sourceType": "module"
+      "presets": []
     }
   }
 }
