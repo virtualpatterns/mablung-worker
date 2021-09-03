@@ -1,7 +1,7 @@
 import ChildProcess from 'child_process'
 import Test from 'ava'
 
-const Require = __require // __require is replaced by @virtualpatterns/mablung-babel-plugin-replace
+const Require = __require // __require is replaced by @virtualpatterns/babel-plugin-mablung-replace
 
 Test('...', (test) => {
 

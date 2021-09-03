@@ -3,7 +3,7 @@
     "commonjs": {
       "plugins": [
         [
-          "@virtualpatterns/mablung-babel-plugin-replace-identifier",
+          "@virtualpatterns/babel-plugin-mablung-replace-identifier",
           {
             "rule": [
               {
@@ -18,7 +18,7 @@
           }
         ],
         [
-          "@virtualpatterns/mablung-babel-plugin-replace-string-literal",
+          "@virtualpatterns/babel-plugin-mablung-replace-string-literal",
           {
             "rule": [
               {
@@ -44,7 +44,7 @@
       "plugins": [
         "@babel/plugin-syntax-import-meta",
         [
-          "@virtualpatterns/mablung-babel-plugin-replace-identifier",
+          "@virtualpatterns/babel-plugin-mablung-replace-identifier",
           {
             "rule": [
               {
