@@ -34,14 +34,14 @@
     "./package.json": "./package.json"
   },
   "files": [
-    "/release/commonjs/library",
-    "/release/commonjs/test/library/logged-client.cjs",
-    "/release/commonjs/test/library/logged-pool.cjs",
-    "/release/commonjs/index.cjs",
-    "/release/esmodule/library",
-    "/release/esmodule/test/library/logged-client.js",
-    "/release/esmodule/test/library/logged-pool.js",
-    "/release/esmodule/index.js"
+    "release/commonjs/library",
+    "release/commonjs/test/library/logged-client.cjs",
+    "release/commonjs/test/library/logged-pool.cjs",
+    "release/commonjs/index.cjs",
+    "release/esmodule/library",
+    "release/esmodule/test/library/logged-client.js",
+    "release/esmodule/test/library/logged-pool.js",
+    "release/esmodule/index.js"
   ],
   "license": "GPL-3.0+",
   "main": "release/commonjs/index.cjs",
@@ -69,8 +69,8 @@
     "@babel/eslint-parser": "^7.14.7",
     "@babel/plugin-syntax-import-meta": "^7.10.4",
     "@babel/preset-env": "^7.14.7",
-    "@virtualpatterns/mablung-babel-plugin-replace-identifier": "0.0.1-26",
-    "@virtualpatterns/mablung-babel-plugin-replace-string-literal": "0.0.1-23",
+    "@virtualpatterns/babel-plugin-mablung-replace-identifier": "0.0.1-26",
+    "@virtualpatterns/babel-plugin-mablung-replace-string-literal": "0.0.1-23",
     "@virtualpatterns/mablung-check-dependency": "0.0.1-58",
     "@virtualpatterns/mablung-makefile-environment": "0.0.1-26",
     "@virtualpatterns/mablung-source-map-support": "0.0.2-59",
