@@ -1,5 +1,3 @@
-import Test from 'ava'
+import { Configuration } from '@virtualpatterns/mablung-configuration'
 
-Test('...', (t) => {
-  t.pass()
-})
+console.dir(Configuration.getArgument({ 'abc': true }, [ 'def', 'ghi' ]))

@@ -1,51 +1,46 @@
+import { WorkerServer } from '../../index.js'
+
 import { WorkerExceptionError } from './error/worker-exception-error.js'
 import { WorkerUncaughtExceptionError } from './error/worker-uncaught-exception-error.js'
 import { WorkerUnhandledRejectionError } from './error/worker-unhandled-rejection-error.js'
 
 const Process = process
 
-export function getPid(duration = 0) {
+class Worker {
 
-  if (duration > 0) {
+  static getPid(duration = 0) {
 
-    return new Promise((resolve) => {
+    if (duration > 0) {
 
-      setTimeout(() => {
-        /* c8 ignore next 1 */
-        resolve(Process.pid)
-      }, duration)
+      return new Promise((resolve) => {
 
-    })
+        setTimeout(() => {
+          /* c8 ignore next 1 */
+          resolve(Process.pid)
+        }, duration)
 
-  } else {
-    return Process.pid
+      })
+
+    } else {
+      return Process.pid
+    }
+
   }
 
-}
-
-export function throwException(duration = 0) {
-
-  if (duration > 0) {
-
-    return new Promise((resolve, reject) => {
-
-      setTimeout(() => {
-        /* c8 ignore next 1 */
-        reject(new WorkerExceptionError())
-      }, duration)
-
-    })
-
-  } else {
+  static throwException() {
     throw new WorkerExceptionError()
   }
 
+  static throwUncaughtException() {
+    setImmediate(() => { throw new WorkerUncaughtExceptionError() })
+  }
+
+  static rejectUnhandledException() {
+    setImmediate(() => Promise.reject(new WorkerUnhandledRejectionError()))
+  }
+
 }
 
-export function throwUncaughtException() {
-  setImmediate(() => { throw new WorkerUncaughtExceptionError() })
-}
-
-export function rejectUnhandledException() {
-  setImmediate(() => Promise.reject(new WorkerUnhandledRejectionError()))
-}
+(() => {
+  return WorkerServer.publish(Worker)
+})()

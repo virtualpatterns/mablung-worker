@@ -1,2 +1,1 @@
-const OK = true
-export { OK }
+export const OK = true

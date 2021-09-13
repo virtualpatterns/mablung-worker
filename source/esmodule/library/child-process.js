@@ -1,173 +1,44 @@
 import { Configuration } from '@virtualpatterns/mablung-configuration'
-import { Console } from 'console'
 import { Is } from '@virtualpatterns/mablung-is'
-import EventEmitter from 'events'
-import FileSystem from 'fs-extra'
-import Path from 'path'
-import Stream from 'stream'
 
-import { Null } from './null.js'
-
+import { ChildProcessDurationExceededError } from './error/child-process-duration-exceeded-error.js'
+import { ChildProcessExitedError } from './error/child-process-exited-error.js'
+import { ChildProcessInternalError } from './error/child-process-internal-error.js'
+import { ChildProcessKilledError } from './error/child-process-killed-error.js'
 import { ChildProcessSignalError } from './error/child-process-signal-error.js'
 
-class ChildProcess extends EventEmitter {
+const Process = process
 
-  constructor(userPath, userParameter = {}, userOption = {}) { // 
-    super()
+class ChildProcess {
+
+  constructor(userPath, userArgument = {}, userOption = {}) {
 
     let processPath = userPath
-    let processParameter = Configuration.getParameter(this._defaultParameter, userParameter)
-    let processOption = Configuration.getOption(this._defaultOption, userOption)
+    let processArgument = Configuration.getArgument(this.defaultArgument, userArgument)
+    let processOption = Configuration.getOption(this.defaultOption, userOption)
 
-    let process = this._createProcess(processPath, processParameter, processOption)
+    let process = this.createProcess(processPath, processArgument, processOption)
 
-    this._processPath = processPath
-    this._processParameter = processParameter
-    this._processOption = processOption
+    this.processPath = processPath
+    this.processArgument = processArgument
+    this.processOption = processOption
 
-    this._process = process
-
-    this._console = new Null()
-
-    this._stream = null
-    this._streamOption = null
-
-    this._attach()
+    this.process = process
+    
+    this.attachAllHandler()
 
   }
 
-  /* c8 ignore next 1 */
-  _createProcess(/* path, parameter, option */) {}
-
-  _attach() {
-
-    this._process.on('message', this.__onMessage = (message) => {
-      // this._console.log('ChildProcess.on(\'message\', this.__onMessage = (message) => { ... })')
-      // this._console.dir(message)
-  
-      try {
-        this._onMessage(message)
-      /* c8 ignore next 3 */
-      } catch (error) {
-        this._console.error(error)
-      }
-
-    })
-
-    this._process.on('error', this.__onError = (error) => {
-      this._console.error('ChildProcess.on(\'error\', this.__onError = (error) => { ... })')
-      this._console.error(error)
-  
-      try {
-        this._detach()
-        this._onError(error)
-      /* c8 ignore next 3 */
-      } catch (error) {
-        this._console.error(error)
-      } finally {
-        this._console = new Null()
-      }
-
-    })
-
-    this._process.on('disconnect', this.__onDisconnect = () => {
-      this._console.log('ChildProcess.on(\'disconnect\', this.__onDisconnect = () => { ... })')
-  
-      try {
-        this._onDisconnect()
-      /* c8 ignore next 3 */
-      } catch (error) {
-        this._console.error(error)
-      }
-
-    })
-
-    this._process.on('exit', this.__onExit = (code, signal) => {
-      this._console.log(`ChildProcess.on('exit', this.__onExit = (${code}, ${Is.null(signal) ? signal : `'${signal}'`}) => { ... })`)
-
-      try {
-
-        this._detach()
-
-        if (Is.not.null(code)) {
-          this._onExit(code)
-          /* c8 ignore next 5 */
-        } else if (Is.not.null(signal)) {
-          this._onKill(signal)
-        } else {
-          this._onExit(0)
-        }
-
-      /* c8 ignore next 3 */
-      } catch (error) {
-        this._console.error(error)
-      } finally {
-        this._console = new Null()
-      }
-
-    })
-
-  }
-
-  _detach() {
-
-    if (this.__onExit) {
-      this._process.off('exit', this.__onExit)
-      delete this.__onExit
-    }
-
-    if (this.__onDisconnect) {
-      this._process.off('disconnect', this.__onDisconnect)
-      delete this.__onDisconnect
-    }
-
-    if (this.__onError) {
-      this._process.off('error', this.__onError)
-      delete this.__onError
-    }
-
-    if (this.__onMessage) {
-      this._process.off('message', this.__onMessage)
-      delete this.__onMessage
-    }
-
-  }
-
-  _onMessage(message) {
-    this.emit('message', message)
-  }
-
-  _onError(error) {
-    this.emit('error', error)
-  }
-
-  _onDisconnect() {
-    this.emit('disconnect')
-  }
-
-  _onExit(code) {
-    this.emit('exit', code)
-  }
-
-  _onKill(signal) {
-    this.emit('kill', signal)
-  }
-
-  /* c8 ignore next 3 */
-  get path() {
-    return this._processPath
-  }
-
-  get _defaultParameter() {
+  get defaultArgument() {
     return {}
   }
 
   /* c8 ignore next 3 */
-  get parameter() {
-    return this._processParameter
+  get argument() {
+    return this.processArgument
   }
 
-  get _defaultOption() {
+  get defaultOption() {
     return {
       'serialization': 'advanced',
       'stdio': 'pipe'
@@ -175,87 +46,321 @@ class ChildProcess extends EventEmitter {
   }
 
   get option() {
-    return this._processOption
-  }
-
-  get console() {
-    return this._console
+    return this.processOption
   }
 
   get pid() {
-    return this._process.pid
+    return this.process.pid
   }
 
-  get isConnected() {
-    return this._process.connected
+  get stdout() {
+    return this.process.stdout
   }
 
-  writeTo(path, option = { 'autoClose': true, 'emitClose': true, 'encoding': 'utf8', 'flags': 'a+' }) {
+  get stderr() {
+    return this.process.stderr
+  }
 
-    let stream = null
+  // createProcess(path, argument, option) { }
 
-    switch (true) {
+  attachAllHandler() {
+
+    // this.process.on('spawn', this.onExecuteHandler = () => {
+    //   console.log('this.process.on(\'spawn\', this.onExecuteHandler = () => { ... })')
+
+    //   try {
+    //     this.onExecute(this.processPath, this.processArgument, this.processOption)
+    //   /* c8 ignore next 3 */
+    //   } catch (error) {
+    //     this.onError(error)
+    //   }
+
+    // })
+
+    this.process.on('message', this.onMessageHandler = (message) => {
+
+      try {
+        this.onMessage(message)
       /* c8 ignore next 3 */
-      case path instanceof Stream.Writable:
-        stream = path
-        break
-      default:
-        FileSystem.ensureDirSync(Path.dirname(path))
-        stream = FileSystem.createWriteStream(path, option)
-    }
+      } catch (error) {
+        this.onError(error)
+      }
 
-    this._process.stderr.pipe(stream, { 'end': false })
-    this._process.stdout.pipe(stream, { 'end': false })
-
-    this._console = new Console({
-      'colorMode': false,
-      'ignoreErrors': false,
-      'stderr': stream,
-      'stdout': stream
     })
 
-    this._stream = stream
-    this._streamOption = option
-        
-  }
+    this.process.on('exit', this.onExitHandler = (code, signal) => {
 
-  send(message) {
-    // this._console.log('ChildProcess.send(message) { ... }')
-    // this._console.dir(message)
+      try {
 
-    return new Promise((resolve, reject) => {
-      
-      this._process.send(message, (error) => {
+        this.detachAllHandler()
 
-        if (Is.null(error)) {
-          resolve()
-        } else {
-          reject(error)
+        switch (true) {
+          case Is.not.null(code):
+            this.onExit(code)
+            break
+          case Is.not.null(signal):
+            this.onKill(signal)
+            break
+          default:
+            this.onExit(0)
         }
 
-      })
+      /* c8 ignore next 3 */
+      } catch (error) {
+        this.onError(error)
+      }
+
+    })
+
+    this.process.on('error', this.onErrorHandler = (error) => {
+
+      try {
+        this.onError(error)
+      /* c8 ignore next 3 */
+      } catch (error) {
+        console.error(error)
+      }
 
     })
 
   }
 
-  disconnect() {
-    this._process.disconnect()
+  detachAllHandler() {
+
+    if (this.onErrorHandler) {
+      this.process.off('error', this.onErrorHandler)
+      delete this.onErrorHandler
+    }
+
+    if (this.onExitHandler) {
+      this.process.off('exit', this.onExitHandler)
+      delete this.onExitHandler
+    }
+
+    if (this.onMessageHandler) {
+      this.process.off('warning', this.onMessageHandler)
+      delete this.onMessageHandler
+    }
+
+    // if (this.onExecuteHandler) {
+    //   this.process.off('spawn', this.onExecuteHandler)
+    //   delete this.onExecuteHandler
+    // }
+
   }
 
-  signal(signal) {
+  // onExecute(/* path, argument, option */) {}
 
-    if (this._process.kill(signal)) {
-      // do nothing
-    /* c8 ignore next 3 */
-    } else {
-      throw new ChildProcessSignalError(signal, this._process.pid)
+  onMessage(/* message */) {}
+
+  onExit(/* code */) {}
+
+  onKill(/* signal */) {}
+
+  onError(/* error */) { }
+  
+  send(message) {
+
+    return new Promise((resolve, reject) => {
+
+      if (Is.string(message)) {
+
+        switch (this.process.kill(message)) {
+          /* c8 ignore next 3 */
+          case false:
+            reject(new ChildProcessSignalError(message, this.process.pid))
+            break
+          default:
+            resolve()
+        }
+
+      } else {
+
+        this.process.send(message, (error) => {
+
+          /* c8 ignore next 2 */
+          if (Is.not.null(error)) {
+            reject(error)
+          } else {
+            resolve()
+          }
+
+        })
+
+      }
+
+    })
+
+  }
+
+  /* c8 ignore start */ 
+  async whenMessage(maximumDuration = 0, compareFn = () => true) {
+
+    while (maximumDuration >= 0) {
+
+      let [ name, duration, ...argument ] = await this.whenEvent([
+        'message',
+        'exit',
+        'error'
+      ], maximumDuration)
+
+      switch (name) {
+        case 'message':
+          if (compareFn(argument[0])) {
+            return argument[0]
+          }
+          break
+        case 'exit':
+
+          switch (true) {
+            case Is.not.null(argument[0]): // code
+              throw new ChildProcessExitedError(argument[0])
+            case Is.not.null(argument[1]): // signal
+              throw new ChildProcessKilledError(argument[1])
+            default:
+              throw new ChildProcessExitedError(0)
+          }
+
+        case 'error':
+          throw new ChildProcessInternalError(argument[0])
+      }
+
+      maximumDuration -= maximumDuration === 0 ? 0 : duration
+
+    }
+
+    throw new ChildProcessDurationExceededError(maximumDuration)
+
+  }
+  /* c8 ignore stop */
+
+  async whenExit(maximumDuration = 0) {
+
+    let [ name,, ...argument ] = await this.whenEvent([
+      'exit',
+      'error'
+    ], maximumDuration)
+
+    switch (name) {
+      case 'exit':
+
+        switch (true) {
+          case Is.not.null(argument[0]): // code
+            return argument[0]
+          case Is.not.null(argument[1]): // signal
+            throw new ChildProcessKilledError(argument[1])
+          default:
+            return 0
+        }
+      
+      case 'error':
+        throw new ChildProcessInternalError(argument[0])
     }
 
   }
-  
-  kill(signal = 'SIGINT') {
-    this.signal(signal)
+
+  async whenKill(maximumDuration = 0) {
+
+    let [ name,, ...argument ] = await this.whenEvent([
+      'exit',
+      'error'
+    ], maximumDuration)
+
+    switch (name) {
+      case 'exit':
+
+        switch (true) {
+          case Is.not.null(argument[0]): // code
+            throw new ChildProcessExitedError(argument[0])
+          case Is.not.null(argument[1]): // signal
+            return argument[1]
+          default:
+            throw new ChildProcessExitedError(0)
+        }
+
+      case 'error':
+        throw new ChildProcessInternalError(argument[0])
+    }
+
+  }
+
+  async whenError(maximumDuration = 0) {
+
+    let [ name,, ...argument ] = await this.whenEvent([
+      'error',
+      'exit'
+    ], maximumDuration)
+
+    switch (name) {
+      case 'error':
+        return argument[0]
+      case 'exit':
+
+        switch (true) {
+          case Is.not.null(argument[0]): // code
+            throw new ChildProcessExitedError(argument[0])
+          case Is.not.null(argument[1]): // signal
+            throw new ChildProcessKilledError(argument[1])
+          default:
+            throw new ChildProcessExitedError(0)
+        }
+
+    }
+
+  }
+
+  whenEvent(name, maximumDuration = 0) {
+
+    return new Promise((resolve, reject) => {
+
+      let onEventHandler = {}
+      let onTimeoutHandler = null
+
+      let begin = Process.hrtime.bigint()
+
+      for (let nameOn of (Is.array(name) ? name : [ name ])) {
+
+        this.process.on(nameOn, onEventHandler[nameOn] = (...argument) => {
+          
+          let end = Process.hrtime.bigint()
+          let duration = parseInt((end - begin) / BigInt(1e6))
+
+          if (maximumDuration > 0) {
+            clearTimeout(onTimeoutHandler)
+            onTimeoutHandler = null
+          }
+
+          for (let nameOff of (Is.array(name) ? name.reverse() : [ name ])) {
+            this.process.off(nameOff, onEventHandler[nameOff])
+            delete onEventHandler[nameOff]
+          }
+
+          resolve([ nameOn, duration, ...argument ])
+
+        })
+
+      }
+
+      if (maximumDuration > 0) {
+
+        onTimeoutHandler = setTimeout(() => {
+
+          clearTimeout(onTimeoutHandler)
+          onTimeoutHandler = null
+
+          for (let nameOff of (Is.array(name) ? name.reverse() : [ name ])) {
+            this.process.off(nameOff, onEventHandler[nameOff])
+            delete onEventHandler[nameOff]
+          }
+
+          reject(new ChildProcessDurationExceededError(maximumDuration))
+
+        }, maximumDuration)
+
+      }
+
+    })
+
   }
 
 }

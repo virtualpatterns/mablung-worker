@@ -1,3 +1,6 @@
 {
-  "extends": "@virtualpatterns/eslint-config-mablung-makefile-environment"
+  "extends": "@virtualpatterns/eslint-config-mablung-makefile-environment",
+  "env": {
+    "es2020": true
+  }
 }

@@ -1,76 +1,26 @@
 import { Configuration } from '@virtualpatterns/mablung-configuration'
+import { Is } from '@virtualpatterns/mablung-is'
+import Cryptography from 'crypto'
+
 import { ForkedProcess } from './forked-process.js'
-import { WorkerClientModuleHandler } from './worker-client-module-handler.js'
-import { WorkerClientParameter } from './worker-client-parameter.js'
-import DefaultChangeCase, * as ModuleChangeCase from 'change-case'
-
-import { WorkerClientDurationExceededError } from './error/worker-client-duration-exceeded-error.js'
-import { WorkerClientRejectedError } from './error/worker-client-rejected-error.js'
-import { WorkerClientDisconnectedError } from './error/worker-client-disconnected-error.js'
-import { WorkerClientInternalError } from './error/worker-client-internal-error.js'
-import { WorkerClientExitedError } from './error/worker-client-exited-error.js'
-import { WorkerClientKilledError } from './error/worker-client-killed-error.js'
-
-const { 'pascalCase': PascalCase } = DefaultChangeCase || ModuleChangeCase
+import { WorkerClientHandler } from './worker-client-handler.js'
 
 class WorkerClient extends ForkedProcess {
 
-  constructor(...parameter) {
-    super(...WorkerClientParameter.getConstructorParameter(...parameter))
+  constructor(...argument) {
+    super(...argument)
 
     this._isReady = false
-
-    this._module = new Proxy(this, WorkerClientModuleHandler)
-
-  }
-
-  get _defaultOption() {
-    return Configuration.merge(super._defaultOption, { 'maximumDuration': 10000 })
-  }
-
-  _onMessage(message) {
-
-    let methodName = `_on${PascalCase(message.type)}`
-    this[methodName](message)
-
-    super._onMessage(message)
+    this._worker = new Proxy(this, WorkerClientHandler)
 
   }
 
-  _onReady(message) {
-    this.emit('ready', message)
+  get defaultArgument() {
+    return super.defaultArgument
   }
 
-  _onPing(message) {
-    this.emit('ping', message)
-  }
-
-  _onApply(message) {
-    this.emit('apply', message)
-  }
-
-  _onError(error) {
-    this._onReject(new WorkerClientInternalError(error))
-    super._onError(error)
-  }
-
-  _onDisconnect() {
-    this._onReject(new WorkerClientDisconnectedError())
-    super._onDisconnect()
-  }
-
-  _onExit(code) {
-    this._onReject(new WorkerClientExitedError(code))
-    super._onExit(code)
-  }
-
-  _onKill(signal) {
-    this._onReject(new WorkerClientKilledError(signal))
-    super._onKill(signal)
-  }
-
-  _onReject(error) {
-    this.emit('reject', error)
+  get defaultOption() {
+    return Configuration.getOption(super.defaultOption, { 'maximumDuration': 5000 })
   }
 
   get maximumDuration() {
@@ -81,180 +31,97 @@ class WorkerClient extends ForkedProcess {
     this.option.maximumDuration = value
   }
 
-  get module() {
-    return this._module
+  get worker() {
+    return this._worker
   }
 
   async whenReady() {
 
-    if (!this._isReady) {
-      await this.whenMessageType('ready')
-      this._isReady = true
-    }
+    switch (this._isReady) {
+      case true:
+        return
+      default:
 
-  }
-
-  whenMessageType(type) {
-    // this.console.log(`WorkerClient.whenMessageType('${type}') { ... }`)
-
-    return new Promise((resolve, reject) => {
-
-      let onMessage = null
-      let onReject = null
-      let timeout = null
-   
-      this.on('message', onMessage = (message) => {
-        // this.console.log('WorkerClient.on(\'message\', onMessage = (message) => { ... })')
-        // this.console.dir(message)
-
-        if (message.type === type) {
-
-          this.off('message', onMessage)
-          onMessage = null
-
-          this.off('reject', onReject)
-          onReject = null
-
-          if (this.maximumDuration > 0) {
-            clearTimeout(timeout)
-            timeout = null
-          }
-          
-          resolve(message)
-    
-        }
-
-      })
-
-      this.on('reject', onReject = (error) => {
-        // this.console.error('WorkerClient.on(\'reject\', onReject = (error) => { ... })')
-        // this.console.error(error)
-  
-        this.off('message', onMessage)
-        onMessage = null
-
-        this.off('reject', onReject)
-        onReject = null
-
-        if (this.maximumDuration > 0) {
-          clearTimeout(timeout)
-          timeout = null
-        }
-      
-        reject(error)
-  
-      })
-
-      if (this.maximumDuration > 0) {
-  
-        timeout = setTimeout(() => {
-
-          this.off('message', onMessage)
-          onMessage = null
-  
-          this.off('reject', onReject)
-          onReject = null
-  
-          clearTimeout(timeout)
-          timeout = null
-          
-          reject(new WorkerClientDurationExceededError(this.maximumDuration))
-    
-        }, this.maximumDuration)
-  
-      }
-
-    })
-
-  }
-
-  whenRejected(errorClass = WorkerClientRejectedError) {
-    // this.console.log(`WorkerClient.whenRejected(${errorClass.name}) { ... }`)
-
-    return new Promise((resolve, reject) => {
-
-      let onReject = null
-      let timeout = null
-
-      this.on('reject', onReject = (error) => {
-        // this.console.error('WorkerClient.on(\'reject\', onReject = (error) => { ... })')
-        // this.console.error(error)
-
-        if (error instanceof errorClass) {
-
-          this.off('reject', onReject)
-          onReject = null
-  
-          if (this.maximumDuration > 0) {
-            clearTimeout(timeout)
-            timeout = null
-          }
+        // server lets us know when it's ready
+        await this.whenMessage((message) => message.type === 'ready')
         
-          resolve(error)
-  
-        }
-  
-      })
+        // letting server know we're ready
+        await this.send({ 'type': 'ready' })
 
-      if (this.maximumDuration > 0) {
-  
-        timeout = setTimeout(() => {
+        this._isReady = true
 
-          this.off('reject', onReject)
-          onReject = null
-
-          clearTimeout(timeout)
-          timeout = null
-          
-          reject(new WorkerClientDurationExceededError(this.maximumDuration))
-    
-        }, this.maximumDuration)
-
-      }
-
-    })
-
-  }
-
-  async send(requestMessage) {
-
-    let responsePromise = this.whenMessageType(requestMessage.type)
-    let sendPromise = super.send(requestMessage)
-
-    let [, responseMessage] = await Promise.all([ sendPromise, responsePromise ])
-
-    if (responseMessage.error) {
-      throw responseMessage.error
     }
 
-    return responseMessage.returnValue
-
   }
 
-  async ping() {
-    await this.whenReady()
+  whenMessage(compareFn = () => true) {
+    return super.whenMessage(this.maximumDuration, compareFn)
+  }
+
+  whenExit() {
+    return super.whenExit(this.maximumDuration)
+  }
+
+  whenKill() {
+    return super.whenKill(this.maximumDuration)
+  }
+
+  whenError() {
+    return super.whenError(this.maximumDuration)
+  }
+
+  ping() {
     return this.send({ 'type': 'ping' })
   }
 
-  async apply(methodName, parameter) {
-    await this.whenReady()
-    return this.send({ 'type': 'apply', 'methodName': methodName, 'parameter': parameter })
+  exit(code = 0) {
+    // using super since there will be no response
+    return Promise.all([ this.whenExit(), super.send({ 'type': 'exit', 'code': code }) ])
   }
 
-  disconnect() {
-    super.disconnect()
-    return this.whenRejected(WorkerClientDisconnectedError)
+  kill(signal = 'SIGINT') {
+    return Promise.all([ this.whenKill(), this.send(signal) ])
   }
 
-  async exit(code = 0) {
-    await this.whenReady()
-    await super.send({ 'type': 'exit', 'code': code }) // there will be no response
-    await this.whenRejected(WorkerClientExitedError)
+  async send(message) {
+
+    if (Is.string(message)) {
+      await super.send(message)
+    } else {
+
+      let messageId = await WorkerClient.createMessageId()
+      let requestMessage = { id: messageId, ...message }
+
+      let [ responseMessage ] = await Promise.all([
+        this.whenMessage((message) => message.id === messageId),
+        super.send(requestMessage)
+      ])
+
+      if (responseMessage.error) {
+        throw responseMessage.error
+      } else {
+        return responseMessage.returnValue
+      }
+
+    }
+
   }
 
-  kill(...parameter) {
-    super.kill(...parameter)
-    return this.whenRejected(WorkerClientKilledError)
+  static createMessageId() {
+
+    return new Promise((resolve, reject) => {
+
+      Cryptography.randomBytes(16, (error, buffer) => {
+        if (Is.not.null(error)) {
+          /* c8 ignore next 1 */
+          reject(error)
+        } else {
+          resolve(buffer.toString('hex'))
+        }
+      })
+
+    })
+
   }
 
 }

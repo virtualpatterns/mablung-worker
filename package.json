@@ -1,46 +1,25 @@
 {
   "author": "virtualpatterns.com <code@virtualpatterns.com> (http://www.virtualpatterns.com)",
-  "ava": {
-    "failFast": true,
-    "files": [
-      "release/**/test/**/*.test.*"
-    ],
-    "nodeArguments": [
-      "--no-warnings",
-      "--unhandled-rejections=strict"
-    ],
-    "require": [
-      "@virtualpatterns/mablung-source-map-support/install"
-    ],
-    "verbose": true
-  },
-  "c8": {
-    "all": true,
-    "exclude": [
-      "release/commonjs/sandbox",
-      "release/esmodule/sandbox"
-    ],
-    "reporter": [
-      "html"
-    ],
-    "src": "release"
-  },
   "description": "TBD",
   "exports": {
     ".": {
       "import": "./release/esmodule/index.js",
       "require": "./release/commonjs/index.cjs"
     },
+    "./worker": {
+      "import": "./release/esmodule/library/worker.js",
+      "require": "./release/commonjs/library/worker.cjs"
+    },
+    "./worker-server": {
+      "import": "./release/esmodule/library/worker-server.js",
+      "require": "./release/commonjs/library/worker-server.cjs"
+    },
     "./package.json": "./package.json"
   },
   "files": [
     "release/commonjs/library",
-    "release/commonjs/test/library/logged-client.cjs",
-    "release/commonjs/test/library/logged-pool.cjs",
     "release/commonjs/index.cjs",
     "release/esmodule/library",
-    "release/esmodule/test/library/logged-client.js",
-    "release/esmodule/test/library/logged-pool.js",
     "release/esmodule/index.js"
   ],
   "license": "GPL-3.0+",
@@ -50,36 +29,20 @@
     "type": "git",
     "url": "https://github.com/virtualpatterns/mablung-worker"
   },
-  "scripts": {
-    "test": "make test"
-  },
   "type": "module",
   "version": "0.0.2-40",
   "dependencies": {
     "@virtualpatterns/mablung-configuration": "0.0.2-33",
     "@virtualpatterns/mablung-is": "0.0.1-38",
     "change-case": "^4.1.2",
-    "commander": "^8.1.0",
-    "fs-extra": "^10.0.0",
-    "json5": "^2.2.0"
+    "fs-extra": "^10.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.15.4",
-    "@babel/core": "^7.15.4",
-    "@babel/eslint-parser": "^7.15.4",
-    "@babel/plugin-syntax-import-meta": "^7.10.4",
-    "@babel/preset-env": "^7.15.4",
-    "@virtualpatterns/babel-plugin-mablung-replace-identifier": "0.0.26-4",
-    "@virtualpatterns/babel-plugin-mablung-replace-string-literal": "0.0.26-4",
+    "@virtualpatterns/babel-preset-mablung-makefile-environment": "0.0.26-2",
+    "@virtualpatterns/eslint-config-mablung-makefile-environment": "0.0.26-2",
     "@virtualpatterns/mablung-check-dependency": "0.0.26-11",
     "@virtualpatterns/mablung-makefile-environment": "0.0.26-9",
     "@virtualpatterns/mablung-source-map-support": "0.0.26-18",
-    "ava": "^3.15.0",
-    "c8": "^7.8.0",
-    "eslint": "^7.32.0",
-    "eslint-plugin-babel": "^5.3.1",
-    "npm-check-updates": "^11.8.4",
-    "shx": "^0.3.3",
-    "sinon": "^11.1.2"
+    "ava": "^3.15.0"
   }
 }

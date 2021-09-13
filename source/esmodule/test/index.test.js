@@ -7,18 +7,15 @@ Test.before(async (test) => {
 ;[
   'ChildProcess',
   'ForkedProcess',
+  'SpawnedProcess',
   'WorkerClient',
-  'WorkerPool',
-  'NextWorkerPool',
-  'RandomWorkerPool',
-  'WorkerClientDisconnectedError',
-  'WorkerClientDurationExceededError',
-  'WorkerClientExitedError',
-  'WorkerClientInternalError',
-  'WorkerClientKilledError',
-  'WorkerPoolDisconnectedError',
-  'LoggedClient',
-  'LoggedPool'
+  'WorkerServer',
+  'CreateLoggedProcess',
+  'ChildProcessDurationExceededError',
+  'ChildProcessExitedError',
+  'ChildProcessInternalError',
+  'ChildProcessKilledError',
+  'ChildProcessSignalError'
 ].forEach((name) => {
 
   Test(name, async (test) => {

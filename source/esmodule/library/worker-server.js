@@ -1,135 +1,196 @@
-import { Configuration } from '@virtualpatterns/mablung-configuration'
 import { Is } from '@virtualpatterns/mablung-is'
-import DefaultChangeCase, * as ModuleChangeCase from 'change-case'
-// import URL from 'url'
 
+import { WorkerServerInvalidMessageError } from './error/worker-server-invalid-message.js'
 import { WorkerServerNoIPCChannelError } from './error/worker-server-no-ipc-channel-error.js'
 
-const { 'pascalCase': PascalCase } = DefaultChangeCase || ModuleChangeCase
 const Process = process
 
 class WorkerServer {
 
-  constructor(userOption = {}) {
+  static READY_INTERVAL = 1000
 
-    this._option = Configuration.getOption(this.defaultOption, userOption)
+  static publish(worker) {
 
-    this._module = null
-    this._modulePath = null
+    Object.defineProperty(this, 'worker', {
+      'configurable': true,
+      'enumerable': true,
+      'get': () => worker
+    })
 
-    this._attach()
+    return this.attachAllHandler()
 
   }
 
-  get defaultOption() {
-    return { 'readyInterval': 1000 }
-  }
+  static async attachAllHandler() {
 
-  _attach() {
-
-    Process.on('message', this.__onMessage = async (message) => {
-      // console.log('WorkerServer.on(\'message\', this.__onMessage = async (message) => { ... })')
-      // console.dir(message)
+    /* c8 ignore start */
+    this.onReadyHandler = setInterval(async () => {
 
       try {
-        this._detachReadyInterval()   
-        await this._onMessage(message) 
-      /* c8 ignore next 3 */
-      } catch(error) {
-        console.error(error)
-      }
-
-    })
-
-    Process.on('disconnect', this.__onDisconnect = () => {
-      // console.log('WorkerServer.on(\'disconnect\', this.__onDisconnect = () => { ... })')
-
-      try {
-        this._detachReadyInterval()   
-        this._detachDisconnect()    
-      /* c8 ignore next 3 */
-      } catch(error) {
-        console.error(error)
-      }
-      
-    })
-
-    Process.on('exit', this.__onExit = (/* code */) => {
-      // console.log(`WorkerServer.on('exit', this.__onExit = (${code}) => { ... })`)
-
-      try {
-        this._detach()
-      /* c8 ignore next 3 */
-      } catch(error) {
-        console.error(error)
-      }
-        
-    })
-
-    this._readyInterval = setInterval(async () => {
-
-      try {
-        await this.send({ 'type': 'ready' })
-      /* c8 ignore next 4 */
+        await this.onReady()
       } catch (error) {
-        this._detachReadyInterval()
-        console.error(error)
+        this.detachReadyHandler()
+        this.onError(error)
       }
 
-    }, this._option.readyInterval)
+    }, this.READY_INTERVAL)
+    /* c8 ignore end */
+
+    Process.on('message', this.onMessageHandler = async (message) => {
+
+      try {
+        this.detachReadyHandler()
+        await this.onMessage(message)
+      /* c8 ignore next 3 */
+      } catch (error) {
+        this.onError(error)
+      }
+
+    })
+
+    Process.on('exit', this.onExitHandler = (code) => {
+
+      try {
+        this.detachAllHandler()
+        this.onExit(code)
+      /* c8 ignore next 3 */
+      } catch (error) {
+        this.onError(error)
+      }
+
+    })
+
+    Process.on('uncaughtException', this.onUncaughtExceptionHandler = (error) => {
+      this.onError(error)
+    })
+
+    Process.on('unhandledRejection', this.onUnhandledRejectionHandler = (error) => {
+      this.onError(error)
+    })
+
+    await this.onReady()
 
   }
 
-  _detachReadyInterval() {
+  static detachAllHandler() {
 
-    if (this._readyInterval) {
-      clearInterval(this._readyInterval)
-      delete this._readyInterval
+    if (this.onUnhandledRejectionHandler) {
+      Process.off('unhandledRejection', this.onUnhandledRejectionHandler)
+      delete this.onUnhandledRejectionHandler
+    }
+
+    if (this.onUncaughtExceptionHandler) {
+      Process.off('uncaughtException', this.onUncaughtExceptionHandler)
+      delete this.onUncaughtExceptionHandler
+    }
+
+    if (this.onExitHandler) {
+      Process.off('exit', this.onExitHandler)
+      delete this.onExitHandler
+    }
+
+    if (this.onMessageHandler) {
+      Process.off('message', this.onMessageHandler)
+      delete this.onMessageHandler
+    }
+
+    this.detachReadyHandler()
+
+  }
+
+  static detachReadyHandler() {
+
+    if (this.onReadyHandler) {
+      clearInterval(this.onReadyHandler)
+      delete this.onReadyHandler
     }
 
   }
 
-  _detachDisconnect() {
+  static async onReady() {
+    console.log('WorkerServer.onReady()')
+    
+    // letting client know we're ready
+    await this.send({ 'type': 'ready' })
 
-    if (this.__onDisconnect) {
-      Process.off('disconnect', this.__onDisconnect)
-      delete this.__onDisconnect
+  }
+
+  static async onMessage(message) {
+    console.log('WorkerServer.onMessage(message)')
+    console.dir(message)
+
+    switch (message.type) {
+      case 'ready':
+        // client lets us know it's ready,
+
+        message.returnValue = undefined
+        await this.send(message)
+
+        break
+      
+      case 'ping': {
+
+        let cpuUsage = null
+        cpuUsage = Process.cpuUsage()
+        cpuUsage = (cpuUsage.user + cpuUsage.system) / 2.0
+
+        message.returnValue = { 'cpuUsage': cpuUsage }
+        await this.send(message)
+
+        break
+
+      }
+      case 'call':
+
+        try {
+
+          let returnValue = null
+          returnValue = this.worker[message.methodName](...message.argument)
+          returnValue = returnValue instanceof Promise ? await returnValue : returnValue
+
+          delete message.error
+          message.returnValue = returnValue
+
+        } catch (error) {
+
+          message.error = error
+          delete message.returnValue
+
+        }
+
+        await this.send(message)
+
+        break
+
+      case 'exit':
+
+        Process.exit(message.code)
+
+        break
+
+      default:
+
+        message.error = new WorkerServerInvalidMessageError(message)
+        delete message.returnValue
+
+        await this.send(message)
+
     }
 
   }
 
-  _detach() {
-
-    this._detachReadyInterval()    
-
-    if (this.__onExit) {
-      Process.off('exit', this.__onExit)
-      delete this.__onExit
-    }
-
-    this._detachDisconnect()
-
-    if (this.__onMessage) {
-      Process.off('message', this.__onMessage)
-      delete this.__onMessage
-    }
-
+  static onExit(code) {
+    console.log(`WorkerServer.onExit(${code})`)
   }
 
-  async import(path) {
-
-    let module = null
-    module = await import(path) // URL.pathToFileURL(path))
-    module = module.default || module
-
-    this._module = module
-    this._modulePath = path
-
+  static onError(error) {
+    console.error('WorkerServer.onError(error)')
+    console.error(error)
   }
 
-  send(message) {
-    // console.log('WorkerServer.send(message) { ... }')
-    // console.dir(message)
+  static send(message) {
+    console.log('WorkerServer.send(message)')
+    console.dir(message)
 
     return new Promise((resolve, reject) => {
 
@@ -137,11 +198,11 @@ class WorkerServer {
 
         Process.send(message, (error) => {
 
-          if (Is.null(error)) {
-            resolve()
           /* c8 ignore next 3 */
-          } else {
+          if (Is.not.null(error)) {
             reject(error)
+          } else {
+            resolve()
           }
 
         })
@@ -155,56 +216,6 @@ class WorkerServer {
 
   }
 
-  _onMessage(message) {
-    let methodName = `_on${PascalCase(message.type)}`
-    return this[methodName](message)
-  }
-
-  async _onPing(message) {
-
-    let cpuUsage = null
-    cpuUsage = Process.cpuUsage()
-    cpuUsage = (cpuUsage.user + cpuUsage.system) / 2.0
-
-    message.returnValue = { 'index': Process.env.WORKER_POOL_INDEX ? parseInt(Process.env.WORKER_POOL_INDEX) : 0, 'pid': Process.pid, 'cpuUsage': cpuUsage }
-
-    await this.send(message)
-
-  }
-
-  async _onApply(message) {
-
-    try {
-
-      let returnValue = null
-      returnValue = this._module[message.methodName].apply(this._module, message.parameter)
-      returnValue = returnValue instanceof Promise ? await returnValue : returnValue
-
-      delete message.error
-      message.returnValue = returnValue
-
-    } catch (error) {
-
-      message.error = error
-      delete message.returnValue
-
-    }
-
-    await this.send(message)
-
-  }
-
-  async _onExit(message) {
-
-    try {
-      Process.exit(message.code || 0)
-    /* c8 ignore next 3 */
-    } catch (error) {
-      console.error(error)
-    }
-
-  }
-
 }
 
-export default WorkerServer
+export { WorkerServer }
