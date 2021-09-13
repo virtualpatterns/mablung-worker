@@ -4,14 +4,12 @@ import { Is } from '@virtualpatterns/mablung-is'
 import FileSystem from 'fs-extra'
 import Path from 'path'
 
-export function CreateLoggedProcess(processClass) {
+export function CreateLoggedProcess(processClass, userLogPath, userLogOption = {}) {
 
   class LoggedProcess extends processClass {
 
-    constructor(userLogPath, userLogOption = {}, ...argument) {
-      super(...LoggedProcess.getSuperConstructorArgument(userLogPath, userLogOption, ...argument))
-
-      ;[ userLogPath, userLogOption ] = LoggedProcess.getConstructorArgument(userLogPath, userLogOption, ...argument)
+    constructor(...argument) {
+      super(...argument)
         
       let logPath = userLogPath
       let logOption = Configuration.getOption(this.defaultLogOption, userLogOption)
@@ -28,8 +26,6 @@ export function CreateLoggedProcess(processClass) {
         'stdout': logStream
       })
 
-      this.console.log(`LoggedProcess('${Path.relative('', logPath)}', ...) extends ${processClass.name}`)
-
     }
 
     get defaultLogOption() {
@@ -41,12 +37,12 @@ export function CreateLoggedProcess(processClass) {
       }
     }
 
-    // onExecute(path, argument, option) {
-    //   this.console.log(`${processClass.name}.onExecute('${Path.relative('', path)}', argument, option)`)
-    //   this.console.dir(argument)
-    //   this.console.dir(option)
-    //   return super.onExecute(path, argument, option)
-    // }
+    onExecute(path, argument, option) {
+      this.console.log(`${processClass.name}.onExecute('${Path.relative('', path)}', argument, option)`)
+      this.console.dir(argument)
+      this.console.dir(option)
+      return super.onExecute(path, argument, option)
+    }
 
     onMessage(message) {
       this.console.log(`${processClass.name}.onMessage(message)`)

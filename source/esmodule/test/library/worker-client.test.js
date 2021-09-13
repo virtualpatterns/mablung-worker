@@ -10,7 +10,7 @@ const FilePath = __filePath
 const LogPath = FilePath.replace(/\/release\//, '/data/').replace(/\.c?js$/, '.log')
 const Require = __require
 
-const LoggedClient = CreateLoggedProcess(WorkerClient)
+const LoggedClient = CreateLoggedProcess(WorkerClient, LogPath)
 
 Test.before(async () => {
   await FileSystem.ensureDir(Path.dirname(LogPath))
@@ -19,14 +19,14 @@ Test.before(async () => {
 
 Test.serial('WorkerClient()', (test) => {
   return test.throws(() => {
-    new LoggedClient(LogPath)
+    new LoggedClient()
   }, { 'code': 'ERR_INVALID_ARG_TYPE' })
 })
 
 Test.serial('WorkerClient(\'...\')', (test) => {
   return test.notThrowsAsync(async () => {
 
-    let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+    let client = new LoggedClient(Require.resolve('./worker.js'))
     await client.whenReady()
     await client.whenReady()
     await client.exit()
@@ -37,7 +37,7 @@ Test.serial('WorkerClient(\'...\')', (test) => {
 Test.serial('WorkerClient(\'...\', { ... })', (test) => {
   return test.notThrowsAsync(async () => {
     
-    let client = new LoggedClient(LogPath, Require.resolve('./worker.js'), { '--asd': 'fgh' })
+    let client = new LoggedClient(Require.resolve('./worker.js'), { '--asd': 'fgh' })
     await client.whenReady()
     await client.whenReady()
     await client.exit()
@@ -48,7 +48,7 @@ Test.serial('WorkerClient(\'...\', { ... })', (test) => {
 Test.serial('WorkerClient(\'...\', { ... }, { ... })', (test) => {
   return test.notThrowsAsync(async () => {
 
-    let client = new LoggedClient(LogPath, Require.resolve('./worker.js'), { '--asd': 'fgh' }, { 'maximumDuration': 10000 })
+    let client = new LoggedClient(Require.resolve('./worker.js'), { '--asd': 'fgh' }, { 'maximumDuration': 10000 })
     await client.whenReady()
     await client.whenReady()
     await client.exit()
@@ -59,7 +59,7 @@ Test.serial('WorkerClient(\'...\', { ... }, { ... })', (test) => {
 Test.serial('maximumDuration', async (test) => {
 
   let maximumDuration = 10000
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'), {}, { 'maximumDuration': maximumDuration })
+  let client = new LoggedClient(Require.resolve('./worker.js'), {}, { 'maximumDuration': maximumDuration })
 
   await client.whenReady()
 
@@ -81,7 +81,7 @@ Test.serial('maximumDuration', async (test) => {
 
 Test.serial('whenMessage()', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -95,7 +95,7 @@ Test.serial('whenMessage()', async (test) => {
  
 Test.serial('whenMessage(...)', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -109,7 +109,7 @@ Test.serial('whenMessage(...)', async (test) => {
 
 Test.serial('whenMessage() throws ChildProcessExitedError code=0', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -123,7 +123,7 @@ Test.serial('whenMessage() throws ChildProcessExitedError code=0', async (test) 
 
 Test.serial('whenMessage() throws ChildProcessExitedError code=null', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -137,7 +137,7 @@ Test.serial('whenMessage() throws ChildProcessExitedError code=null', async (tes
 
 Test.serial('whenMessage() throws ChildProcessKilledError', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -151,7 +151,7 @@ Test.serial('whenMessage() throws ChildProcessKilledError', async (test) => {
 
 Test.serial('whenMessage() throws ChildProcessInternalError', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -165,7 +165,7 @@ Test.serial('whenMessage() throws ChildProcessInternalError', async (test) => {
 
 Test.serial('whenMessage() throws ChildProcessDurationExceededError', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -179,7 +179,7 @@ Test.serial('whenMessage() throws ChildProcessDurationExceededError', async (tes
 
 Test.serial('whenExit() code=0', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -193,7 +193,7 @@ Test.serial('whenExit() code=0', async (test) => {
 
 Test.serial('whenExit() code=null', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -207,7 +207,7 @@ Test.serial('whenExit() code=null', async (test) => {
 
 Test.serial('whenExit() throws ChildProcessKilledError', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -221,7 +221,7 @@ Test.serial('whenExit() throws ChildProcessKilledError', async (test) => {
 
 Test.serial('whenExit() throws ChildProcessInternalError', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -235,7 +235,7 @@ Test.serial('whenExit() throws ChildProcessInternalError', async (test) => {
 
 Test.serial('whenExit() throws ChildProcessDurationExceededError', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -249,7 +249,7 @@ Test.serial('whenExit() throws ChildProcessDurationExceededError', async (test) 
 
 Test.serial('whenKill()', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -263,7 +263,7 @@ Test.serial('whenKill()', async (test) => {
 
 Test.serial('whenKill() throws ChildProcessExitedError code=0', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -277,7 +277,7 @@ Test.serial('whenKill() throws ChildProcessExitedError code=0', async (test) => 
 
 Test.serial('whenKill() throws ChildProcessExitedError code=null', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -291,7 +291,7 @@ Test.serial('whenKill() throws ChildProcessExitedError code=null', async (test) 
 
 Test.serial('whenKill() throws ChildProcessInternalError', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -305,7 +305,7 @@ Test.serial('whenKill() throws ChildProcessInternalError', async (test) => {
 
 Test.serial('whenKill() throws ChildProcessDurationExceededError', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -319,7 +319,7 @@ Test.serial('whenKill() throws ChildProcessDurationExceededError', async (test) 
 
 Test.serial('whenError()', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -333,7 +333,7 @@ Test.serial('whenError()', async (test) => {
 
 Test.serial('whenError() throws ChildProcessExitedError code=0', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -347,7 +347,7 @@ Test.serial('whenError() throws ChildProcessExitedError code=0', async (test) =>
 
 Test.serial('whenError() throws ChildProcessExitedError code=null', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -361,7 +361,7 @@ Test.serial('whenError() throws ChildProcessExitedError code=null', async (test)
 
 Test.serial('whenError() throws ChildProcessKilledError', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -375,7 +375,7 @@ Test.serial('whenError() throws ChildProcessKilledError', async (test) => {
 
 Test.serial('whenError() throws ChildProcessDurationExceededError', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -389,7 +389,7 @@ Test.serial('whenError() throws ChildProcessDurationExceededError', async (test)
 
 Test.serial('whenEvent()', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -403,7 +403,7 @@ Test.serial('whenEvent()', async (test) => {
 
 Test.serial('whenEvent() throws ChildProcessDurationExceededError', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -417,7 +417,7 @@ Test.serial('whenEvent() throws ChildProcessDurationExceededError', async (test)
 
 Test.serial('ping()', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -431,7 +431,7 @@ Test.serial('ping()', async (test) => {
 
 Test.serial('exit() throws ChildProcessKilledError', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
   await test.throwsAsync(Promise.all([ client.exit(), client.kill() ]), { 'instanceOf': ChildProcessKilledError })
@@ -440,7 +440,7 @@ Test.serial('exit() throws ChildProcessKilledError', async (test) => {
 
 Test.serial('kill()', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
   await test.notThrowsAsync(client.kill())
@@ -449,7 +449,7 @@ Test.serial('kill()', async (test) => {
 
 Test.serial('send({ ... }) throws \'The message with type \'type\' is invalid.\'', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -463,7 +463,7 @@ Test.serial('send({ ... }) throws \'The message with type \'type\' is invalid.\'
 
 Test.serial('send({ ... }) throws \'The message with type undefined is invalid.\'', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -477,7 +477,7 @@ Test.serial('send({ ... }) throws \'The message with type undefined is invalid.\
 
 Test.serial('worker.then', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -491,7 +491,7 @@ Test.serial('worker.then', async (test) => {
 
 Test.serial('worker.getPid()', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -505,7 +505,7 @@ Test.serial('worker.getPid()', async (test) => {
 
 Test.serial('worker.getPid(...) throws ChildProcessDurationExceededError', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -526,7 +526,7 @@ Test.serial('worker.getPid(...) throws ChildProcessDurationExceededError', async
 
 Test.serial('worker.getPid(...) throws ChildProcessExitedError', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
   await test.throwsAsync(Promise.all([ client.worker.getPid(2500), client.exit() ]), { 'instanceOf': ChildProcessExitedError })
@@ -535,7 +535,7 @@ Test.serial('worker.getPid(...) throws ChildProcessExitedError', async (test) =>
 
 Test.serial('worker.getPid(...) throws ChildProcessKilledError', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
   await test.throwsAsync(Promise.all([ client.worker.getPid(2500), client.kill() ]), { 'instanceOf': ChildProcessKilledError })
@@ -544,7 +544,7 @@ Test.serial('worker.getPid(...) throws ChildProcessKilledError', async (test) =>
 
 Test.serial('worker.throwException() throws WorkerExceptionError', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -558,7 +558,7 @@ Test.serial('worker.throwException() throws WorkerExceptionError', async (test) 
 
 Test.serial('worker.throwUncaughtException() ...', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 
@@ -572,7 +572,7 @@ Test.serial('worker.throwUncaughtException() ...', async (test) => {
 
 Test.serial('worker.rejectUnhandledException() ...', async (test) => {
 
-  let client = new LoggedClient(LogPath, Require.resolve('./worker.js'))
+  let client = new LoggedClient(Require.resolve('./worker.js'))
 
   await client.whenReady()
 

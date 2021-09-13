@@ -65,17 +65,16 @@ class ChildProcess {
 
   attachAllHandler() {
 
-    // this.process.on('spawn', this.onExecuteHandler = () => {
-    //   console.log('this.process.on(\'spawn\', this.onExecuteHandler = () => { ... })')
+    this.process.on('spawn', this.onExecuteHandler = () => {
 
-    //   try {
-    //     this.onExecute(this.processPath, this.processArgument, this.processOption)
-    //   /* c8 ignore next 3 */
-    //   } catch (error) {
-    //     this.onError(error)
-    //   }
+      try {
+        this.onExecute(this.processPath, this.processArgument, this.processOption)
+      /* c8 ignore next 3 */
+      } catch (error) {
+        this.process.emit('error', error)
+      }
 
-    // })
+    })
 
     this.process.on('message', this.onMessageHandler = (message) => {
 
@@ -83,7 +82,7 @@ class ChildProcess {
         this.onMessage(message)
       /* c8 ignore next 3 */
       } catch (error) {
-        this.onError(error)
+        this.process.emit('error', error)
       }
 
     })
@@ -107,7 +106,7 @@ class ChildProcess {
 
       /* c8 ignore next 3 */
       } catch (error) {
-        this.onError(error)
+        this.process.emit('error', error)
       }
 
     })
@@ -142,14 +141,14 @@ class ChildProcess {
       delete this.onMessageHandler
     }
 
-    // if (this.onExecuteHandler) {
-    //   this.process.off('spawn', this.onExecuteHandler)
-    //   delete this.onExecuteHandler
-    // }
+    if (this.onExecuteHandler) {
+      this.process.off('spawn', this.onExecuteHandler)
+      delete this.onExecuteHandler
+    }
 
   }
 
-  // onExecute(/* path, argument, option */) {}
+  onExecute(/* path, argument, option */) {}
 
   onMessage(/* message */) {}
 
