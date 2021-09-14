@@ -12,7 +12,7 @@ class WorkerServer {
   static publish(worker) {
 
     Object.defineProperty(this, 'worker', {
-      'configurable': true,
+      'configurable': false,
       'enumerable': true,
       'get': () => worker
     })

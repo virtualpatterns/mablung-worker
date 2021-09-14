@@ -41,6 +41,4 @@ class Worker {
 
 }
 
-(() => {
-  return WorkerServer.publish(Worker)
-})()
+WorkerServer.publish(Worker)
