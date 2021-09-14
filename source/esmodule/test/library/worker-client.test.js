@@ -556,7 +556,7 @@ Test.serial('worker.throwException() throws WorkerExceptionError', async (test) 
 
 })
 
-Test.serial('worker.throwUncaughtException() ...', async (test) => {
+Test.serial('worker.throwUncaughtException()', async (test) => {
 
   let client = new LoggedClient(Require.resolve('./worker.js'))
 
@@ -570,7 +570,7 @@ Test.serial('worker.throwUncaughtException() ...', async (test) => {
 
 })
 
-Test.serial('worker.rejectUnhandledException() ...', async (test) => {
+Test.serial('worker.rejectUnhandledException()', async (test) => {
 
   let client = new LoggedClient(Require.resolve('./worker.js'))
 

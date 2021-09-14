@@ -122,12 +122,8 @@ class WorkerServer {
     switch (message.type) {
       case 'ready':
         // client lets us know it's ready,
-
-        message.returnValue = undefined
         await this.send(message)
-
         break
-      
       case 'ping': {
 
         let cpuUsage = null
