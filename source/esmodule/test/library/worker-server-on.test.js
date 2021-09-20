@@ -51,7 +51,7 @@ Test.serial('onExit() throws Error', async (test) => {
   try {
     await test.throwsAsync(client.worker.onExit(), { 'instanceOf': Error })
   } finally {
-    await client.exit()
+    await Promise.all([ client.whenKill(), client.kill()])
   }
 
 })

@@ -67,6 +67,7 @@ class Worker {
 
   }
 
+  /* c8 ignore start */
   static onExit() {
 
     return new Promise((resolve, reject) => {
@@ -79,7 +80,6 @@ class Worker {
 
         let onErrorStub = Sinon
           .stub(WorkerServer, 'onError')
-          /* c8 ignore next 3 */
           .callsFake(function (error) {
             reject(error)
           })
@@ -97,6 +97,7 @@ class Worker {
     })
 
   }
+  /* c8 ignore stop */
 
   static onError() {
 

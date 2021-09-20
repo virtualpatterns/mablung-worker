@@ -60,6 +60,7 @@ class WorkerServer {
 
     })
 
+    /* c8 ignore start */
     Process.on('exit', this.onExitHandler = (code) => {
 
       try {
@@ -70,6 +71,7 @@ class WorkerServer {
       }
 
     })
+    /* c8 ignore stop */
 
     Process.on('error', this.onErrorHandler = (error) => {
 
