@@ -1,49 +1,61 @@
 import { Is } from '@virtualpatterns/mablung-is'
 
-import { WorkerServerInvalidMessageError } from './error/worker-server-invalid-message.js'
+import { CreateMessageId } from './create-message-id.js'
+
+import { WorkerServerInvalidMessageError } from './error/worker-server-invalid-message-error.js'
+import { WorkerServerInvalidPropertyError } from './error/worker-server-invalid-property-error.js'
 import { WorkerServerNoIPCChannelError } from './error/worker-server-no-ipc-channel-error.js'
 
 const Process = process
 
 class WorkerServer {
 
-  static READY_INTERVAL = 1000
+  static INTERVAL = 1000
 
-  static publish(worker) {
+  static start(worker) {
 
-    Object.defineProperty(this, 'worker', {
-      'configurable': false,
-      'enumerable': true,
-      'get': () => worker
-    })
+    if (Is.not.propertyDefined(this, 'worker')) {
 
-    return this.attachAllHandler()
+      this.worker = worker
+      this.attachAllHandler()
+
+    }
 
   }
 
+  // static stop() {
+
+  //   if (Is.propertyDefined(this, 'worker')) {
+
+  //     this.detachAllHandler()
+
+  //     this.worker = null
+  //     delete this.worker
+
+  //   }
+
+  // }
+
   static async attachAllHandler() {
 
-    /* c8 ignore start */
-    this.onReadyHandler = setInterval(async () => {
+    Process.on('interval', this.onIntervalHandler = async () => {
 
       try {
-        await this.onReady()
+        await this.onInterval()
       } catch (error) {
-        this.detachReadyHandler()
-        this.onError(error)
+        this.clearInterval()
+        Process.emit('error', error)
       }
 
-    }, this.READY_INTERVAL)
-    /* c8 ignore end */
+    })
 
     Process.on('message', this.onMessageHandler = async (message) => {
 
       try {
-        this.detachReadyHandler()
+        this.clearInterval()
         await this.onMessage(message)
-      /* c8 ignore next 3 */
       } catch (error) {
-        this.onError(error)
+        Process.emit('error', error)
       }
 
     })
@@ -53,35 +65,35 @@ class WorkerServer {
       try {
         this.detachAllHandler()
         this.onExit(code)
-      /* c8 ignore next 3 */
       } catch (error) {
-        this.onError(error)
+        Process.emit('error', error)
       }
 
     })
 
-    Process.on('uncaughtException', this.onUncaughtExceptionHandler = (error) => {
-      this.onError(error)
+    Process.on('error', this.onErrorHandler = (error) => {
+
+      try {
+        this.onError(error)
+      } catch (error) {
+        console.error(error)
+      }
+
     })
 
-    Process.on('unhandledRejection', this.onUnhandledRejectionHandler = (error) => {
-      this.onError(error)
-    })
-
-    await this.onReady()
+    this.setInterval()
 
   }
 
   static detachAllHandler() {
+    // console.log('WorkerServer.detachAllHandler()')
+    
+    this.clearInterval()
 
-    if (this.onUnhandledRejectionHandler) {
-      Process.off('unhandledRejection', this.onUnhandledRejectionHandler)
-      delete this.onUnhandledRejectionHandler
-    }
-
-    if (this.onUncaughtExceptionHandler) {
-      Process.off('uncaughtException', this.onUncaughtExceptionHandler)
-      delete this.onUncaughtExceptionHandler
+    if (this.onErrorHandler) {
+      // console.log('Process.off(\'error\', this.onErrorHandler)')
+      Process.off('error', this.onErrorHandler)
+      delete this.onErrorHandler
     }
 
     if (this.onExitHandler) {
@@ -94,25 +106,33 @@ class WorkerServer {
       delete this.onMessageHandler
     }
 
-    this.detachReadyHandler()
-
-  }
-
-  static detachReadyHandler() {
-
-    if (this.onReadyHandler) {
-      clearInterval(this.onReadyHandler)
-      delete this.onReadyHandler
+    if (this.onIntervalHandler) {
+      Process.off('interval', this.onIntervalHandler)
+      delete this.onIntervalHandler
     }
 
   }
 
-  static async onReady() {
-    console.log('WorkerServer.onReady()')
-    
-    // letting client know we're ready
-    await this.send({ 'type': 'ready' })
+  static setInterval() {
 
+    if (Is.not.propertyDefined(this, 'interval')) {
+      this.interval = setInterval(() => { Process.emit('interval') }, this.INTERVAL)
+      Process.emit('interval')
+    }
+
+  }
+
+  static clearInterval() {
+
+    if (Is.propertyDefined(this, 'interval')) {
+      clearInterval(this.interval)
+      delete this.interval
+    }
+
+  }
+
+  static onInterval() {
+    return this.send({ 'type': 'ready' })
   }
 
   static async onMessage(message) {
@@ -121,8 +141,6 @@ class WorkerServer {
 
     switch (message.type) {
       case 'ready':
-        // client lets us know it's ready,
-        await this.send(message)
         break
       case 'ping': {
 
@@ -130,7 +148,7 @@ class WorkerServer {
         cpuUsage = Process.cpuUsage()
         cpuUsage = (cpuUsage.user + cpuUsage.system) / 2.0
 
-        message.returnValue = { 'cpuUsage': cpuUsage }
+        message.value = { 'cpuUsage': cpuUsage }
         await this.send(message)
 
         break
@@ -140,17 +158,28 @@ class WorkerServer {
 
         try {
 
-          let returnValue = null
-          returnValue = this.worker[message.methodName](...message.argument)
-          returnValue = returnValue instanceof Promise ? await returnValue : returnValue
+          if (Is.propertyDefined(this.worker, message.name)) {
 
-          delete message.error
-          message.returnValue = returnValue
+            let value = null
+            value = this.worker[message.name](...message.argument)
+            value = value instanceof Promise ? await value : value
+
+            delete message.error
+
+            if (Is.not.undefined(value)) {
+              message.value = value
+            } else {
+              delete message.value
+            }
+
+          } else {
+            throw new WorkerServerInvalidPropertyError(message.name)
+          }
 
         } catch (error) {
 
           message.error = error
-          delete message.returnValue
+          delete message.value
 
         }
 
@@ -167,7 +196,7 @@ class WorkerServer {
       default:
 
         message.error = new WorkerServerInvalidMessageError(message)
-        delete message.returnValue
+        delete message.value
 
         await this.send(message)
 
@@ -184,26 +213,24 @@ class WorkerServer {
     console.error(error)
   }
 
-  static send(message) {
-    console.log('WorkerServer.send(message)')
-    console.dir(message)
+  static async send(message) {
+    
+    let responseMessage = Is.propertyDefined(message, 'id') ? message : { 'id': await CreateMessageId(), ...message }
 
     return new Promise((resolve, reject) => {
 
       if (Process.send) {
 
-        Process.send(message, (error) => {
+        Process.send(responseMessage, (error) => {
 
-          /* c8 ignore next 3 */
-          if (Is.not.null(error)) {
-            reject(error)
-          } else {
+          if (Is.null(error)) {
             resolve()
+          } else {
+            reject(error)
           }
 
         })
 
-      /* c8 ignore next 3 */
       } else {
         reject(new WorkerServerNoIPCChannelError())
       }

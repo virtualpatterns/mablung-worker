@@ -1,10 +1,10 @@
 import { Configuration } from '@virtualpatterns/mablung-configuration'
 import { Console } from 'console'
-import { Is } from '@virtualpatterns/mablung-is'
 import FileSystem from 'fs-extra'
 import Path from 'path'
+import Utility from 'util'
 
-export function CreateLoggedProcess(processClass, userLogPath, userLogOption = {}) {
+export function CreateLoggedProcess(processClass, userLogPath, userLogOption = {}, userConsoleOption = {}) {
 
   class LoggedProcess extends processClass {
 
@@ -18,13 +18,13 @@ export function CreateLoggedProcess(processClass, userLogPath, userLogOption = {
 
       this.stderr.pipe(logStream, { 'end': false })
       this.stdout.pipe(logStream, { 'end': false })
-
-      this.console = new Console({
-        'colorMode': false,
-        'ignoreErrors': false,
-        'stderr': logStream,
-        'stdout': logStream
-      })
+        
+      let consoleOption = Configuration.getOption(this.defaultConsoleOption, userConsoleOption)
+      
+      consoleOption.stderr = logStream
+      consoleOption.stdout = logStream
+        
+      this.console = new Console(consoleOption)
 
     }
 
@@ -37,11 +37,16 @@ export function CreateLoggedProcess(processClass, userLogPath, userLogOption = {
       }
     }
 
-    onExecute(path, argument, option) {
-      this.console.log(`${processClass.name}.onExecute('${Path.relative('', path)}', argument, option)`)
-      this.console.dir(argument)
-      this.console.dir(option)
-      return super.onExecute(path, argument, option)
+    get defaultConsoleOption() {
+      return {
+        'colorMode': false,
+        'ignoreErrors': false
+      }
+    }
+
+    onSpawn() {
+      this.console.log(`${processClass.name}.onSpawn() processPath = '${Path.relative('', this.processPath)}' processArgument = ${Utility.format(this.processArgument)} processOption = ${Utility.format(this.processOption)}`)
+      return super.onSpawn()
     }
 
     onMessage(message) {
@@ -66,11 +71,11 @@ export function CreateLoggedProcess(processClass, userLogPath, userLogOption = {
       return super.onError(error)
     }
 
-    send(message) {
-      this.console.log(`${processClass.name}.send(${Is.string(message) ? `'${message}'` : 'message'})`)
-      if (Is.not.string(message)) this.console.dir(message)
-      return super.send(message)
-    }
+    // send(message) {
+    //   this.console.log(`${processClass.name}.send(${Is.string(message) ? `'${message}'` : 'message'})`)
+    //   if (Is.not.string(message)) this.console.dir(message)
+    //   return super.send(message)
+    // }
 
   }
 

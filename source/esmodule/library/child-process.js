@@ -13,18 +13,12 @@ class ChildProcess {
 
   constructor(userPath, userArgument = {}, userOption = {}) {
 
-    let processPath = userPath
-    let processArgument = Configuration.getArgument(this.defaultArgument, userArgument)
-    let processOption = Configuration.getOption(this.defaultOption, userOption)
+    this.processPath = userPath
+    this.processArgument = Configuration.getArgument(this.defaultArgument, userArgument)
+    this.processOption = Configuration.getOption(this.defaultOption, userOption)
 
-    let process = this.createProcess(processPath, processArgument, processOption)
+    this.process = this.createProcess(this.processPath, this.processArgument, this.processOption)
 
-    this.processPath = processPath
-    this.processArgument = processArgument
-    this.processOption = processOption
-
-    this.process = process
-    
     this.attachAllHandler()
 
   }
@@ -33,7 +27,6 @@ class ChildProcess {
     return {}
   }
 
-  /* c8 ignore next 3 */
   get argument() {
     return this.processArgument
   }
@@ -61,15 +54,15 @@ class ChildProcess {
     return this.process.stderr
   }
 
+  // derived class must implement ...
   // createProcess(path, argument, option) { }
 
   attachAllHandler() {
 
-    this.process.on('spawn', this.onExecuteHandler = () => {
+    this.process.on('spawn', this.onSpawnHandler = () => {
 
       try {
-        this.onExecute(this.processPath, this.processArgument, this.processOption)
-      /* c8 ignore next 3 */
+        this.onSpawn()
       } catch (error) {
         this.process.emit('error', error)
       }
@@ -80,7 +73,6 @@ class ChildProcess {
 
       try {
         this.onMessage(message)
-      /* c8 ignore next 3 */
       } catch (error) {
         this.process.emit('error', error)
       }
@@ -103,8 +95,7 @@ class ChildProcess {
           default:
             this.onExit(0)
         }
-
-      /* c8 ignore next 3 */
+      
       } catch (error) {
         this.process.emit('error', error)
       }
@@ -115,7 +106,6 @@ class ChildProcess {
 
       try {
         this.onError(error)
-      /* c8 ignore next 3 */
       } catch (error) {
         console.error(error)
       }
@@ -137,18 +127,18 @@ class ChildProcess {
     }
 
     if (this.onMessageHandler) {
-      this.process.off('warning', this.onMessageHandler)
+      this.process.off('message', this.onMessageHandler)
       delete this.onMessageHandler
     }
 
-    if (this.onExecuteHandler) {
-      this.process.off('spawn', this.onExecuteHandler)
-      delete this.onExecuteHandler
+    if (this.onSpawnHandler) {
+      this.process.off('spawn', this.onSpawnHandler)
+      delete this.onSpawnHandler
     }
 
   }
 
-  onExecute(/* path, argument, option */) {}
+  onSpawn(/* path, argument, option */) {}
 
   onMessage(/* message */) {}
 
@@ -156,7 +146,7 @@ class ChildProcess {
 
   onKill(/* signal */) {}
 
-  onError(/* error */) { }
+  onError(/* error */) {}
   
   send(message) {
 
@@ -164,24 +154,20 @@ class ChildProcess {
 
       if (Is.string(message)) {
 
-        switch (this.process.kill(message)) {
-          /* c8 ignore next 3 */
-          case false:
-            reject(new ChildProcessSignalError(message, this.process.pid))
-            break
-          default:
-            resolve()
+        if (this.process.kill(message)) {
+          resolve()
+        } else {
+          reject(new ChildProcessSignalError(message, this.process.pid))
         }
 
       } else {
 
         this.process.send(message, (error) => {
 
-          /* c8 ignore next 2 */
-          if (Is.not.null(error)) {
-            reject(error)
-          } else {
+          if (Is.null(error)) {
             resolve()
+          } else {
+            reject(error)
           }
 
         })
@@ -192,10 +178,28 @@ class ChildProcess {
 
   }
 
-  /* c8 ignore start */ 
+  async whenSpawn(maximumDuration = 0) {
+
+    let [ name, , ...argument ] = await this.whenEvent([
+      'spawn',
+      'error'
+    ], maximumDuration)
+
+    switch (name) {
+      case 'spawn':
+        return
+      case 'error':
+        throw new ChildProcessInternalError(argument[0])
+    }
+
+  }
+
+  /* c8 ignore start */
   async whenMessage(maximumDuration = 0, compareFn = () => true) {
 
-    while (maximumDuration >= 0) {
+    let durationRemaining = maximumDuration
+    
+    while (durationRemaining >= 0) {
 
       let [ name, duration, ...argument ] = await this.whenEvent([
         'message',
@@ -224,7 +228,7 @@ class ChildProcess {
           throw new ChildProcessInternalError(argument[0])
       }
 
-      maximumDuration -= maximumDuration === 0 ? 0 : duration
+      durationRemaining -= durationRemaining === 0 ? 0 : duration
 
     }
 
@@ -284,6 +288,7 @@ class ChildProcess {
   }
 
   async whenError(maximumDuration = 0) {
+    // console.log(`ChildProcess.whenError(${maximumDuration}) { ... }`)
 
     let [ name,, ...argument ] = await this.whenEvent([
       'error',
@@ -309,27 +314,34 @@ class ChildProcess {
   }
 
   whenEvent(name, maximumDuration = 0) {
+    // console.log(`ChildProcess.whenEvent(name, ${maximumDuration}) { ... }`)
+    // console.dir(name)
 
     return new Promise((resolve, reject) => {
 
       let onEventHandler = {}
-      let onTimeoutHandler = null
+      let onEventTimeout = null
 
       let begin = Process.hrtime.bigint()
 
       for (let nameOn of (Is.array(name) ? name : [ name ])) {
 
+        // console.log(`> this.process.on('${nameOn}', onEventHandler['${nameOn}'] = (...argument) => { ... })`)
         this.process.on(nameOn, onEventHandler[nameOn] = (...argument) => {
-          
+          // console.log(`< this.process.on('${nameOn}', onEventHandler['${nameOn}'] = (...argument) => { ... })`)
+          // console.dir(argument)
+
           let end = Process.hrtime.bigint()
           let duration = parseInt((end - begin) / BigInt(1e6))
 
           if (maximumDuration > 0) {
-            clearTimeout(onTimeoutHandler)
-            onTimeoutHandler = null
+            clearTimeout(onEventTimeout)
+            onEventTimeout = null
+            delete onEventHandler['timeout']
           }
 
-          for (let nameOff of (Is.array(name) ? name.reverse() : [ name ])) {
+          for (let nameOff of (Is.array(name) ? name.reverse() : [name])) {
+            // console.log(`this.process.off('${nameOff}', onEventHandler['${nameOff}'])`)
             this.process.off(nameOff, onEventHandler[nameOff])
             delete onEventHandler[nameOff]
           }
@@ -342,12 +354,14 @@ class ChildProcess {
 
       if (maximumDuration > 0) {
 
-        onTimeoutHandler = setTimeout(() => {
+        onEventTimeout = setTimeout(onEventHandler['timeout'] = () => {
 
-          clearTimeout(onTimeoutHandler)
-          onTimeoutHandler = null
+          clearTimeout(onEventTimeout)
+          onEventTimeout = null
+          delete onEventHandler['timeout']
 
           for (let nameOff of (Is.array(name) ? name.reverse() : [ name ])) {
+            // console.log(`this.process.off('${nameOff}', onEventHandler['${nameOff}'])`)
             this.process.off(nameOff, onEventHandler[nameOff])
             delete onEventHandler[nameOff]
           }

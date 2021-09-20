@@ -5,10 +5,9 @@ import Test from 'ava'
 import { CreateLoggedProcess, SpawnedProcess } from '../../index.js'
 
 const FilePath = __filePath
-const LogPath = FilePath.replace(/\/release\//, '/data/').replace(/\.c?js$/, '.log')
+const LogPath = FilePath.replace(/\/release\//, '/data/').replace(/\.test\.c?js$/, '.log')
+const LoggedClass = CreateLoggedProcess(SpawnedProcess, LogPath)
 const Process = process
-
-const LoggedProcess = CreateLoggedProcess(SpawnedProcess, LogPath)
 
 Test.before(async () => {
   await FileSystem.ensureDir(Path.dirname(LogPath))
@@ -16,15 +15,13 @@ Test.before(async () => {
 })
 
 Test.serial('SpawnedProcess()', (test) => {
-  return test.throws(() => {
-    new LoggedProcess()
-  }, { 'code': 'ERR_INVALID_ARG_TYPE' })
+  return test.throws(() => { new LoggedClass() }, { 'code': 'ERR_INVALID_ARG_TYPE' })
 })
 
 Test.serial('SpawnedProcess(\'...\')', (test) => {
   return test.notThrowsAsync(async () => {
 
-    let process = new LoggedProcess(Process.env.MAKE_PATH)
+    let process = new LoggedClass(Process.env.MAKE_PATH)
     await process.whenExit()
 
   })
@@ -33,7 +30,7 @@ Test.serial('SpawnedProcess(\'...\')', (test) => {
 Test.serial('SpawnedProcess(\'...\', { ... })', (test) => {
   return test.notThrowsAsync(async () => {
     
-    let process = new LoggedProcess(Process.env.MAKE_PATH, { 'version': true })
+    let process = new LoggedClass(Process.env.MAKE_PATH, { 'version': true })
     await process.whenExit()
 
   })
@@ -42,7 +39,7 @@ Test.serial('SpawnedProcess(\'...\', { ... })', (test) => {
 Test.serial('SpawnedProcess(\'...\', { ... }, { ... })', (test) => {
   return test.notThrowsAsync(async () => {
 
-    let process = new LoggedProcess(Process.env.MAKE_PATH, { 'version': true }, {})
+    let process = new LoggedClass(Process.env.MAKE_PATH, { 'version': true }, {})
     await process.whenExit()
 
   })

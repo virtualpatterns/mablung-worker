@@ -1,12 +1,30 @@
-import { WorkerServer } from '../../index.js'
+import '@virtualpatterns/mablung-source-map-support/install'
 
-import { WorkerExceptionError } from './error/worker-exception-error.js'
-import { WorkerUncaughtExceptionError } from './error/worker-uncaught-exception-error.js'
-import { WorkerUnhandledRejectionError } from './error/worker-unhandled-rejection-error.js'
+import { WorkerServer } from '../../../index.js'
+
+import { WorkerExceptionError } from '../error/worker-exception-error.js'
+import { WorkerUncaughtExceptionError } from '../error/worker-uncaught-exception-error.js'
+import { WorkerUnhandledRejectionError } from '../error/worker-unhandled-rejection-error.js'
 
 const Process = process
 
 class Worker {
+
+  static doIt(duration = 0) {
+
+    if (duration > 0) {
+
+      return new Promise((resolve) => {
+
+        setTimeout(() => {
+          resolve()
+        }, duration)
+
+      })
+
+    }
+
+  }
 
   static getPid(duration = 0) {
 
@@ -15,7 +33,6 @@ class Worker {
       return new Promise((resolve) => {
 
         setTimeout(() => {
-          /* c8 ignore next 1 */
           resolve(Process.pid)
         }, duration)
 
@@ -41,4 +58,4 @@ class Worker {
 
 }
 
-WorkerServer.publish(Worker)
+WorkerServer.start(Worker)

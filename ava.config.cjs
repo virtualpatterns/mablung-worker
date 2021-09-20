@@ -5,9 +5,6 @@ module.exports = function({ path }) {
     'files': [
       'release/**/test/**/*.test.*'
     ],
-    // 'nodeArguments': [
-    //   '--unhandled-rejections=strict'
-    // ],
     'require': [
       '@virtualpatterns/mablung-source-map-support/install'
     ],

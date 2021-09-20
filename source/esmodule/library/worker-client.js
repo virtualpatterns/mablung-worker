@@ -1,7 +1,7 @@
 import { Configuration } from '@virtualpatterns/mablung-configuration'
 import { Is } from '@virtualpatterns/mablung-is'
-import Cryptography from 'crypto'
 
+import { CreateMessageId } from './create-message-id.js'
 import { ForkedProcess } from './forked-process.js'
 import { WorkerClientHandler } from './worker-client-handler.js'
 
@@ -10,8 +10,8 @@ class WorkerClient extends ForkedProcess {
   constructor(...argument) {
     super(...argument)
 
-    this._isReady = false
-    this._worker = new Proxy(this, WorkerClientHandler)
+    this.worker = new Proxy(this, WorkerClientHandler)
+    this.isReady = false
 
   }
 
@@ -31,27 +31,64 @@ class WorkerClient extends ForkedProcess {
     this.option.maximumDuration = value
   }
 
-  get worker() {
-    return this._worker
+  async ping() {
+
+    let requestMessage = { 'type': 'ping' }
+    let responseMessage = await this.send(requestMessage, true)
+
+    switch (true) {
+      case Is.propertyDefined(responseMessage, 'error'):
+        throw responseMessage.error
+      case Is.propertyDefined(responseMessage, 'value'):
+        return responseMessage.value
+      default:
+        return
+    }
+
+  }
+
+  exit(code = 0) {
+    return Promise.all([this.whenExit(), this.send({ 'type': 'exit', 'code': code }, false)])
+  }
+
+  kill(signal = 'SIGINT') {
+    return Promise.all([ this.whenKill(), this.send(signal) ])
+  }
+
+  async send(message, awaitResponse = true) {
+
+    if (Is.string(message)) {
+      return super.send(message)
+    } else {
+
+      let requestMessage = Is.propertyDefined(message, 'id') ? message : { 'id': await CreateMessageId(), ...message }
+
+      if (awaitResponse) {
+        await super.send(requestMessage)
+        return this.whenMessage((responseMessage) => responseMessage.id === requestMessage.id)
+      } else {
+        return super.send(requestMessage)
+      }
+
+    }
+
   }
 
   async whenReady() {
 
-    switch (this._isReady) {
-      case true:
-        return
-      default:
+    if (!this.isReady) {
 
-        // server lets us know when it's ready
-        await this.whenMessage((message) => message.type === 'ready')
-        
-        // letting server know we're ready
-        await this.send({ 'type': 'ready' })
+      await this.whenMessage((message) => message.type === 'ready')
+      await this.send({ 'type': 'ready' }, false)
 
-        this._isReady = true
+      this.isReady = true
 
     }
 
+  }
+
+  whenSpawn() {
+    return super.whenSpawn(this.maximumDuration)
   }
 
   whenMessage(compareFn = () => true) {
@@ -68,60 +105,6 @@ class WorkerClient extends ForkedProcess {
 
   whenError() {
     return super.whenError(this.maximumDuration)
-  }
-
-  ping() {
-    return this.send({ 'type': 'ping' })
-  }
-
-  exit(code = 0) {
-    // using super since there will be no response
-    return Promise.all([ this.whenExit(), super.send({ 'type': 'exit', 'code': code }) ])
-  }
-
-  kill(signal = 'SIGINT') {
-    return Promise.all([ this.whenKill(), this.send(signal) ])
-  }
-
-  async send(message) {
-
-    if (Is.string(message)) {
-      await super.send(message)
-    } else {
-
-      let messageId = await WorkerClient.createMessageId()
-      let requestMessage = { id: messageId, ...message }
-
-      let [ responseMessage ] = await Promise.all([
-        this.whenMessage((message) => message.id === messageId),
-        super.send(requestMessage)
-      ])
-
-      if (responseMessage.error) {
-        throw responseMessage.error
-      } else {
-        return responseMessage.returnValue
-      }
-
-    }
-
-  }
-
-  static createMessageId() {
-
-    return new Promise((resolve, reject) => {
-
-      Cryptography.randomBytes(16, (error, buffer) => {
-        if (Is.not.null(error)) {
-          /* c8 ignore next 1 */
-          reject(error)
-        } else {
-          resolve(buffer.toString('hex'))
-        }
-      })
-
-    })
-
   }
 
 }
