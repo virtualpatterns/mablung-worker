@@ -30,7 +30,7 @@
     "url": "https://github.com/virtualpatterns/mablung-worker"
   },
   "type": "module",
-  "version": "0.0.2-60",
+  "version": "0.0.2-61",
   "dependencies": {
     "@virtualpatterns/mablung-configuration": "0.0.2-35",
     "@virtualpatterns/mablung-is": "0.0.1-40",
