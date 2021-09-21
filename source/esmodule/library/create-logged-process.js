@@ -4,6 +4,8 @@ import FileSystem from 'fs-extra'
 import Path from 'path'
 import Utility from 'util'
 
+const Process = process
+
 export function CreateLoggedProcess(processClass, userLogPath, userLogOption = {}, userConsoleOption = {}) {
 
   class LoggedProcess extends processClass {
@@ -45,8 +47,28 @@ export function CreateLoggedProcess(processClass, userLogPath, userLogOption = {
     }
 
     onSpawn() {
-      this.console.log(`${processClass.name}.onSpawn() processPath = '${Path.relative('', this.processPath)}' processArgument = ${Utility.format(this.processArgument)} processOption = ${Utility.format(this.processOption)}`)
+
+      let processPath = this.processPath
+
+      if (processPath.includes(Process.cwd())) {
+        processPath = Path.relative('', processPath)
+      }
+
+      let processArgument = Utility.format(this.processArgument)
+      let processOption = Utility.format(this.processOption)
+
+      this.console.log(`${processClass.name}.onSpawn() processPath = '${processPath}' processArgument = ${processArgument.includes('\n') ? '...' : processArgument} processOption = ${processOption.includes('\n') ? '...' : processOption}`)
+
+      if (processArgument.includes('\n')) {
+        this.console.log(processArgument)
+      }
+
+      if (processOption.includes('\n')) {
+        this.console.log(processOption)
+      }
+
       return super.onSpawn()
+
     }
 
     onMessage(message) {

@@ -44,3 +44,12 @@ Test.serial('SpawnedProcess(\'...\', { ... }, { ... })', (test) => {
 
   })
 })
+
+Test.serial('SpawnedProcess(\'...\', long, long)', (test) => {
+  return test.notThrowsAsync(async () => {
+
+    let process = new LoggedClass(Process.env.MAKE_PATH, { 'abcdefghi': true, 'jklmnopqr': true, 'stuvwxyz': true, 'a123456789': true, 'b123456789': true, 'c123456789': true }, { 'abcdefghi': true, 'jklmnopqr': true, 'stuvwxyz': true, 'a123456789': true, 'b123456789': true, 'c123456789': true })
+    await process.whenExit()
+
+  })
+})
