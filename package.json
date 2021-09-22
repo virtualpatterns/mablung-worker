@@ -40,7 +40,7 @@
   "devDependencies": {
     "@virtualpatterns/babel-preset-mablung-makefile-environment": "0.0.26-4",
     "@virtualpatterns/eslint-config-mablung-makefile-environment": "0.0.26-4",
-    "@virtualpatterns/mablung-check-dependency": "0.0.26-16",
+    "@virtualpatterns/mablung-check-dependency": "0.0.26-19",
     "@virtualpatterns/mablung-makefile-environment": "0.0.26-15",
     "@virtualpatterns/mablung-source-map-support": "0.0.26-20",
     "ava": "^3.15.0",
