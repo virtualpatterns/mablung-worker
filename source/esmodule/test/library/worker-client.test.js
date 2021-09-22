@@ -8,9 +8,8 @@ import { CreateMessageId } from '../../library/create-message-id.js'
 
 const FilePath = __filePath
 const LogPath = FilePath.replace(/\/release\//, '/data/').replace(/\.test\.c?js$/, '.log')
-const LoggedClass = CreateLoggedProcess(WorkerClient, LogPath)
-const Require = __require
-const WorkerPath = Require.resolve('./worker/empty-object.js')
+const LoggedClient = CreateLoggedProcess(WorkerClient, LogPath)
+const WorkerPath = FilePath.replace('worker-', 'worker/worker-').replace('.test', '')
 
 Test.before(async () => {
   await FileSystem.ensureDir(Path.dirname(LogPath))
@@ -18,13 +17,13 @@ Test.before(async () => {
 })
 
 Test.serial('WorkerClient()', (test) => {
-  return test.throws(() => { new LoggedClass() }, { 'code': 'ERR_INVALID_ARG_TYPE' })
+  return test.throws(() => { new LoggedClient() }, { 'code': 'ERR_INVALID_ARG_TYPE' })
 })
 
 Test.serial('WorkerClient(\'...\')', (test) => {
   return test.notThrowsAsync(async () => {
 
-    let client = new LoggedClass(WorkerPath)
+    let client = new LoggedClient(WorkerPath)
     await client.whenReady()
 
     test.deepEqual(client.argument, [])
@@ -42,7 +41,7 @@ Test.serial('WorkerClient(\'...\')', (test) => {
 Test.serial('WorkerClient(\'...\', { ... })', (test) => {
   return test.notThrowsAsync(async () => {
     
-    let client = new LoggedClass(WorkerPath, { '--asd': 'fgh' })
+    let client = new LoggedClient(WorkerPath, { '--asd': 'fgh' })
     await client.whenReady()
 
     test.deepEqual(client.argument, [
@@ -63,7 +62,7 @@ Test.serial('WorkerClient(\'...\', { ... })', (test) => {
 Test.serial('WorkerClient(\'...\', { ... }, { ... })', (test) => {
   return test.notThrowsAsync(async () => {
 
-    let client = new LoggedClass(WorkerPath, { '--asd': 'fgh' }, { 'maximumDuration': 10000 })
+    let client = new LoggedClient(WorkerPath, { '--asd': 'fgh' }, { 'maximumDuration': 10000 })
     await client.whenReady()
 
     test.deepEqual(client.argument, [
@@ -84,7 +83,7 @@ Test.serial('WorkerClient(\'...\', { ... }, { ... })', (test) => {
 Test.serial('maximumDuration', async (test) => {
 
   let maximumDuration = 10000
-  let client = new LoggedClass(WorkerPath, {}, { 'maximumDuration': maximumDuration })
+  let client = new LoggedClient(WorkerPath, {}, { 'maximumDuration': maximumDuration })
 
   await client.whenReady()
 
@@ -106,7 +105,7 @@ Test.serial('maximumDuration', async (test) => {
 
 Test.serial('ping()', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -123,7 +122,7 @@ Test.serial('ping()', async (test) => {
 
 Test.serial('ping() throws Error', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -151,7 +150,7 @@ Test.serial('ping() throws Error', async (test) => {
 
 Test.serial('ping() returns undefined', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -178,18 +177,57 @@ Test.serial('ping() returns undefined', async (test) => {
 
 Test.serial('exit()', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
   await test.notThrowsAsync(client.exit())
 
 })
 
+Test.serial('exit(...)', async (test) => {
+
+  let client = new LoggedClient(WorkerPath)
+
+  await client.whenReady()
+
+  await test.notThrowsAsync(async () => {
+
+    let [ code ] = await client.exit(1)
+    test.is(code, 1)
+
+  })
+
+})
+
+Test.serial.only('exit(...) on send(\'...\')', async (test) => {
+
+  let client = new LoggedClient(WorkerPath)
+
+  await client.whenReady()
+
+  await test.notThrowsAsync(async () => {
+
+    let [ code ] = await Promise.all([ client.whenExit(), client.send('SIGHUP') ])
+    test.is(code, 42)
+
+  })
+
+})
+
 Test.serial('kill()', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
   await test.notThrowsAsync(client.kill())
+
+})
+
+Test.serial('kill(\'...\')', async (test) => {
+
+  let client = new LoggedClient(WorkerPath)
+
+  await client.whenReady()
+  await test.notThrowsAsync(client.kill('SIGINT'))
 
 })

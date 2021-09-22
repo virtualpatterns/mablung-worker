@@ -1,5 +1,6 @@
 import { Configuration } from '@virtualpatterns/mablung-configuration'
 import { Console } from 'console'
+import { Is } from '@virtualpatterns/mablung-is'
 import FileSystem from 'fs-extra'
 import Path from 'path'
 import Utility from 'util'
@@ -93,11 +94,10 @@ export function CreateLoggedProcess(processClass, userLogPath, userLogOption = {
       return super.onError(error)
     }
 
-    // send(message) {
-    //   this.console.log(`${processClass.name}.send(${Is.string(message) ? `'${message}'` : 'message'})`)
-    //   if (Is.not.string(message)) this.console.dir(message)
-    //   return super.send(message)
-    // }
+    send(message, awaitResponse = true) {
+      if (Is.string(message)) this.console.log(`${processClass.name}.send('${message}', ${awaitResponse})`)
+      return super.send(message, awaitResponse)
+    }
 
   }
 

@@ -197,6 +197,7 @@ class ChildProcess {
   /* c8 ignore start */
   async whenMessage(maximumDuration = 0, compareFn = () => true) {
 
+    let totalDuration = 0
     let durationRemaining = maximumDuration
     
     while (durationRemaining >= 0) {
@@ -228,11 +229,12 @@ class ChildProcess {
           throw new ChildProcessInternalError(argument[0])
       }
 
+      totalDuration += duration
       durationRemaining -= durationRemaining === 0 ? 0 : duration
 
     }
 
-    throw new ChildProcessDurationExceededError(maximumDuration)
+    throw new ChildProcessDurationExceededError(totalDuration, maximumDuration)
 
   }
   /* c8 ignore stop */
@@ -356,6 +358,9 @@ class ChildProcess {
 
         onEventTimeout = setTimeout(onEventHandler['timeout'] = () => {
 
+          let end = Process.hrtime.bigint()
+          let duration = parseInt((end - begin) / BigInt(1e6))
+
           clearTimeout(onEventTimeout)
           onEventTimeout = null
           delete onEventHandler['timeout']
@@ -366,7 +371,7 @@ class ChildProcess {
             delete onEventHandler[nameOff]
           }
 
-          reject(new ChildProcessDurationExceededError(maximumDuration))
+          reject(new ChildProcessDurationExceededError(duration, maximumDuration))
 
         }, maximumDuration)
 

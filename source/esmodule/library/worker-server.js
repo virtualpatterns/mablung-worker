@@ -18,6 +18,8 @@ class WorkerServer {
 
       this.worker = worker
       this.attachAllHandler()
+      
+      if (Is.function(this.worker.start)) this.worker.start()
 
     }
 
@@ -36,7 +38,7 @@ class WorkerServer {
 
   // }
 
-  static async attachAllHandler() {
+  static attachAllHandler() {
 
     Process.on('interval', this.onIntervalHandler = async () => {
 

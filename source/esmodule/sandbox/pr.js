@@ -1,7 +1,7 @@
 class A extends Proxy {
 
-  constructor(...parameter) {
-    super(...parameter)
+  constructor(...argument) {
+    super(...argument)
   }
 
 }
