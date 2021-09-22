@@ -199,7 +199,7 @@ Test.serial('exit(...)', async (test) => {
 
 })
 
-Test.serial.only('exit(...) on send(\'...\')', async (test) => {
+Test.serial('exit(...) on send(\'...\')', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
