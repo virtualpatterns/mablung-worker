@@ -8,9 +8,9 @@ import { ChildProcessDurationExceededError, ChildProcessExitedError, ChildProces
 
 const FilePath = __filePath
 const LogPath = FilePath.replace(/\/release\//, '/data/').replace(/\.test\.c?js$/, '.log')
-const LoggedClass = CreateLoggedProcess(WorkerClient, LogPath)
+const LoggedClient = CreateLoggedProcess(WorkerClient, LogPath)
 const Require = __require
-const WorkerPath = Require.resolve('./worker/empty-object.js')
+const WorkerPath = Require.resolve('./worker/worker.js')
 
 Test.before(async () => {
   await FileSystem.ensureDir(Path.dirname(LogPath))
@@ -19,7 +19,7 @@ Test.before(async () => {
 
 Test.serial('whenReady()', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await test.notThrowsAsync(client.whenReady())
   await client.exit()
@@ -28,7 +28,7 @@ Test.serial('whenReady()', async (test) => {
 
 Test.serial('whenSpawn()', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -42,7 +42,7 @@ Test.serial('whenSpawn()', async (test) => {
 
 Test.serial('whenSpawn() throws ChildProcessInternalError', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -56,7 +56,7 @@ Test.serial('whenSpawn() throws ChildProcessInternalError', async (test) => {
 
 Test.serial('whenSpawn() throws ChildProcessDurationExceededError', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -70,7 +70,7 @@ Test.serial('whenSpawn() throws ChildProcessDurationExceededError', async (test)
 
 Test.serial('whenMessage()', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -84,7 +84,7 @@ Test.serial('whenMessage()', async (test) => {
 
 Test.serial('whenMessage(...)', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -98,7 +98,7 @@ Test.serial('whenMessage(...)', async (test) => {
 
 Test.serial('whenMessage() throws ChildProcessExitedError code=0', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -112,7 +112,7 @@ Test.serial('whenMessage() throws ChildProcessExitedError code=0', async (test) 
 
 Test.serial('whenMessage() throws ChildProcessExitedError code=null', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -126,7 +126,7 @@ Test.serial('whenMessage() throws ChildProcessExitedError code=null', async (tes
 
 Test.serial('whenMessage() throws ChildProcessKilledError', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -140,7 +140,7 @@ Test.serial('whenMessage() throws ChildProcessKilledError', async (test) => {
 
 Test.serial('whenMessage() throws ChildProcessInternalError', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -154,7 +154,7 @@ Test.serial('whenMessage() throws ChildProcessInternalError', async (test) => {
 
 Test.serial('whenMessage() throws ChildProcessDurationExceededError', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -168,7 +168,7 @@ Test.serial('whenMessage() throws ChildProcessDurationExceededError', async (tes
 
 Test.serial('whenExit() code=0', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -182,7 +182,7 @@ Test.serial('whenExit() code=0', async (test) => {
 
 Test.serial('whenExit() code=null', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -196,7 +196,7 @@ Test.serial('whenExit() code=null', async (test) => {
 
 Test.serial('whenExit() throws ChildProcessKilledError', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -210,7 +210,7 @@ Test.serial('whenExit() throws ChildProcessKilledError', async (test) => {
 
 Test.serial('whenExit() throws ChildProcessInternalError', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -224,7 +224,7 @@ Test.serial('whenExit() throws ChildProcessInternalError', async (test) => {
 
 Test.serial('whenExit() throws ChildProcessDurationExceededError', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -238,7 +238,7 @@ Test.serial('whenExit() throws ChildProcessDurationExceededError', async (test) 
 
 Test.serial('whenKill()', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -252,7 +252,7 @@ Test.serial('whenKill()', async (test) => {
 
 Test.serial('whenKill() throws ChildProcessExitedError code=0', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -266,7 +266,7 @@ Test.serial('whenKill() throws ChildProcessExitedError code=0', async (test) => 
 
 Test.serial('whenKill() throws ChildProcessExitedError code=null', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -280,7 +280,7 @@ Test.serial('whenKill() throws ChildProcessExitedError code=null', async (test) 
 
 Test.serial('whenKill() throws ChildProcessInternalError', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -294,7 +294,7 @@ Test.serial('whenKill() throws ChildProcessInternalError', async (test) => {
 
 Test.serial('whenKill() throws ChildProcessDurationExceededError', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -308,7 +308,7 @@ Test.serial('whenKill() throws ChildProcessDurationExceededError', async (test) 
 
 Test.serial('whenError()', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -322,7 +322,7 @@ Test.serial('whenError()', async (test) => {
 
 Test.serial('whenError() throws ChildProcessExitedError code=0', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -336,7 +336,7 @@ Test.serial('whenError() throws ChildProcessExitedError code=0', async (test) =>
 
 Test.serial('whenError() throws ChildProcessExitedError code=null', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -350,7 +350,7 @@ Test.serial('whenError() throws ChildProcessExitedError code=null', async (test)
 
 Test.serial('whenError() throws ChildProcessKilledError', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -364,7 +364,7 @@ Test.serial('whenError() throws ChildProcessKilledError', async (test) => {
 
 Test.serial('whenError() throws ChildProcessDurationExceededError', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -378,7 +378,7 @@ Test.serial('whenError() throws ChildProcessDurationExceededError', async (test)
 
 Test.serial('whenEvent()', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -392,7 +392,7 @@ Test.serial('whenEvent()', async (test) => {
 
 Test.serial('whenEvent() throws ChildProcessDurationExceededError', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 

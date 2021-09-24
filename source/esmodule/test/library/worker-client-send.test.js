@@ -9,9 +9,9 @@ import { ChildProcessSignalError } from '../../index.js'
 
 const FilePath = __filePath
 const LogPath = FilePath.replace(/\/release\//, '/data/').replace(/\.test\.c?js$/, '.log')
-const LoggedClass = CreateLoggedProcess(WorkerClient, LogPath)
+const LoggedClient = CreateLoggedProcess(WorkerClient, LogPath)
 const Require = __require
-const WorkerPath = Require.resolve('./worker/empty-object.js')
+const WorkerPath = Require.resolve('./worker/worker.js')
 
 Test.before(async () => {
   await FileSystem.ensureDir(Path.dirname(LogPath))
@@ -20,7 +20,7 @@ Test.before(async () => {
 
 Test.serial('send(\'...\')', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
   await test.notThrowsAsync(client.send('SIGINT'))
@@ -30,7 +30,7 @@ Test.serial('send(\'...\')', async (test) => {
 
 Test.serial('send({ ... }, false)', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
   await test.notThrowsAsync(client.send({ 'type': 'exit', 'code': 0 }, false))
@@ -40,7 +40,7 @@ Test.serial('send({ ... }, false)', async (test) => {
 
 Test.serial('send({ ... }, true)', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -57,7 +57,7 @@ Test.serial('send({ ... }, true)', async (test) => {
 
 Test.serial('send({ id, ... }, false)', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
   await test.notThrowsAsync(client.send({ 'id': '123', 'type': 'exit', 'code': 0 }, false))
@@ -67,7 +67,7 @@ Test.serial('send({ id, ... }, false)', async (test) => {
 
 Test.serial('send({ id, ... }, true)', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -84,7 +84,7 @@ Test.serial('send({ id, ... }, true)', async (test) => {
 
 Test.serial('send({ \'type\' }, false)', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -98,7 +98,7 @@ Test.serial('send({ \'type\' }, false)', async (test) => {
 
 Test.serial('send({ \'type\' }, true) returns { \'The message with type \'type\' is invalid.\' }', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -117,7 +117,7 @@ Test.serial('send({ \'type\' }, true) returns { \'The message with type \'type\'
 
 Test.serial('send({}) throws \'The message with type undefined is invalid.\'', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -136,7 +136,7 @@ Test.serial('send({}) throws \'The message with type undefined is invalid.\'', a
 
 Test.serial('send(\'...\') throws ChildProcessSignalError', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -160,7 +160,7 @@ Test.serial('send(\'...\') throws ChildProcessSignalError', async (test) => {
 
 Test.serial('send({ ... }) throws Error', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 

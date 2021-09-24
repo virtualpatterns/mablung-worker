@@ -94,8 +94,8 @@ export function CreateLoggedProcess(processClass, userLogPath, userLogOption = {
       return super.onError(error)
     }
 
-    send(message, awaitResponse = true) {
-      if (Is.string(message)) this.console.log(`${processClass.name}.send('${message}', ${awaitResponse})`)
+    send(message, awaitResponse = Is.string(message) ? false : true) {
+      if (Is.string(message)) this.console.log(`${processClass.name}.send('${message}', ...)`)
       return super.send(message, awaitResponse)
     }
 

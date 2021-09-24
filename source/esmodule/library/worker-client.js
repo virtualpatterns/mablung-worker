@@ -55,7 +55,7 @@ class WorkerClient extends ForkedProcess {
     return Promise.all([ this.whenKill(), this.send(signal) ])
   }
 
-  async send(message, awaitResponse = true) {
+  async send(message, awaitResponse = Is.string(message) ? false : true) {
 
     if (Is.string(message)) {
       return super.send(message)

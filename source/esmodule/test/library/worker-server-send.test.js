@@ -6,7 +6,7 @@ import { CreateLoggedProcess, WorkerClient } from '../../index.js'
 
 const FilePath = __filePath
 const LogPath = FilePath.replace(/\/release\//, '/data/').replace(/\.test\.c?js$/, '.log')
-const LoggedClass = CreateLoggedProcess(WorkerClient, LogPath)
+const LoggedClient = CreateLoggedProcess(WorkerClient, LogPath)
 const WorkerPath = FilePath.replace('worker-', 'worker/worker-').replace('.test', '')
 
 Test.before(async () => {
@@ -16,7 +16,7 @@ Test.before(async () => {
 
 Test.serial('send()', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -30,7 +30,7 @@ Test.serial('send()', async (test) => {
 
 Test.serial('send({ ... }) throws Error', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
@@ -44,7 +44,7 @@ Test.serial('send({ ... }) throws Error', async (test) => {
 
 Test.serial('send({ ... }) throws WorkerServerNoIPCChannelError', async (test) => {
 
-  let client = new LoggedClass(WorkerPath)
+  let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
