@@ -63,30 +63,6 @@ Test.serial('onMessage() throws Error', async (test) => {
 
 })
 
-Test.serial('onExit() throws Error', async (test) => {
-
-  let client = new LoggedClient(WorkerPath)
-
-  await client.whenReady()
-
-  try {
-
-    let onExitStub = Sinon
-      .stub(client, 'onExit')
-      .throws(new Error())
-
-    try {
-      await test.notThrowsAsync(Promise.all([ client.whenEvent('error'), client.process.emit('exit', null, null) ]))
-    } finally {
-      onExitStub.restore()
-    }
-
-  } finally {
-    await client.exit()
-  }
-
-})
-
 Test.serial('onError() throws Error', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
@@ -118,6 +94,30 @@ Test.serial('onError() throws Error', async (test) => {
       onErrorStub.restore()
     }
     
+  } finally {
+    await client.exit()
+  }
+
+})
+
+Test.serial('onExit() throws Error', async (test) => {
+
+  let client = new LoggedClient(WorkerPath)
+
+  await client.whenReady()
+
+  try {
+
+    let onExitStub = Sinon
+      .stub(client, 'onExit')
+      .throws(new Error())
+
+    try {
+      await test.notThrowsAsync(Promise.all([ client.whenEvent('error'), client.process.emit('exit', null, null) ]))
+    } finally {
+      onExitStub.restore()
+    }
+
   } finally {
     await client.exit()
   }

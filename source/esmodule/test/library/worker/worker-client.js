@@ -7,26 +7,15 @@ const Process = process
 class Worker {
 
   static start() {
-    this.attachAllHandler()
-  }
+    console.log('Worker.start()')
 
-  static attachAllHandler() {
-
-    Process.on('exit', this.onExitHandler = (code) => {
+    Process.once('SIGHUP', () => {
 
       try {
-        this.detachAllHandler()
-        this.onExit(code)
-      } catch (error) {
-        Process.emit('error', error)
-      }
 
-    })
+        WorkerServer.stop()
+        Process.exitCode = 42
 
-    Process.on('SIGHUP', this.onSIGHUPHandler = () => {
-
-      try {
-        this.onSIGHUP()
       } catch (error) {
         Process.emit('error', error)
       }
@@ -35,27 +24,8 @@ class Worker {
 
   }
 
-  static detachAllHandler() {
-
-    if (this.onSIGHUPHandler) {
-      Process.off('SIGHUP', this.onSIGHUPHandler)
-      delete this.onSIGHUPHandler
-    }
-
-    if (this.onExitHandler) {
-      Process.off('exit', this.onExitHandler)
-      delete this.onExitHandler
-    }
-
-  }
-
-  static onExit(code) {
-    console.log(`Worker.onExit(${code})`)
-  }
-
-  static onSIGHUP() {
-    console.log('Worker.onSIGHUP()')
-    Process.exit(42)
+  static stop() {
+    console.log('Worker.stop()')
   }
 
 }

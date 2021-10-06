@@ -6,7 +6,7 @@ import { CreateLoggedProcess, SpawnedProcess } from '../../index.js'
 
 const FilePath = __filePath
 const LogPath = FilePath.replace(/\/release\//, '/data/').replace(/\.test\.c?js$/, '.log')
-const LoggedClass = CreateLoggedProcess(SpawnedProcess, LogPath)
+const LoggedProcess = CreateLoggedProcess(SpawnedProcess, LogPath)
 const Process = process
 
 Test.before(async () => {
@@ -15,13 +15,13 @@ Test.before(async () => {
 })
 
 Test.serial('SpawnedProcess()', (test) => {
-  return test.throws(() => { new LoggedClass() }, { 'code': 'ERR_INVALID_ARG_TYPE' })
+  return test.throws(() => { new LoggedProcess() }, { 'code': 'ERR_INVALID_ARG_TYPE' })
 })
 
 Test.serial('SpawnedProcess(\'...\')', (test) => {
   return test.notThrowsAsync(async () => {
 
-    let process = new LoggedClass(Process.env.MAKE_PATH)
+    let process = new LoggedProcess(Process.env.MAKE_PATH)
     await process.whenExit()
 
   })
@@ -30,7 +30,7 @@ Test.serial('SpawnedProcess(\'...\')', (test) => {
 Test.serial('SpawnedProcess(\'...\', { ... })', (test) => {
   return test.notThrowsAsync(async () => {
     
-    let process = new LoggedClass(Process.env.MAKE_PATH, { 'version': true })
+    let process = new LoggedProcess(Process.env.MAKE_PATH, { 'version': true })
     await process.whenExit()
 
   })
@@ -39,7 +39,7 @@ Test.serial('SpawnedProcess(\'...\', { ... })', (test) => {
 Test.serial('SpawnedProcess(\'...\', { ... }, { ... })', (test) => {
   return test.notThrowsAsync(async () => {
 
-    let process = new LoggedClass(Process.env.MAKE_PATH, { 'version': true }, {})
+    let process = new LoggedProcess(Process.env.MAKE_PATH, { 'version': true }, {})
     await process.whenExit()
 
   })
@@ -48,7 +48,7 @@ Test.serial('SpawnedProcess(\'...\', { ... }, { ... })', (test) => {
 Test.serial('SpawnedProcess(\'...\', long, long)', (test) => {
   return test.notThrowsAsync(async () => {
 
-    let process = new LoggedClass(Process.env.MAKE_PATH, { 'abcdefghi': true, 'jklmnopqr': true, 'stuvwxyz': true, 'a123456789': true, 'b123456789': true, 'c123456789': true }, { 'abcdefghi': true, 'jklmnopqr': true, 'stuvwxyz': true, 'a123456789': true, 'b123456789': true, 'c123456789': true })
+    let process = new LoggedProcess(Process.env.MAKE_PATH, { 'abcdefghi': true, 'jklmnopqr': true, 'stuvwxyz': true, 'a123456789': true, 'b123456789': true, 'c123456789': true }, { 'abcdefghi': true, 'jklmnopqr': true, 'stuvwxyz': true, 'a123456789': true, 'b123456789': true, 'c123456789': true })
     await process.whenExit()
 
   })

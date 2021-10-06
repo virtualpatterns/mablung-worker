@@ -20,7 +20,7 @@ class WorkerClient extends ForkedProcess {
   }
 
   get defaultOption() {
-    return Configuration.getOption(super.defaultOption, { 'maximumDuration': 5000 })
+    return Configuration.merge(super.defaultOption, { 'maximumDuration': 5000 })
   }
 
   get maximumDuration() {
@@ -47,8 +47,8 @@ class WorkerClient extends ForkedProcess {
 
   }
 
-  exit(code = 0) {
-    return Promise.all([this.whenExit(), this.send({ 'type': 'exit', 'code': code }, false)])
+  exit(code = 0, force = false) {
+    return Promise.all([this.whenExit(), this.send({ 'type': 'exit', 'code': code, 'force': force }, false)])
   }
 
   kill(signal = 'SIGINT') {
@@ -95,16 +95,16 @@ class WorkerClient extends ForkedProcess {
     return super.whenMessage(this.maximumDuration, compareFn)
   }
 
+  whenError() {
+    return super.whenError(this.maximumDuration)
+  }
+
   whenExit() {
     return super.whenExit(this.maximumDuration)
   }
 
   whenKill() {
     return super.whenKill(this.maximumDuration)
-  }
-
-  whenError() {
-    return super.whenError(this.maximumDuration)
   }
 
 }

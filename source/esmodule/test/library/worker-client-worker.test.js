@@ -130,7 +130,7 @@ Test.serial('doIt(...) throws ChildProcessExitedError', async (test) => {
   let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
-  await test.throwsAsync(Promise.all([ client.worker.doIt(1000), client.exit() ]), { 'instanceOf': ChildProcessExitedError })
+  await test.throwsAsync(Promise.all([ client.worker.doIt(1000), client.exit(0, true) ]), { 'instanceOf': ChildProcessExitedError })
 
 })
 
@@ -227,7 +227,7 @@ Test.serial('getPid(...) throws ChildProcessExitedError', async (test) => {
   let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
-  await test.throwsAsync(Promise.all([ client.worker.getPid(2500), client.exit() ]), { 'instanceOf': ChildProcessExitedError })
+  await test.throwsAsync(Promise.all([ client.worker.getPid(2500), client.exit(0, true) ]), { 'instanceOf': ChildProcessExitedError })
 
 })
 

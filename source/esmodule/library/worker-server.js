@@ -17,28 +17,15 @@ class WorkerServer {
     if (Is.not.propertyDefined(this, 'worker')) {
 
       this.worker = worker
-      this.attachAllHandler()
+      this.attach()
       
-      if (Is.function(this.worker.start)) this.worker.start()
+      if (Is.function(this.worker.start)) { this.worker.start() }
 
     }
 
   }
 
-  // static stop() {
-
-  //   if (Is.propertyDefined(this, 'worker')) {
-
-  //     this.detachAllHandler()
-
-  //     this.worker = null
-  //     delete this.worker
-
-  //   }
-
-  // }
-
-  static attachAllHandler() {
+  static attach() {
 
     Process.on('interval', this.onIntervalHandler = async () => {
 
@@ -62,19 +49,6 @@ class WorkerServer {
 
     })
 
-    /* c8 ignore start */
-    Process.on('exit', this.onExitHandler = (code) => {
-
-      try {
-        this.detachAllHandler()
-        this.onExit(code)
-      } catch (error) {
-        Process.emit('error', error)
-      }
-
-    })
-    /* c8 ignore stop */
-
     Process.on('error', this.onErrorHandler = (error) => {
 
       try {
@@ -85,35 +59,19 @@ class WorkerServer {
 
     })
 
+    /* c8 ignore start */
+    Process.once('beforeExit', (code) => {
+
+      try {
+        this.onExit(code)
+      } catch (error) {
+        Process.emit('error', error)
+      }
+
+    })
+    /* c8 ignore stop */
+
     this.setInterval()
-
-  }
-
-  static detachAllHandler() {
-    // console.log('WorkerServer.detachAllHandler()')
-    
-    this.clearInterval()
-
-    if (this.onErrorHandler) {
-      // console.log('Process.off(\'error\', this.onErrorHandler)')
-      Process.off('error', this.onErrorHandler)
-      delete this.onErrorHandler
-    }
-
-    if (this.onExitHandler) {
-      Process.off('exit', this.onExitHandler)
-      delete this.onExitHandler
-    }
-
-    if (this.onMessageHandler) {
-      Process.off('message', this.onMessageHandler)
-      delete this.onMessageHandler
-    }
-
-    if (this.onIntervalHandler) {
-      Process.off('interval', this.onIntervalHandler)
-      delete this.onIntervalHandler
-    }
 
   }
 
@@ -193,7 +151,12 @@ class WorkerServer {
 
       case 'exit':
 
-        Process.exit(message.code)
+        if (message.force) {
+          Process.exit(message.code)
+        } else {
+          this.stop()
+          Process.exitCode = message.code
+        }
 
         break
 
@@ -208,13 +171,13 @@ class WorkerServer {
 
   }
 
-  static onExit(code) {
-    console.log(`WorkerServer.onExit(${code})`)
-  }
-
   static onError(error) {
     console.error('WorkerServer.onError(error)')
     console.error(error)
+  }
+
+  static onExit(code) {
+    console.log(`WorkerServer.onExit(${code})`)
   }
 
   static async send(message) {
@@ -227,7 +190,7 @@ class WorkerServer {
 
         Process.send(responseMessage, (error) => {
 
-          if (Is.null(error)) {
+          if (Is.nil(error)) {
             resolve()
           } else {
             reject(error)
@@ -240,6 +203,42 @@ class WorkerServer {
       }
 
     })
+
+  }
+
+  static stop() {
+
+    if (Is.propertyDefined(this, 'worker')) {
+
+      if (Is.function(this.worker.stop)) { this.worker.stop() }
+
+      this.detach()
+
+      this.worker = null
+      delete this.worker
+
+    }
+
+  }
+
+  static detach() {
+
+    this.clearInterval()
+
+    if (this.onErrorHandler) {
+      Process.off('error', this.onErrorHandler)
+      delete this.onErrorHandler
+    }
+
+    if (this.onMessageHandler) {
+      Process.off('message', this.onMessageHandler)
+      delete this.onMessageHandler
+    }
+
+    if (this.onIntervalHandler) {
+      Process.off('interval', this.onIntervalHandler)
+      delete this.onIntervalHandler
+    }
 
   }
 

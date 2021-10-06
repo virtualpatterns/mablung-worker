@@ -42,20 +42,6 @@ Test.serial('onMessage(...) throws Error', async (test) => {
 
 })
 
-Test.serial('onExit() throws Error', async (test) => {
-
-  let client = new LoggedClient(WorkerPath)
-
-  await client.whenReady()
-
-  try {
-    await test.throwsAsync(client.worker.onExit(), { 'instanceOf': Error })
-  } finally {
-    await client.kill()
-  }
-
-})
-
 Test.serial('onError(...) throws Error', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
@@ -66,6 +52,20 @@ Test.serial('onError(...) throws Error', async (test) => {
     await test.throwsAsync(client.worker.onError(), { 'instanceOf': Error })
   } finally {
     await client.exit()
+  }
+
+})
+
+Test.serial('onExit() throws Error', async (test) => {
+
+  let client = new LoggedClient(WorkerPath)
+
+  await client.whenReady()
+
+  try {
+    await test.throwsAsync(client.worker.onExit(), { 'instanceOf': Error })
+  } finally {
+    await client.kill()
   }
 
 })

@@ -19,7 +19,7 @@ class ChildProcess {
 
     this.process = this.createProcess(this.processPath, this.processArgument, this.processOption)
 
-    this.attachAllHandler()
+    this.attach()
 
   }
 
@@ -57,7 +57,7 @@ class ChildProcess {
   // derived class must implement ...
   // createProcess(path, argument, option) { }
 
-  attachAllHandler() {
+  attach() {
 
     this.process.on('spawn', this.onSpawnHandler = () => {
 
@@ -79,11 +79,21 @@ class ChildProcess {
 
     })
 
+    this.process.on('error', this.onErrorHandler = (error) => {
+
+      try {
+        this.onError(error)
+      } catch (error) {
+        console.error(error)
+      }
+
+    })
+
     this.process.on('exit', this.onExitHandler = (code, signal) => {
 
       try {
 
-        this.detachAllHandler()
+        this.detach()
 
         switch (true) {
           case Is.not.null(code):
@@ -95,46 +105,12 @@ class ChildProcess {
           default:
             this.onExit(0)
         }
-      
+
       } catch (error) {
         this.process.emit('error', error)
       }
 
     })
-
-    this.process.on('error', this.onErrorHandler = (error) => {
-
-      try {
-        this.onError(error)
-      } catch (error) {
-        console.error(error)
-      }
-
-    })
-
-  }
-
-  detachAllHandler() {
-
-    if (this.onErrorHandler) {
-      this.process.off('error', this.onErrorHandler)
-      delete this.onErrorHandler
-    }
-
-    if (this.onExitHandler) {
-      this.process.off('exit', this.onExitHandler)
-      delete this.onExitHandler
-    }
-
-    if (this.onMessageHandler) {
-      this.process.off('message', this.onMessageHandler)
-      delete this.onMessageHandler
-    }
-
-    if (this.onSpawnHandler) {
-      this.process.off('spawn', this.onSpawnHandler)
-      delete this.onSpawnHandler
-    }
 
   }
 
@@ -142,12 +118,12 @@ class ChildProcess {
 
   onMessage(/* message */) {}
 
-  onExit(/* code */) {}
-
-  onKill(/* signal */) {}
-
   onError(/* error */) {}
-  
+
+  onExit(/* code */) { }
+
+  onKill(/* signal */) { }
+
   send(message) {
 
     return new Promise((resolve, reject) => {
@@ -164,7 +140,7 @@ class ChildProcess {
 
         this.process.send(message, (error) => {
 
-          if (Is.null(error)) {
+          if (Is.nil(error)) {
             resolve()
           } else {
             reject(error)
@@ -239,56 +215,6 @@ class ChildProcess {
   }
   /* c8 ignore stop */
 
-  async whenExit(maximumDuration = 0) {
-
-    let [ name,, ...argument ] = await this.whenEvent([
-      'exit',
-      'error'
-    ], maximumDuration)
-
-    switch (name) {
-      case 'exit':
-
-        switch (true) {
-          case Is.not.null(argument[0]): // code
-            return argument[0]
-          case Is.not.null(argument[1]): // signal
-            throw new ChildProcessKilledError(argument[1])
-          default:
-            return 0
-        }
-      
-      case 'error':
-        throw new ChildProcessInternalError(argument[0])
-    }
-
-  }
-
-  async whenKill(maximumDuration = 0) {
-
-    let [ name,, ...argument ] = await this.whenEvent([
-      'exit',
-      'error'
-    ], maximumDuration)
-
-    switch (name) {
-      case 'exit':
-
-        switch (true) {
-          case Is.not.null(argument[0]): // code
-            throw new ChildProcessExitedError(argument[0])
-          case Is.not.null(argument[1]): // signal
-            return argument[1]
-          default:
-            throw new ChildProcessExitedError(0)
-        }
-
-      case 'error':
-        throw new ChildProcessInternalError(argument[0])
-    }
-
-  }
-
   async whenError(maximumDuration = 0) {
     // console.log(`ChildProcess.whenError(${maximumDuration}) { ... }`)
 
@@ -311,6 +237,56 @@ class ChildProcess {
             throw new ChildProcessExitedError(0)
         }
 
+    }
+
+  }
+
+  async whenExit(maximumDuration = 0) {
+
+    let [name, , ...argument] = await this.whenEvent([
+      'exit',
+      'error'
+    ], maximumDuration)
+
+    switch (name) {
+      case 'exit':
+
+        switch (true) {
+          case Is.not.null(argument[0]): // code
+            return argument[0]
+          case Is.not.null(argument[1]): // signal
+            throw new ChildProcessKilledError(argument[1])
+          default:
+            return 0
+        }
+
+      case 'error':
+        throw new ChildProcessInternalError(argument[0])
+    }
+
+  }
+
+  async whenKill(maximumDuration = 0) {
+
+    let [name, , ...argument] = await this.whenEvent([
+      'exit',
+      'error'
+    ], maximumDuration)
+
+    switch (name) {
+      case 'exit':
+
+        switch (true) {
+          case Is.not.null(argument[0]): // code
+            throw new ChildProcessExitedError(argument[0])
+          case Is.not.null(argument[1]): // signal
+            return argument[1]
+          default:
+            throw new ChildProcessExitedError(0)
+        }
+
+      case 'error':
+        throw new ChildProcessInternalError(argument[0])
     }
 
   }
@@ -378,6 +354,30 @@ class ChildProcess {
       }
 
     })
+
+  }
+
+  detach() {
+
+    if (this.onExitHandler) {
+      this.process.off('exit', this.onExitHandler)
+      delete this.onExitHandler
+    }
+
+    if (this.onErrorHandler) {
+      this.process.off('error', this.onErrorHandler)
+      delete this.onErrorHandler
+    }
+
+    if (this.onMessageHandler) {
+      this.process.off('message', this.onMessageHandler)
+      delete this.onMessageHandler
+    }
+
+    if (this.onSpawnHandler) {
+      this.process.off('spawn', this.onSpawnHandler)
+      delete this.onSpawnHandler
+    }
 
   }
 
