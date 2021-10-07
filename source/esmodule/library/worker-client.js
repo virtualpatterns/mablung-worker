@@ -85,6 +85,8 @@ class WorkerClient extends ForkedProcess {
 
     }
 
+    return true
+
   }
 
   whenSpawn() {

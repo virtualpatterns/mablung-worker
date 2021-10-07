@@ -13,7 +13,6 @@ Test.before(async (test) => {
   'CreateLoggedProcess',
   'ChildProcessDurationExceededError',
   'ChildProcessExitedError',
-  'ChildProcessInternalError',
   'ChildProcessKilledError',
   'ChildProcessSignalError'
 ].forEach((name) => {

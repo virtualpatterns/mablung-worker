@@ -22,12 +22,13 @@ export function CreateLoggedProcess(processClass, userLogPath, userLogOption = {
       this.stderr.pipe(logStream, { 'end': false })
       this.stdout.pipe(logStream, { 'end': false })
         
-      let consoleOption = Configuration.getOption(this.defaultConsoleOption, userConsoleOption)
-      
-      consoleOption.stderr = logStream
-      consoleOption.stdout = logStream
+      let logConsoleOption = Configuration.getOption(this.defaultConsoleOption, userConsoleOption, { 'stderr': logStream, 'stdout': logStream })
+      let logConsole = new Console(logConsoleOption)
         
-      this.console = new Console(consoleOption)
+      this.stream = logStream
+      this.console = logConsole
+
+      this._attach()
 
     }
 
@@ -45,6 +46,30 @@ export function CreateLoggedProcess(processClass, userLogPath, userLogOption = {
         'colorMode': false,
         'ignoreErrors': false
       }
+    }
+
+    _attach() {
+
+      this.stream.on('error', this._onErrorHandler = (error) => {
+
+        try {
+          this.process.emit('error', error)
+        } catch (error) {
+          console.error(error)
+        }
+
+      })
+
+      this.stream.once('close', this._onCloseHandler = () => {
+
+        try {
+          this._detach()
+        } catch (error) {
+          console.error(error)
+        }
+
+      })
+
     }
 
     onSpawn() {
@@ -78,25 +103,58 @@ export function CreateLoggedProcess(processClass, userLogPath, userLogOption = {
       return super.onMessage(message)
     }
 
-    onExit(code) {
-      this.console.log(`${processClass.name}.onExit(${code})`)
-      return super.onExit(code)
-    }
-
-    onKill(signal) {
-      this.console.log(`${processClass.name}.onKill('${signal}')`)
-      return super.onKill(signal)
-    }
-
     onError(error) {
       this.console.error(`${processClass.name}.onError(error)`)
       this.console.error(error)
       return super.onError(error)
     }
 
+    async onExit(code) {
+      this.console.log(`${processClass.name}.onExit(${code})`)
+      await this._close()
+      return super.onExit(code)
+    }
+
+    async onKill(signal) {
+      this.console.log(`${processClass.name}.onKill('${signal}')`)
+      await this._close()
+      return super.onKill(signal)
+    }
+
     send(message, awaitResponse = Is.string(message) ? false : true) {
-      if (Is.string(message)) this.console.log(`${processClass.name}.send('${message}', ...)`)
+      if (Is.string(message)) { this.console.log(`${processClass.name}.send('${message}')`) }
       return super.send(message, awaitResponse)
+    }
+
+    _close() {
+
+      return new Promise((resolve, reject) => {
+
+        this.stream.end((error) => {
+
+          if (Is.nil(error)) {
+            resolve()
+          } else {
+            reject(error)
+          }
+
+        })
+
+      })
+
+    }
+
+    _detach() {
+
+      if (this._onCloseHandler) {
+        delete this._onCloseHandler
+      }
+
+      if (this._onErrorHandler) {
+        this.stream.off('error', this._onErrorHandler)
+        delete this._onErrorHandler
+      }
+
     }
 
   }

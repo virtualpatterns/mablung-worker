@@ -9,7 +9,9 @@ class Worker {
   static start() {
     console.log('Worker.start()')
 
-    Process.once('SIGHUP', () => {
+    Process.once('SIGHUP', this.onSIGHUPHandler = () => {
+
+      delete this.onSIGHUPHandler
 
       try {
 
@@ -26,6 +28,12 @@ class Worker {
 
   static stop() {
     console.log('Worker.stop()')
+
+    if (this.onSIGHUPHandler) {
+      Process.off('SIGHUP', this.onSIGHUPHandler)
+      delete this.onSIGHUPHandler
+    }
+
   }
 
 }

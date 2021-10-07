@@ -60,7 +60,9 @@ class WorkerServer {
     })
 
     /* c8 ignore start */
-    Process.once('beforeExit', (code) => {
+    Process.once('beforeExit', this.onExitHandler = (code) => {
+
+      delete this.onExitHandler
 
       try {
         this.onExit(code)
@@ -213,8 +215,6 @@ class WorkerServer {
       if (Is.function(this.worker.stop)) { this.worker.stop() }
 
       this.detach()
-
-      this.worker = null
       delete this.worker
 
     }
@@ -224,6 +224,11 @@ class WorkerServer {
   static detach() {
 
     this.clearInterval()
+
+    if (this.onExitHandler) {
+      Process.off('beforeExit', this.onExitHandler)
+      delete this.onExitHandler
+    }
 
     if (this.onErrorHandler) {
       Process.off('error', this.onErrorHandler)

@@ -4,7 +4,7 @@ import Test from 'ava'
 
 import { CreateLoggedProcess, WorkerClient } from '../../index.js'
 
-import { ChildProcessDurationExceededError, ChildProcessExitedError, ChildProcessInternalError, ChildProcessKilledError } from '../../index.js'
+import { ChildProcessDurationExceededError, ChildProcessExitedError, ChildProcessKilledError } from '../../index.js'
 
 const FilePath = __filePath
 const LogPath = FilePath.replace(/\/release\//, '/data/').replace(/\.test\.c?js$/, '.log')
@@ -40,14 +40,14 @@ Test.serial('whenSpawn()', async (test) => {
 
 })
 
-Test.serial('whenSpawn() throws ChildProcessInternalError', async (test) => {
+Test.serial('whenSpawn() throws Error', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
   try {
-    await test.throwsAsync(Promise.all([ client.whenSpawn(), client.process.emit('error', new Error()) ]), { 'instanceOf': ChildProcessInternalError })
+    await test.throwsAsync(Promise.all([ client.whenSpawn(), client.process.emit('error', new Error()) ]), { 'instanceOf': Error })
   } finally {
     await client.exit()
   }
@@ -138,14 +138,14 @@ Test.serial('whenMessage() throws ChildProcessKilledError', async (test) => {
 
 })
 
-Test.serial('whenMessage() throws ChildProcessInternalError', async (test) => {
+Test.serial('whenMessage() throws Error', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
   try {
-    await test.throwsAsync(Promise.all([ client.whenMessage(), client.process.emit('error', new Error()) ]), { 'instanceOf': ChildProcessInternalError })
+    await test.throwsAsync(Promise.all([ client.whenMessage(), client.process.emit('error', new Error()) ]), { 'instanceOf': Error })
   } finally {
     await client.exit()
   }
@@ -278,14 +278,14 @@ Test.serial('whenExit() throws ChildProcessKilledError', async (test) => {
 
 })
 
-Test.serial('whenExit() throws ChildProcessInternalError', async (test) => {
+Test.serial('whenExit() throws Error', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
   try {
-    await test.throwsAsync(Promise.all([ client.whenExit(), client.process.emit('error', new Error()) ]), { 'instanceOf': ChildProcessInternalError })
+    await test.throwsAsync(Promise.all([ client.whenExit(), client.process.emit('error', new Error()) ]), { 'instanceOf': Error })
   } finally {
     await client.exit()
   }
@@ -348,14 +348,14 @@ Test.serial('whenKill() throws ChildProcessExitedError code=null', async (test) 
 
 })
 
-Test.serial('whenKill() throws ChildProcessInternalError', async (test) => {
+Test.serial('whenKill() throws Error', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
   try {
-    await test.throwsAsync(Promise.all([ client.whenKill(), client.process.emit('error', new Error()) ]), { 'instanceOf': ChildProcessInternalError })
+    await test.throwsAsync(Promise.all([ client.whenKill(), client.process.emit('error', new Error()) ]), { 'instanceOf': Error })
   } finally {
     await client.exit()
   }

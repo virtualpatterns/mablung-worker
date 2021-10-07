@@ -8,6 +8,5 @@ export * from './library/create-logged-process.js'
 
 export * from './library/error/child-process-duration-exceeded-error.js'
 export * from './library/error/child-process-exited-error.js'
-export * from './library/error/child-process-internal-error.js'
 export * from './library/error/child-process-killed-error.js'
 export * from './library/error/child-process-signal-error.js'

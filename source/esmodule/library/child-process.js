@@ -3,7 +3,6 @@ import { Is } from '@virtualpatterns/mablung-is'
 
 import { ChildProcessDurationExceededError } from './error/child-process-duration-exceeded-error.js'
 import { ChildProcessExitedError } from './error/child-process-exited-error.js'
-import { ChildProcessInternalError } from './error/child-process-internal-error.js'
 import { ChildProcessKilledError } from './error/child-process-killed-error.js'
 import { ChildProcessSignalError } from './error/child-process-signal-error.js'
 
@@ -165,7 +164,7 @@ class ChildProcess {
       case 'spawn':
         return
       case 'error':
-        throw new ChildProcessInternalError(argument[0])
+        throw argument[0]
     }
 
   }
@@ -180,8 +179,8 @@ class ChildProcess {
 
       let [ name, duration, ...argument ] = await this.whenEvent([
         'message',
-        'exit',
-        'error'
+        'error',
+        'exit'
       ], maximumDuration)
 
       switch (name) {
@@ -190,6 +189,8 @@ class ChildProcess {
             return argument[0]
           }
           break
+        case 'error':
+          throw argument[0]
         case 'exit':
 
           switch (true) {
@@ -201,8 +202,6 @@ class ChildProcess {
               throw new ChildProcessExitedError(0)
           }
 
-        case 'error':
-          throw new ChildProcessInternalError(argument[0])
       }
 
       totalDuration += duration
@@ -216,7 +215,6 @@ class ChildProcess {
   /* c8 ignore stop */
 
   async whenError(maximumDuration = 0) {
-    // console.log(`ChildProcess.whenError(${maximumDuration}) { ... }`)
 
     let [ name,, ...argument ] = await this.whenEvent([
       'error',
@@ -261,7 +259,7 @@ class ChildProcess {
         }
 
       case 'error':
-        throw new ChildProcessInternalError(argument[0])
+        throw argument[0]
     }
 
   }
@@ -286,14 +284,12 @@ class ChildProcess {
         }
 
       case 'error':
-        throw new ChildProcessInternalError(argument[0])
+        throw argument[0]
     }
 
   }
 
   whenEvent(name, maximumDuration = 0) {
-    // console.log(`ChildProcess.whenEvent(name, ${maximumDuration}) { ... }`)
-    // console.dir(name)
 
     return new Promise((resolve, reject) => {
 
@@ -304,10 +300,7 @@ class ChildProcess {
 
       for (let nameOn of (Is.array(name) ? name : [ name ])) {
 
-        // console.log(`> this.process.on('${nameOn}', onEventHandler['${nameOn}'] = (...argument) => { ... })`)
         this.process.on(nameOn, onEventHandler[nameOn] = (...argument) => {
-          // console.log(`< this.process.on('${nameOn}', onEventHandler['${nameOn}'] = (...argument) => { ... })`)
-          // console.dir(argument)
 
           let end = Process.hrtime.bigint()
           let duration = parseInt((end - begin) / BigInt(1e6))
@@ -319,7 +312,6 @@ class ChildProcess {
           }
 
           for (let nameOff of (Is.array(name) ? name.reverse() : [name])) {
-            // console.log(`this.process.off('${nameOff}', onEventHandler['${nameOff}'])`)
             this.process.off(nameOff, onEventHandler[nameOff])
             delete onEventHandler[nameOff]
           }
@@ -342,7 +334,6 @@ class ChildProcess {
           delete onEventHandler['timeout']
 
           for (let nameOff of (Is.array(name) ? name.reverse() : [ name ])) {
-            // console.log(`this.process.off('${nameOff}', onEventHandler['${nameOff}'])`)
             this.process.off(nameOff, onEventHandler[nameOff])
             delete onEventHandler[nameOff]
           }
