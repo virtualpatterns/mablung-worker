@@ -4,19 +4,11 @@ import Test from 'ava'
 
 import { CreateMessageId } from '../../library/create-message-id.js'
 
-Test('CreateMessageId()', (test) => {
+Test.serial('CreateMessageId()', (test) => {
   return test.notThrowsAsync(CreateMessageId())
 })
 
-Test('CreateMessageId(8)', async (test) => {
-  test.is((await CreateMessageId(8)).length, 8)
-})
-
-Test('CreateMessageId(9)', async (test) => {
-  test.is((await CreateMessageId(9)).length, 10)
-})
-
-Test('CreateMessageId() throws Error', async (test) => {
+Test.serial('CreateMessageId() throws Error', async (test) => {
 
   let randomBytesStub = Sinon
     .stub(Cryptography, 'randomBytes')
@@ -28,4 +20,12 @@ Test('CreateMessageId() throws Error', async (test) => {
     randomBytesStub.restore()
   }
 
+})
+
+Test.serial('CreateMessageId(8)', async (test) => {
+  test.is((await CreateMessageId(8)).length, 8)
+})
+
+Test.serial('CreateMessageId(9)', async (test) => {
+  test.is((await CreateMessageId(9)).length, 10)
 })

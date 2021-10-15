@@ -17,8 +17,53 @@ class ChildProcess {
     this.processOption = Configuration.getOption(this.defaultOption, userOption)
 
     this.process = this.createProcess(this.processPath, this.processArgument, this.processOption)
+    this.isProcessError = true
 
-    this.attach()
+    this.process.once('spawn', () => {
+      this.isProcessError = false
+
+      try {
+        this.onSpawn()
+      } catch (error) {
+        this.process.emit('error', error)
+      }
+
+    })
+
+    this.process.on('message', (message) => {
+
+      try {
+        this.onMessage(message)
+      } catch (error) {
+        this.process.emit('error', error)
+      }
+
+    })
+
+    this.process.once('exit', (code, signal) => {
+
+      try {
+
+        switch (true) {
+          case Is.not.null(code):
+            this.onExit(code)
+            break
+          case Is.not.null(signal):
+            this.onKill(signal)
+            break
+          default:
+            this.onExit(0)
+        }
+
+      } catch (error) {
+        this.process.emit('error', error)
+      }
+
+    })
+
+    this.process.on('error', (error) => {
+      this.onError(error, this.isProcessError)
+    })
 
   }
 
@@ -56,72 +101,15 @@ class ChildProcess {
   // derived class must implement ...
   // createProcess(path, argument, option) { }
 
-  attach() {
-
-    this.process.on('spawn', this.onSpawnHandler = () => {
-
-      try {
-        this.onSpawn()
-      } catch (error) {
-        this.process.emit('error', error)
-      }
-
-    })
-
-    this.process.on('message', this.onMessageHandler = (message) => {
-
-      try {
-        this.onMessage(message)
-      } catch (error) {
-        this.process.emit('error', error)
-      }
-
-    })
-
-    this.process.on('error', this.onErrorHandler = (error) => {
-
-      try {
-        this.onError(error)
-      } catch (error) {
-        console.error(error)
-      }
-
-    })
-
-    this.process.on('exit', this.onExitHandler = (code, signal) => {
-
-      try {
-
-        this.detach()
-
-        switch (true) {
-          case Is.not.null(code):
-            this.onExit(code)
-            break
-          case Is.not.null(signal):
-            this.onKill(signal)
-            break
-          default:
-            this.onExit(0)
-        }
-
-      } catch (error) {
-        this.process.emit('error', error)
-      }
-
-    })
-
-  }
-
   onSpawn(/* path, argument, option */) {}
 
   onMessage(/* message */) {}
 
-  onError(/* error */) {}
+  onExit(/* code */) {}
 
-  onExit(/* code */) { }
+  onKill(/* signal */) {}
 
-  onKill(/* signal */) { }
+  onError(/* error, isProcessError */) {}
 
   send(message) {
 
@@ -214,31 +202,6 @@ class ChildProcess {
   }
   /* c8 ignore stop */
 
-  async whenError(maximumDuration = 0) {
-
-    let [ name,, ...argument ] = await this.whenEvent([
-      'error',
-      'exit'
-    ], maximumDuration)
-
-    switch (name) {
-      case 'error':
-        return argument[0]
-      case 'exit':
-
-        switch (true) {
-          case Is.not.null(argument[0]): // code
-            throw new ChildProcessExitedError(argument[0])
-          case Is.not.null(argument[1]): // signal
-            throw new ChildProcessKilledError(argument[1])
-          default:
-            throw new ChildProcessExitedError(0)
-        }
-
-    }
-
-  }
-
   async whenExit(maximumDuration = 0) {
 
     let [name, , ...argument] = await this.whenEvent([
@@ -289,7 +252,21 @@ class ChildProcess {
 
   }
 
+  async whenError(maximumDuration = 0) {
+
+    let [ , , ...argument ] = await this.whenEvent([ 'error' ], maximumDuration)
+          
+    return argument[0]
+
+  }
+
   whenEvent(name, maximumDuration = 0) {
+    return ChildProcess.whenEvent(this.process, name, maximumDuration)
+  }
+
+  static whenEvent(emitter, name, maximumDuration = 0) {
+
+    let isNotResolved = true
 
     return new Promise((resolve, reject) => {
 
@@ -300,23 +277,32 @@ class ChildProcess {
 
       for (let nameOn of (Is.array(name) ? name : [ name ])) {
 
-        this.process.on(nameOn, onEventHandler[nameOn] = (...argument) => {
+        // console.log(`> emitter.once('${nameOn}', onEventHandler[('${nameOn}'] = (...argument) => { ... })`)
+        emitter.once(nameOn, onEventHandler[nameOn] = (...argument) => {
+          // console.log(`- emitter.once('${nameOn}', onEventHandler[('${nameOn}'] = (...argument) => { ... })`)
 
-          let end = Process.hrtime.bigint()
-          let duration = parseInt((end - begin) / BigInt(1e6))
+          if (isNotResolved) {
 
-          if (maximumDuration > 0) {
-            clearTimeout(onEventTimeout)
-            onEventTimeout = null
-            delete onEventHandler['timeout']
+            let end = Process.hrtime.bigint()
+            let duration = parseInt((end - begin) / BigInt(1e6))
+
+            if (maximumDuration > 0) {
+              clearTimeout(onEventTimeout)
+              onEventTimeout = null
+              delete onEventHandler['timeout']
+            }
+
+            for (let nameOff of (Is.array(name) ? name.reverse() : [ name ])) {
+              // console.log(`> emitter.off('${nameOff}', onEventHandler[('${nameOff}'])`)
+              emitter.off(nameOff, onEventHandler[nameOff])
+              delete onEventHandler[nameOff]
+            }
+
+            resolve([nameOn, duration, ...argument])
+
+            isNotResolved = false
+
           }
-
-          for (let nameOff of (Is.array(name) ? name.reverse() : [name])) {
-            this.process.off(nameOff, onEventHandler[nameOff])
-            delete onEventHandler[nameOff]
-          }
-
-          resolve([ nameOn, duration, ...argument ])
 
         })
 
@@ -325,50 +311,34 @@ class ChildProcess {
       if (maximumDuration > 0) {
 
         onEventTimeout = setTimeout(onEventHandler['timeout'] = () => {
+          // console.log('- setTimeout(onEventHandler[\'timeout\'] = () => { ... })')
 
-          let end = Process.hrtime.bigint()
-          let duration = parseInt((end - begin) / BigInt(1e6))
+          if (isNotResolved) {
 
-          clearTimeout(onEventTimeout)
-          onEventTimeout = null
-          delete onEventHandler['timeout']
+            let end = Process.hrtime.bigint()
+            let duration = parseInt((end - begin) / BigInt(1e6))
 
-          for (let nameOff of (Is.array(name) ? name.reverse() : [ name ])) {
-            this.process.off(nameOff, onEventHandler[nameOff])
-            delete onEventHandler[nameOff]
+            clearTimeout(onEventTimeout)
+            onEventTimeout = null
+            delete onEventHandler['timeout']
+
+            for (let nameOff of (Is.array(name) ? name.reverse() : [name])) {
+              // console.log(`> emitter.off('${nameOff}', onEventHandler[('${nameOff}'])`)
+              emitter.off(nameOff, onEventHandler[nameOff])
+              delete onEventHandler[nameOff]
+            }
+
+            reject(new ChildProcessDurationExceededError(duration, maximumDuration))
+
+            isNotResolved = false
+
           }
-
-          reject(new ChildProcessDurationExceededError(duration, maximumDuration))
 
         }, maximumDuration)
 
       }
 
     })
-
-  }
-
-  detach() {
-
-    if (this.onExitHandler) {
-      this.process.off('exit', this.onExitHandler)
-      delete this.onExitHandler
-    }
-
-    if (this.onErrorHandler) {
-      this.process.off('error', this.onErrorHandler)
-      delete this.onErrorHandler
-    }
-
-    if (this.onMessageHandler) {
-      this.process.off('message', this.onMessageHandler)
-      delete this.onMessageHandler
-    }
-
-    if (this.onSpawnHandler) {
-      this.process.off('spawn', this.onSpawnHandler)
-      delete this.onSpawnHandler
-    }
 
   }
 

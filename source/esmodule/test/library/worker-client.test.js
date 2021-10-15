@@ -7,9 +7,10 @@ import { CreateLoggedProcess, WorkerClient } from '../../index.js'
 import { CreateMessageId } from '../../library/create-message-id.js'
 
 const FilePath = __filePath
-const LogPath = FilePath.replace(/\/release\//, '/data/').replace(/\.test\.c?js$/, '.log')
+const LogPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '.log')
 const LoggedClient = CreateLoggedProcess(WorkerClient, LogPath)
-const WorkerPath = FilePath.replace('worker-', 'worker/worker-').replace('.test', '')
+const Require = __require
+const WorkerPath = Require.resolve('./worker/worker-client.js')
 
 Test.before(async () => {
   await FileSystem.ensureDir(Path.dirname(LogPath))
@@ -17,7 +18,7 @@ Test.before(async () => {
 })
 
 Test.serial('WorkerClient()', (test) => {
-  return test.throws(() => { new LoggedClient() }, { 'code': 'ERR_INVALID_ARG_TYPE' })
+  test.throws(() => { new LoggedClient() }, { 'code': 'ERR_INVALID_ARG_TYPE' })
 })
 
 Test.serial('WorkerClient(\'...\')', (test) => {
@@ -117,6 +118,8 @@ Test.serial('ping()', async (test) => {
   } finally {
     await client.exit()
   }
+
+  await new Promise((resolve) => setTimeout(resolve, 5000))
 
 })
 

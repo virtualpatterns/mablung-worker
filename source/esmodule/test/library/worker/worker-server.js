@@ -7,33 +7,20 @@ const Process = process
 
 class Worker {
 
-  // static start() {
-  //   WorkerServer.start({})
-  // }
-
-  // static stop() {
-  //   WorkerServer.stop()
-  // }
-
   static onError() {
 
-    return new Promise((resolve) => {
+    let error = new Error()
+    let onErrorSpy = Sinon
+      .spy(WorkerServer, 'onError')
 
-      let error = new Error()
-      let onErrorSpy = Sinon
-        .spy(WorkerServer, 'onError')
+    try {
 
-      try {
+      Process.emit('error', error)
+      return onErrorSpy.calledWith(error)
 
-        Process.emit('error', error)
-
-        resolve(onErrorSpy.calledWith(error))
-
-      } finally {
-        onErrorSpy.restore()
-      }
-
-    })
+    } finally {
+      onErrorSpy.restore()
+    }
 
   }
 

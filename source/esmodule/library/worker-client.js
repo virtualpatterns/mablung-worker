@@ -7,6 +7,8 @@ import { WorkerClientHandler } from './worker-client-handler.js'
 
 class WorkerClient extends ForkedProcess {
 
+  static MaximumDuration = 5000
+
   constructor(...argument) {
     super(...argument)
 
@@ -20,7 +22,7 @@ class WorkerClient extends ForkedProcess {
   }
 
   get defaultOption() {
-    return Configuration.merge(super.defaultOption, { 'maximumDuration': 5000 })
+    return Configuration.merge(super.defaultOption, { 'maximumDuration': WorkerClient.MaximumDuration })
   }
 
   get maximumDuration() {
@@ -48,7 +50,7 @@ class WorkerClient extends ForkedProcess {
   }
 
   exit(code = 0, force = false) {
-    return Promise.all([this.whenExit(), this.send({ 'type': 'exit', 'code': code, 'force': force }, false)])
+    return Promise.all([ this.whenExit(), this.send({ 'type': 'exit', 'code': code, 'force': force }, false) ])
   }
 
   kill(signal = 'SIGINT') {
@@ -97,16 +99,16 @@ class WorkerClient extends ForkedProcess {
     return super.whenMessage(this.maximumDuration, compareFn)
   }
 
-  whenError() {
-    return super.whenError(this.maximumDuration)
-  }
-
   whenExit() {
     return super.whenExit(this.maximumDuration)
   }
 
   whenKill() {
     return super.whenKill(this.maximumDuration)
+  }
+
+  whenError() {
+    return super.whenError(this.maximumDuration)
   }
 
 }

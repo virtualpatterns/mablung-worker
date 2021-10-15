@@ -9,32 +9,102 @@ const Process = process
 
 export function CreateLoggedProcess(processClass, userLogPath, userLogOption = {}, userConsoleOption = {}) {
 
+  class ConsoleQueue {
+
+    static queue = []
+
+    /* c8 ignore start */
+    static dir(...argument) {
+      this.queue.push([ 'dir', argument ])
+    }
+
+    static error(...argument) {
+      this.queue.push([ 'error', argument ])
+    }
+
+    static log(...argument) {
+      this.queue.push([ 'log', argument ])
+    }
+    /* c8 ignore stop */
+
+    static replay(_console = console) {
+    
+      let item = this.queue.shift()
+
+      while (item) {
+
+        let [ method, argument ] = item
+        _console[method](...argument)
+
+        item = this.queue.shift()
+
+      }
+
+    }
+
+  }
+
   class LoggedProcess extends processClass {
 
     constructor(...argument) {
       super(...argument)
-        
-      let logPath = userLogPath
-      let logOption = Configuration.getOption(this.defaultLogOption, userLogOption)
 
-      let logStream = FileSystem.createWriteStream(logPath, logOption)
+      try {
 
-      this.stderr.pipe(logStream, { 'end': false })
-      this.stdout.pipe(logStream, { 'end': false })
-        
-      let logConsoleOption = Configuration.getOption(this.defaultConsoleOption, userConsoleOption, { 'stderr': logStream, 'stdout': logStream })
-      let logConsole = new Console(logConsoleOption)
-        
-      this.stream = logStream
-      this.console = logConsole
+        let logPath = userLogPath
+        let logOption = Configuration.getOption(this.defaultLogOption, userLogOption)
 
-      this._attach()
+        let logStream = FileSystem.createWriteStream(logPath, logOption)
+
+        logStream.once('open', () => {
+          // console.log('Stream.once(\'open\', () => { ... })')
+          this.isStreamError = false
+
+          try {
+            this.onLogOpen(logStream)
+          } catch (error) {
+            logStream.emit('error', error)
+          }
+
+        })
+
+        logStream.once('close', () => {
+          // console.log('Stream.once(\'close\', () => { ... })')
+
+          try {
+            this.onLogClose()
+          } catch (error) {
+            logStream.emit('error', error)
+          }
+
+        })
+
+        logStream.on('error', (error) => {
+          // console.error('Stream.on(\'error\', (error) => { ... })')
+          this.onLogError(error, this.isStreamError)
+        })
+
+        ConsoleQueue.log('-'.repeat(50))
+
+        this.stream = logStream
+        this.isStreamError = true
+
+        this.console = ConsoleQueue
+
+      } catch (error) {
+
+        ConsoleQueue.log('-'.repeat(50))
+        ConsoleQueue.error(error)
+
+        this.onLogOpen(Process.stdout)
+
+      }
 
     }
 
     get defaultLogOption() {
       return {
-        'autoClose': true,
+        'autoClose': false,
         'emitClose': true,
         'encoding': 'utf8',
         'flags': 'a+'
@@ -46,30 +116,6 @@ export function CreateLoggedProcess(processClass, userLogPath, userLogOption = {
         'colorMode': false,
         'ignoreErrors': false
       }
-    }
-
-    _attach() {
-
-      this.stream.on('error', this._onErrorHandler = (error) => {
-
-        try {
-          this.process.emit('error', error)
-        } catch (error) {
-          console.error(error)
-        }
-
-      })
-
-      this.stream.once('close', this._onCloseHandler = () => {
-
-        try {
-          this._detach()
-        } catch (error) {
-          console.error(error)
-        }
-
-      })
-
     }
 
     onSpawn() {
@@ -93,68 +139,142 @@ export function CreateLoggedProcess(processClass, userLogPath, userLogOption = {
         this.console.log(processOption)
       }
 
-      return super.onSpawn()
+      super.onSpawn()
 
     }
 
     onMessage(message) {
+
       this.console.log(`${processClass.name}.onMessage(message)`)
       this.console.dir(message)
-      return super.onMessage(message)
+
+      super.onMessage(message)
+
     }
 
-    onError(error) {
-      this.console.error(`${processClass.name}.onError(error)`)
-      this.console.error(error)
-      return super.onError(error)
-    }
+    onExit(code) {
 
-    async onExit(code) {
       this.console.log(`${processClass.name}.onExit(${code})`)
-      await this._close()
-      return super.onExit(code)
+
+      if (this.stream instanceof FileSystem.WriteStream) { this.closeLog() }
+
+      super.onExit(code)
+
     }
 
-    async onKill(signal) {
+    onKill(signal) {
+
       this.console.log(`${processClass.name}.onKill('${signal}')`)
-      await this._close()
-      return super.onKill(signal)
+
+      if (this.stream instanceof FileSystem.WriteStream) { this.closeLog() }
+
+      super.onKill(signal)
+
+    }
+
+    onError(error, isProcessError) {
+
+      this.console.error(`${processClass.name}.onError(error, ${isProcessError})`)
+      this.console.error(error)
+
+      if (isProcessError && this.stream instanceof FileSystem.WriteStream) { this.closeLog() }
+
+      super.onError(error)
+
     }
 
     send(message, awaitResponse = Is.string(message) ? false : true) {
-      if (Is.string(message)) { this.console.log(`${processClass.name}.send('${message}')`) }
+
+      if (Is.string(message)) {
+        this.console.log(`${processClass.name}.send('${message}')`)
+      }
+
       return super.send(message, awaitResponse)
-    }
-
-    _close() {
-
-      return new Promise((resolve, reject) => {
-
-        this.stream.end((error) => {
-
-          if (Is.nil(error)) {
-            resolve()
-          } else {
-            reject(error)
-          }
-
-        })
-
-      })
 
     }
 
-    _detach() {
+    closeLog() {
 
-      if (this._onCloseHandler) {
-        delete this._onCloseHandler
+      this.stderr.unpipe(this.stream)
+      this.stdout.unpipe(this.stream)
+
+      this.console = ConsoleQueue
+
+      this.stream.close()
+
+    }
+
+    onLogOpen(stream) {
+
+      let option = Configuration.getOption(this.defaultConsoleOption, userConsoleOption, { 'stderr': stream, 'stdout': stream })
+      let _console = new Console(option)
+
+      ConsoleQueue.replay(_console)
+
+      this.stderr.pipe(stream, { 'end': false })
+      this.stdout.pipe(stream, { 'end': false })
+
+      this.stream = stream
+      this.console = _console
+
+    }
+
+    onLogClose() {}
+
+    onLogError(error, isStreamError) {
+
+      if (isStreamError) {
+
+        ConsoleQueue.error(`${processClass.name}.onLogError(error)`)
+        ConsoleQueue.error(error)
+
+        this.onLogOpen(Process.stdout)
+
+      } else {
+
+        this.console.error(`${processClass.name}.onLogError(error)`)
+        this.console.error(error)
+
       }
 
-      if (this._onErrorHandler) {
-        this.stream.off('error', this._onErrorHandler)
-        delete this._onErrorHandler
+    }
+
+    async whenLogOpen() {
+
+      let [ name, , ...argument ] = await this.whenLogEvent([ 'open', 'error' ])
+
+      switch (name) {
+        case 'open':
+          return
+        case 'error':
+          throw argument[0]
       }
 
+    }
+
+    async whenLogClose() {
+
+      let [ name, , ...argument ] = await this.whenLogEvent([ 'close', 'error' ])
+
+      switch (name) {
+        case 'close':
+          return
+        case 'error':
+          throw argument[0]
+      }
+
+    }
+
+    async whenLogError() {
+
+      let [ , , ...argument ] = await this.whenLogEvent([ 'error' ])
+
+      return argument[0]
+
+    }
+
+    whenLogEvent(name) {
+      return processClass.whenEvent(this.stream, name, this.maximumDuration)
     }
 
   }

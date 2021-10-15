@@ -5,9 +5,10 @@ import Test from 'ava'
 import { CreateLoggedProcess, WorkerClient } from '../../index.js'
 
 const FilePath = __filePath
-const LogPath = FilePath.replace(/\/release\//, '/data/').replace(/\.test\.c?js$/, '.log')
+const LogPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '.log')
 const LoggedClient = CreateLoggedProcess(WorkerClient, LogPath)
-const WorkerPath = FilePath.replace('worker-', 'worker/worker-').replace('.test', '')
+const Require = __require
+const WorkerPath = Require.resolve('./worker/worker-server-send.js')
 
 Test.before(async () => {
   await FileSystem.ensureDir(Path.dirname(LogPath))

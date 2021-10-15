@@ -5,9 +5,10 @@ import Test from 'ava'
 import { CreateLoggedProcess, WorkerClient } from '../../index.js'
 
 const FilePath = __filePath
-const LogPath = FilePath.replace(/\/release\//, '/data/').replace(/\.test\.c?js$/, '.log')
+const LogPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '.log')
 const LoggedClient = CreateLoggedProcess(WorkerClient, LogPath)
-const WorkerPath = FilePath.replace('worker-', 'worker/worker-').replace('.test', '')
+const Require = __require
+const WorkerPath = Require.resolve('./worker/worker-server-on.js')
 
 Test.before(async () => {
   await FileSystem.ensureDir(Path.dirname(LogPath))
@@ -42,14 +43,14 @@ Test.serial('onMessage(...) throws Error', async (test) => {
 
 })
 
-Test.serial('onError(...) throws Error', async (test) => {
+Test.serial('onBeforeExit() throws Error', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
   await client.whenReady()
 
   try {
-    await test.throwsAsync(client.worker.onError(), { 'instanceOf': Error })
+    await test.throwsAsync(client.worker.onBeforeExit(), { 'instanceOf': Error })
   } finally {
     await client.exit()
   }
@@ -65,7 +66,21 @@ Test.serial('onExit() throws Error', async (test) => {
   try {
     await test.throwsAsync(client.worker.onExit(), { 'instanceOf': Error })
   } finally {
-    await client.kill()
+    await client.exit()
+  }
+
+})
+
+Test.serial('onError(...) throws Error', async (test) => {
+
+  let client = new LoggedClient(WorkerPath)
+
+  await client.whenReady()
+
+  try {
+    await test.throwsAsync(client.worker.onError(), { 'instanceOf': Error })
+  } finally {
+    await client.exit()
   }
 
 })

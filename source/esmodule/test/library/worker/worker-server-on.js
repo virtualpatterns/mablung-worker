@@ -67,30 +67,30 @@ class Worker {
 
   }
 
-  static onError() {
+  static onBeforeExit() {
 
     return new Promise((resolve, reject) => {
 
-      let onErrorStub = Sinon
-        .stub(WorkerServer, 'onError')
+      let onBeforeExitStub = Sinon
+        .stub(WorkerServer, 'onBeforeExit')
         .throws(new Error())
 
       try {
 
-        let errorStub = Sinon
-          .stub(console, 'error')
-          .callsFake(function (...argument) {
-            reject(...argument)
+        let onErrorStub = Sinon
+          .stub(WorkerServer, 'onError')
+          .callsFake(function (error) {
+            reject(error)
           })
 
         try {
-          Process.emit('error', new Error())
+          Process.emit('beforeExit', null, null)
         } finally {
-          errorStub.restore()
+          onErrorStub.restore()
         }
 
       } finally {
-        onErrorStub.restore()
+        onBeforeExitStub.restore()
       }
 
     })
@@ -115,13 +115,45 @@ class Worker {
           })
 
         try {
-          Process.emit('beforeExit', null, null)
+          Process.emit('exit', null, null)
         } finally {
           onErrorStub.restore()
         }
 
       } finally {
         onExitStub.restore()
+      }
+
+    })
+
+  }
+  /* c8 ignore stop */
+
+  /* c8 ignore start */
+  static onError() {
+
+    return new Promise((resolve, reject) => {
+
+      let onErrorStub = Sinon
+        .stub(WorkerServer, 'onError')
+        .throws(new Error())
+
+      try {
+
+        let errorStub = Sinon
+          .stub(console, 'error')
+          .callsFake(function (...argument) {
+            reject(...argument)
+          })
+
+        try {
+          Process.emit('error', new Error())
+        } finally {
+          errorStub.restore()
+        }
+
+      } finally {
+        onErrorStub.restore()
       }
 
     })

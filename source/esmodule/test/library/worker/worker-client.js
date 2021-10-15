@@ -18,6 +18,7 @@ class Worker {
         WorkerServer.stop()
         Process.exitCode = 42
 
+      /* c8 ignore next 3 */
       } catch (error) {
         Process.emit('error', error)
       }
