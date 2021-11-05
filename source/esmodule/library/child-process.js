@@ -6,6 +6,8 @@ import { ChildProcessExitedError } from './error/child-process-exited-error.js'
 import { ChildProcessKilledError } from './error/child-process-killed-error.js'
 import { ChildProcessSignalError } from './error/child-process-signal-error.js'
 
+import { Lock } from './lock.js'
+
 const Process = process
 
 class ChildProcess {
@@ -101,6 +103,7 @@ class ChildProcess {
 
   }
 
+  /* c8 ignore start */
   async whenMessage(maximumDuration = 0, compareFn = () => true) {
 
     let totalDuration = 0
@@ -143,6 +146,7 @@ class ChildProcess {
     throw new ChildProcessDurationExceededError(totalDuration, maximumDuration)
 
   }
+  /* c8 ignore stop */
 
   async whenExit(maximumDuration = 0) {
 
@@ -208,7 +212,7 @@ class ChildProcess {
 
   static whenEvent(emitter, name, maximumDuration = 0) {
 
-    let isNotResolved = true
+    let lock = new Lock()
 
     return new Promise((resolve, reject) => {
 
@@ -219,11 +223,9 @@ class ChildProcess {
 
       for (let nameOn of (Is.array(name) ? name : [ name ])) {
 
-        // console.log(`> emitter.once('${nameOn}', onEventHandler[('${nameOn}'] = (...argument) => { ... })`)
         emitter.once(nameOn, onEventHandler[nameOn] = (...argument) => {
-          // console.log(`- emitter.once('${nameOn}', onEventHandler[('${nameOn}'] = (...argument) => { ... })`)
 
-          if (isNotResolved) {
+          if (lock.isOpen) {
 
             let end = Process.hrtime.bigint()
             let duration = parseInt((end - begin) / BigInt(1e6))
@@ -242,8 +244,6 @@ class ChildProcess {
 
             resolve([nameOn, duration, ...argument])
 
-            isNotResolved = false
-
           }
 
         })
@@ -253,9 +253,8 @@ class ChildProcess {
       if (maximumDuration > 0) {
 
         onEventTimeout = setTimeout(onEventHandler['timeout'] = () => {
-          // console.log('- setTimeout(onEventHandler[\'timeout\'] = () => { ... })')
 
-          if (isNotResolved) {
+          if (lock.isOpen) {
 
             let end = Process.hrtime.bigint()
             let duration = parseInt((end - begin) / BigInt(1e6))
@@ -271,8 +270,6 @@ class ChildProcess {
             }
 
             reject(new ChildProcessDurationExceededError(duration, maximumDuration))
-
-            isNotResolved = false
 
           }
 
