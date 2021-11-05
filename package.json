@@ -6,21 +6,23 @@
       "import": "./release/esmodule/index.js",
       "require": "./release/commonjs/index.cjs"
     },
-    "./worker": {
-      "import": "./release/esmodule/library/worker.js",
-      "require": "./release/commonjs/library/worker.cjs"
-    },
-    "./worker-server": {
-      "import": "./release/esmodule/library/worker-server.js",
-      "require": "./release/commonjs/library/worker-server.cjs"
+    "./test": {
+      "import": "./release/esmodule/test/index.js",
+      "require": "./release/commonjs/test/index.cjs"
     },
     "./package.json": "./package.json"
   },
   "files": [
     "release/commonjs/library",
     "release/commonjs/index.cjs",
+    "release/commonjs/test/library/console.cjs",
+    "release/commonjs/test/library/create-logged-process.cjs",
+    "release/commonjs/test/library/index.cjs",
     "release/esmodule/library",
-    "release/esmodule/index.js"
+    "release/esmodule/index.js",
+    "release/esmodule/test/library/console.js",
+    "release/esmodule/test/library/create-logged-process.js",
+    "release/esmodule/test/library/index.js"
   ],
   "license": "GPL-3.0+",
   "main": "release/commonjs/index.cjs",
@@ -40,10 +42,10 @@
   "devDependencies": {
     "@virtualpatterns/babel-preset-mablung-makefile-environment": "0.0.26-4",
     "@virtualpatterns/eslint-config-mablung-makefile-environment": "0.0.26-4",
-    "@virtualpatterns/mablung-check-dependency": "0.0.26-19",
+    "@virtualpatterns/mablung-check-dependency": "0.0.26-23",
     "@virtualpatterns/mablung-makefile-environment": "0.0.26-15",
     "@virtualpatterns/mablung-source-map-support": "0.0.26-20",
     "ava": "^3.15.0",
-    "sinon": "^11.1.2"
+    "sinon": "^12.0.1"
   }
 }

@@ -19,52 +19,6 @@ class ChildProcess {
     this.process = this.createProcess(this.processPath, this.processArgument, this.processOption)
     this.isProcessError = true
 
-    this.process.once('spawn', () => {
-      this.isProcessError = false
-
-      try {
-        this.onSpawn()
-      } catch (error) {
-        this.process.emit('error', error)
-      }
-
-    })
-
-    this.process.on('message', (message) => {
-
-      try {
-        this.onMessage(message)
-      } catch (error) {
-        this.process.emit('error', error)
-      }
-
-    })
-
-    this.process.once('exit', (code, signal) => {
-
-      try {
-
-        switch (true) {
-          case Is.not.null(code):
-            this.onExit(code)
-            break
-          case Is.not.null(signal):
-            this.onKill(signal)
-            break
-          default:
-            this.onExit(0)
-        }
-
-      } catch (error) {
-        this.process.emit('error', error)
-      }
-
-    })
-
-    this.process.on('error', (error) => {
-      this.onError(error, this.isProcessError)
-    })
-
   }
 
   get defaultArgument() {
@@ -100,16 +54,6 @@ class ChildProcess {
 
   // derived class must implement ...
   // createProcess(path, argument, option) { }
-
-  onSpawn(/* path, argument, option */) {}
-
-  onMessage(/* message */) {}
-
-  onExit(/* code */) {}
-
-  onKill(/* signal */) {}
-
-  onError(/* error, isProcessError */) {}
 
   send(message) {
 
@@ -157,7 +101,6 @@ class ChildProcess {
 
   }
 
-  /* c8 ignore start */
   async whenMessage(maximumDuration = 0, compareFn = () => true) {
 
     let totalDuration = 0
@@ -200,7 +143,6 @@ class ChildProcess {
     throw new ChildProcessDurationExceededError(totalDuration, maximumDuration)
 
   }
-  /* c8 ignore stop */
 
   async whenExit(maximumDuration = 0) {
 

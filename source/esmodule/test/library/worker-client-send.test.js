@@ -1,21 +1,20 @@
+import { CreateLoggedProcess } from '@virtualpatterns/mablung-worker/test'
+import { WorkerClient, ChildProcessSignalError } from '@virtualpatterns/mablung-worker'
 import FileSystem from 'fs-extra'
 import Path from 'path'
 import Sinon from 'sinon'
 import Test from 'ava'
 
-import { CreateLoggedProcess, WorkerClient } from '../../index.js'
-
-import { ChildProcessSignalError } from '../../index.js'
-
 const FilePath = __filePath
+const Require = __require
+
 const LogPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '.log')
 const LoggedClient = CreateLoggedProcess(WorkerClient, LogPath)
-const Require = __require
 const WorkerPath = Require.resolve('./worker/worker.js')
 
 Test.before(async () => {
   await FileSystem.ensureDir(Path.dirname(LogPath))
-  await FileSystem.remove(LogPath)
+  return FileSystem.remove(LogPath)
 })
 
 Test.serial('send(\'...\')', async (test) => {
@@ -45,10 +44,8 @@ Test.serial('send({ ... }, true)', async (test) => {
   await client.whenReady()
 
   try {
-
     await test.notThrowsAsync(client.send({ 'type': 'ping' }, true))
     test.not(await client.send({ 'type': 'ping' }, true), undefined)
-
   } finally {
     await client.exit()
   }
@@ -72,10 +69,8 @@ Test.serial('send({ id, ... }, true)', async (test) => {
   await client.whenReady()
 
   try {
-
     await test.notThrowsAsync(client.send({ 'id': '123', 'type': 'ping' }, true))
     test.not(await client.send({ 'id': '123', 'type': 'ping' }, true), undefined)
-
   } finally {
     await client.exit()
   }

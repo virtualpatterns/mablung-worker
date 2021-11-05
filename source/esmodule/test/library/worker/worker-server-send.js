@@ -1,7 +1,7 @@
 import '@virtualpatterns/mablung-source-map-support/install'
-import Sinon from 'sinon'
 
-import { WorkerServer } from '../../../index.js'
+import { WorkerServer } from '@virtualpatterns/mablung-worker'
+import Sinon from 'sinon'
 
 const Process = process
 

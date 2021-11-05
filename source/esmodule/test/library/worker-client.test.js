@@ -1,40 +1,41 @@
+import { CreateLoggedProcess } from '@virtualpatterns/mablung-worker/test'
+import { WorkerClient } from '@virtualpatterns/mablung-worker'
 import FileSystem from 'fs-extra'
 import Path from 'path'
 import Sinon from 'sinon'
 import Test from 'ava'
 
-import { CreateLoggedProcess, WorkerClient } from '../../index.js'
 import { CreateMessageId } from '../../library/create-message-id.js'
 
 const FilePath = __filePath
+const Require = __require
+
 const LogPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '.log')
 const LoggedClient = CreateLoggedProcess(WorkerClient, LogPath)
-const Require = __require
 const WorkerPath = Require.resolve('./worker/worker-client.js')
 
 Test.before(async () => {
   await FileSystem.ensureDir(Path.dirname(LogPath))
-  await FileSystem.remove(LogPath)
-})
-
-Test.serial('WorkerClient()', (test) => {
-  test.throws(() => { new LoggedClient() }, { 'code': 'ERR_INVALID_ARG_TYPE' })
+  return FileSystem.remove(LogPath)
 })
 
 Test.serial('WorkerClient(\'...\')', (test) => {
   return test.notThrowsAsync(async () => {
 
     let client = new LoggedClient(WorkerPath)
+
     await client.whenReady()
 
-    test.deepEqual(client.argument, [])
-    test.deepEqual(client.option, {
-      'serialization': 'advanced',
-      'stdio': 'pipe',
-      'maximumDuration': 5000
-    })
-
-    await client.exit()
+    try {
+      test.deepEqual(client.argument, [])
+      test.deepEqual(client.option, {
+        'serialization': 'advanced',
+        'stdio': 'pipe',
+        'maximumDuration': 5000
+      })
+    } finally {
+      await client.exit()
+    }
 
   })
 })
@@ -43,19 +44,22 @@ Test.serial('WorkerClient(\'...\', { ... })', (test) => {
   return test.notThrowsAsync(async () => {
     
     let client = new LoggedClient(WorkerPath, { '--asd': 'fgh' })
+
     await client.whenReady()
 
-    test.deepEqual(client.argument, [
-      '--asd',
-      'fgh'
-    ])
-    test.deepEqual(client.option, {
-      'serialization': 'advanced',
-      'stdio': 'pipe',
-      'maximumDuration': 5000
-    })
-
-    await client.exit()
+    try {
+      test.deepEqual(client.argument, [
+        '--asd',
+        'fgh'
+      ])
+      test.deepEqual(client.option, {
+        'serialization': 'advanced',
+        'stdio': 'pipe',
+        'maximumDuration': 5000
+      })
+    } finally {
+      await client.exit()
+    }
 
   })
 })
@@ -64,19 +68,22 @@ Test.serial('WorkerClient(\'...\', { ... }, { ... })', (test) => {
   return test.notThrowsAsync(async () => {
 
     let client = new LoggedClient(WorkerPath, { '--asd': 'fgh' }, { 'maximumDuration': 10000 })
+
     await client.whenReady()
 
-    test.deepEqual(client.argument, [
-      '--asd',
-      'fgh'
-    ])
-    test.deepEqual(client.option, {
-      'serialization': 'advanced',
-      'stdio': 'pipe',
-      'maximumDuration': 10000
-    })
-
-    await client.exit()
+    try {
+      test.deepEqual(client.argument, [
+        '--asd',
+        'fgh'
+      ])
+      test.deepEqual(client.option, {
+        'serialization': 'advanced',
+        'stdio': 'pipe',
+        'maximumDuration': 10000
+      })
+    } finally {
+      await client.exit()
+    }
 
   })
 })
@@ -84,6 +91,7 @@ Test.serial('WorkerClient(\'...\', { ... }, { ... })', (test) => {
 Test.serial('maximumDuration', async (test) => {
 
   let maximumDuration = 10000
+
   let client = new LoggedClient(WorkerPath, {}, { 'maximumDuration': maximumDuration })
 
   await client.whenReady()
@@ -111,10 +119,8 @@ Test.serial('ping()', async (test) => {
   await client.whenReady()
 
   try {
-
     let ping = await client.ping()
     test.assert(ping.cpuUsage > 0)
-
   } finally {
     await client.exit()
   }
@@ -194,10 +200,8 @@ Test.serial('exit(...)', async (test) => {
   await client.whenReady()
 
   await test.notThrowsAsync(async () => {
-
     let [ code ] = await client.exit(1)
     test.is(code, 1)
-
   })
 
 })
@@ -209,10 +213,8 @@ Test.serial('exit(...) on send(\'...\')', async (test) => {
   await client.whenReady()
 
   await test.notThrowsAsync(async () => {
-
     let [ code ] = await Promise.all([ client.whenExit(), client.send('SIGHUP') ])
     test.is(code, 42)
-
   })
 
 })

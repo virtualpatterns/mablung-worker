@@ -1,13 +1,14 @@
+import { CreateLoggedProcess } from '@virtualpatterns/mablung-worker/test'
+import { WorkerClient } from '@virtualpatterns/mablung-worker'
 import FileSystem from 'fs-extra'
 import Path from 'path'
 import Test from 'ava'
 
-import { CreateLoggedProcess, WorkerClient } from '../../index.js'
-
 const FilePath = __filePath
+const Require = __require
+
 const LogPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '.log')
 const LoggedClient = CreateLoggedProcess(WorkerClient, LogPath)
-const Require = __require
 const WorkerPath = Require.resolve('./worker/worker-server-on.js')
 
 Test.before(async () => {

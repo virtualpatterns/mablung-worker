@@ -4,9 +4,10 @@ export * from './library/spawned-process.js'
 export * from './library/worker-client.js'
 export * from './library/worker-server.js'
 
-export * from './library/create-logged-process.js'
-
 export * from './library/error/child-process-duration-exceeded-error.js'
 export * from './library/error/child-process-exited-error.js'
 export * from './library/error/child-process-killed-error.js'
 export * from './library/error/child-process-signal-error.js'
+export * from './library/error/worker-server-invalid-message-error.js'
+export * from './library/error/worker-server-invalid-property-error.js'
+export * from './library/error/worker-server-no-ipc-channel-error.js'

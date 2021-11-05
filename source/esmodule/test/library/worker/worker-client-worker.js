@@ -1,6 +1,6 @@
 import '@virtualpatterns/mablung-source-map-support/install'
 
-import { WorkerServer } from '../../../index.js'
+import { WorkerServer } from '@virtualpatterns/mablung-worker'
 
 import { WorkerExceptionError } from '../error/worker-exception-error.js'
 import { WorkerUncaughtExceptionError } from '../error/worker-uncaught-exception-error.js'

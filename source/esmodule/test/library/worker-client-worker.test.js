@@ -1,22 +1,22 @@
+import { CreateLoggedProcess } from '@virtualpatterns/mablung-worker/test'
+import { WorkerClient, ChildProcessDurationExceededError, ChildProcessExitedError, ChildProcessKilledError } from '@virtualpatterns/mablung-worker'
 import FileSystem from 'fs-extra'
 import Path from 'path'
 import Sinon from 'sinon'
 import Test from 'ava'
 
-import { CreateLoggedProcess, WorkerClient } from '../../index.js'
 import { CreateMessageId } from '../../library/create-message-id.js'
 
-import { ChildProcessDurationExceededError, ChildProcessExitedError, ChildProcessKilledError } from '../../index.js'
-
 const FilePath = __filePath
+const Require = __require
+
 const LogPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '.log')
 const LoggedClient = CreateLoggedProcess(WorkerClient, LogPath)
-const Require = __require
 const WorkerPath = Require.resolve('./worker/worker-client-worker.js')
 
 Test.before(async () => {
   await FileSystem.ensureDir(Path.dirname(LogPath))
-  await FileSystem.remove(LogPath)
+  return FileSystem.remove(LogPath)
 })
 
 Test.serial('then', async (test) => {

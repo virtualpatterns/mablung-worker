@@ -1,62 +1,65 @@
+import { CreateLoggedProcess } from '@virtualpatterns/mablung-worker/test'
+import { SpawnedProcess, WorkerClient } from '@virtualpatterns/mablung-worker'
 import FileSystem from 'fs-extra'
 import Path from 'path'
-import Sinon from 'sinon'
 import Test from 'ava'
 
-import { CreateLoggedProcess, SpawnedProcess } from '../../index.js'
-
 const FilePath = __filePath
-const ValidLogPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '.log')
-const InvalidLogPath = FilePath.replace('/release/', '/invalid/').replace(/\.test\.c?js$/, '.log')
 const Process = process
+const Require = __require
+
+const LogPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '.log')
+const WorkerPath = Require.resolve('./worker/worker.js')
 
 Test.before(async () => {
-  await FileSystem.ensureDir(Path.dirname(ValidLogPath))
-  await FileSystem.remove(ValidLogPath)
+  await FileSystem.ensureDir(Path.dirname(LogPath))
+  await FileSystem.remove(LogPath)
 })
 
-Test.serial('CreateLoggedProcess(..., \'...\')', (test) => {
-  test.notThrows(() => { CreateLoggedProcess(SpawnedProcess, ValidLogPath) })
+Test.serial('CreateLoggedProcess(SpawnedProcess, \'...\')', (test) => {
+  test.notThrows(() => { CreateLoggedProcess(SpawnedProcess, LogPath) })
 })
 
-Test.serial('CreateLoggedProcess(..., \'...\', { ... }, { ... })', (test) => {
-  test.notThrows(() => { CreateLoggedProcess(SpawnedProcess, ValidLogPath, {}, {}) })
+Test.serial('CreateLoggedProcess(SpawnedProcess, \'...\', { ... }, { ... })', (test) => {
+  test.notThrows(() => { CreateLoggedProcess(SpawnedProcess, LogPath, {}, {}) })
 })
 
-Test.serial('CreateLoggedProcess(..., invalid)', (test) => {
-  test.notThrows(() => { CreateLoggedProcess(SpawnedProcess, InvalidLogPath) })
-})
-
-Test.serial('CreateLoggedProcess(..., \'...\')(\'...\')', (test) => {
-  let process = new (CreateLoggedProcess(SpawnedProcess, ValidLogPath))(Process.env.MAKE_PATH)
+Test.serial('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\')', (test) => {
+  let process = new (CreateLoggedProcess(SpawnedProcess, LogPath))(Process.env.MAKE_PATH)
   return test.notThrowsAsync(process.whenExit())
 })
 
-Test.serial('CreateLoggedProcess(..., invalid)(\'...\')', (test) => {
-  let process = new (CreateLoggedProcess(SpawnedProcess, InvalidLogPath))(Process.env.MAKE_PATH)
+Test.serial('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\', { ... }, { ... })', (test) => {
+  let process = new (CreateLoggedProcess(SpawnedProcess, LogPath))(Process.env.MAKE_PATH, {
+    '--annabelle': 'bernadette',
+    '--benjamin': 'claudius',
+    '--claudette': 'danaldus'
+  }, {
+    '--annabelle': 'bernadette'
+  })
   return test.notThrowsAsync(process.whenExit())
 })
 
-Test.serial('CreateLoggedProcess(..., \'...\')(\'...\') throws Error', (test) => {
+Test.serial('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\') on kill', (test) => {
+  let process = new (CreateLoggedProcess(SpawnedProcess, LogPath))(Process.env.MAKE_PATH)
+  return test.notThrowsAsync(Promise.all([ process.whenKill(), process.send('SIGINT') ]))
+})
 
-  let createWriteStreamStub = Sinon
-    .stub(FileSystem, 'createWriteStream')
-    .throws(new Error())
+Test.serial('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\') on error', (test) => {
+  let process = new (CreateLoggedProcess(SpawnedProcess, LogPath))('invalid')
+  return test.notThrowsAsync(process.whenError())
+})
+
+Test.serial('CreateLoggedProcess(WorkerClient, \'...\')(\'...\')', async (test) => {
+
+  let client = new (CreateLoggedProcess(WorkerClient, LogPath))(WorkerPath)
+
+  await client.whenReady()
 
   try {
-        
-    return test.notThrowsAsync(async () => {
-      let process = new (CreateLoggedProcess(SpawnedProcess, ValidLogPath))(Process.env.MAKE_PATH)
-      await process.whenExit()
-    })
-
+    await test.notThrowsAsync(client.ping())
   } finally {
-    createWriteStreamStub.restore()
+    await client.exit()
   }
 
-})
-
-Test.serial('CreateLoggedProcess(..., \'...\', { ... }, { ... })(\'...\')', (test) => {
-  let process = new (CreateLoggedProcess(SpawnedProcess, ValidLogPath, {}, {}))(Process.env.MAKE_PATH)
-  return test.notThrowsAsync(process.whenExit())
 })
