@@ -1,8 +1,7 @@
+import { Console } from '@virtualpatterns/mablung-console'
 import { Is } from '@virtualpatterns/mablung-is'
 import Path from 'path'
 import Utility from 'util'
-
-import { Console } from './console.js'
 
 const Process = process
 
