@@ -13,7 +13,7 @@ const WorkerPath = Require.resolve('./worker/worker.js')
 
 Test.before(async () => {
   await FileSystem.ensureDir(Path.dirname(LogPath))
-  await FileSystem.remove(LogPath)
+  return FileSystem.remove(LogPath)
 })
 
 Test.serial('onSpawn() throws Error', async (test) => {
@@ -100,7 +100,7 @@ Test.serial('onKill() throws Error', async (test) => {
 
 })
 
-// Test.serial('onKill() throws Error', async (test) => {
+// Test.serial('onError() throws Error', async (test) => {
 
 //   let client = new LoggedClient(WorkerPath)
 
@@ -108,14 +108,27 @@ Test.serial('onKill() throws Error', async (test) => {
 
 //   try {
 
-//     let onExitStub = Sinon
-//       .stub(client, 'onExit')
-//       .throws(new Error())
+//     let error = new Error()
+//     let onErrorStub = Sinon
+//       .stub(client, 'onError')
+//       .throws(error)
 
 //     try {
-//       await test.notThrowsAsync(Promise.all([ client.whenEvent('error'), client.process.emit('exit', null, null) ]))
+
+//       let errorStub = Sinon
+//         .stub(console, 'error')
+
+//       try {
+
+//         client.process.emit('error')
+//         test.true(errorStub.calledWith(error))
+
+//       } finally {
+//         errorStub.restore()
+//       }
+
 //     } finally {
-//       onExitStub.restore()
+//       onErrorStub.restore()
 //     }
 
 //   } finally {
@@ -123,40 +136,3 @@ Test.serial('onKill() throws Error', async (test) => {
 //   }
 
 // })
-
-// // Test.serial('onError() throws Error', async (test) => {
-
-// //   let client = new LoggedClient(WorkerPath)
-
-// //   await client.whenReady()
-
-// //   try {
-
-// //     let error = new Error()
-// //     let onErrorStub = Sinon
-// //       .stub(client, 'onError')
-// //       .throws(error)
-
-// //     try {
-
-// //       let errorStub = Sinon
-// //         .stub(console, 'error')
-
-// //       try {
-
-// //         client.process.emit('error')
-// //         test.true(errorStub.calledWith(error))
-
-// //       } finally {
-// //         errorStub.restore()
-// //       }
-
-// //     } finally {
-// //       onErrorStub.restore()
-// //     }
-
-// //   } finally {
-// //     await client.exit()
-// //   }
-
-// // })

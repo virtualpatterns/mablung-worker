@@ -13,7 +13,7 @@ const WorkerPath = Require.resolve('./worker/worker-server-on.js')
 
 Test.before(async () => {
   await FileSystem.ensureDir(Path.dirname(LogPath))
-  await FileSystem.remove(LogPath)
+  return FileSystem.remove(LogPath)
 })
 
 Test.serial('onInterval() throws Error', async (test) => {
