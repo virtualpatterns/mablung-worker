@@ -5,7 +5,6 @@ Test.before(async (test) => {
 })
 
 ;[
-  'Console',
   'CreateLoggedProcess'
 ].forEach((name) => {
 
