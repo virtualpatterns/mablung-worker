@@ -15,14 +15,12 @@
   "files": [
     "release/commonjs/library",
     "release/commonjs/index.cjs",
-    "release/commonjs/test/library/console.cjs",
     "release/commonjs/test/library/create-logged-process.cjs",
-    "release/commonjs/test/library/index.cjs",
+    "release/commonjs/test/index.cjs",
     "release/esmodule/library",
     "release/esmodule/index.js",
-    "release/esmodule/test/library/console.js",
     "release/esmodule/test/library/create-logged-process.js",
-    "release/esmodule/test/library/index.js"
+    "release/esmodule/test/index.js"
   ],
   "license": "GPL-3.0+",
   "main": "release/commonjs/index.cjs",
