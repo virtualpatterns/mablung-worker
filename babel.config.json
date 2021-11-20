@@ -6,7 +6,6 @@
         "header": {
           "exclude": [
             "source/**/test",
-            "source/header",
             "source/index.js"
           ]
         }
