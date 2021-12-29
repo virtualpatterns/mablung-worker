@@ -49,14 +49,6 @@ class WorkerClient extends ForkedProcess {
 
   }
 
-  exit(code = 0, force = false) {
-    return Promise.all([ this.whenExit(), this.send({ 'type': 'exit', 'code': code, 'force': force }, false) ])
-  }
-
-  kill(signal = 'SIGINT') {
-    return Promise.all([ this.whenKill(), this.send(signal) ])
-  }
-
   async send(message, awaitResponse = Is.string(message) ? false : true) {
 
     if (Is.string(message)) {
@@ -76,11 +68,19 @@ class WorkerClient extends ForkedProcess {
 
   }
 
+  exit(code = 0, force = false) {
+    return Promise.all([this.whenExit(), this.send({ 'type': 'exit', 'code': code, 'force': force }, false)])
+  }
+
+  kill(signal = 'SIGINT') {
+    return Promise.all([this.whenKill(), this.send(signal)])
+  }
+
   async whenReady() {
 
     if (!this.isReady) {
 
-      await this.whenMessage((message) => message.type === 'ready')
+      await this.whenMessage((message) => Is.equal(message.type, 'ready'))
       await this.send({ 'type': 'ready' }, false)
 
       this.isReady = true
@@ -96,7 +96,11 @@ class WorkerClient extends ForkedProcess {
   }
 
   whenMessage(compareFn = () => true) {
-    return super.whenMessage(this.maximumDuration, compareFn)
+    return super.whenMessage(compareFn, this.maximumDuration)
+  }
+
+  whenData(compareFn = () => true) {
+    return super.whenData(compareFn, this.maximumDuration)
   }
 
   whenExit() {

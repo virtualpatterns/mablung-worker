@@ -5,7 +5,7 @@ import Path from 'path'
 import { CreateLoggedProcess, WorkerClient } from '../index.js'
 
 const FilePath = __filePath
-const LogPath = FilePath.replace('/release/', '/data/').replace(/\.c?js$/, '.log')
+const LogPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '.log')
 const LoggedClient = CreateLoggedProcess(WorkerClient, LogPath)
 const Require = __require
 const WorkerPath = Require.resolve('../test/library/worker/worker-client.js')

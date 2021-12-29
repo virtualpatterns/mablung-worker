@@ -165,6 +165,104 @@ Test.serial('whenMessage() throws ChildProcessDurationExceededError', async (tes
 
 })
 
+Test.serial('whenData()', async (test) => {
+
+  let client = new LoggedClient(WorkerPath)
+
+  await client.whenReady()
+
+  try {
+    await test.notThrowsAsync(Promise.all([ client.whenData(), client.process.stdout.emit('data', `${Path.relative('', WorkerPath)}\n`) ]))
+  } finally {
+    await client.exit()
+  }
+
+})
+
+Test.serial('whenData(...)', async (test) => {
+
+  let client = new LoggedClient(WorkerPath)
+
+  await client.whenReady()
+
+  try {
+    await test.notThrowsAsync(Promise.all([ client.whenData((data) => /worker\.c?js/im.test(data)), client.process.stdout.emit('data', `${Path.relative('', WorkerPath)}\n`) ]))
+  } finally {
+    await client.exit()
+  }
+
+})
+
+Test.serial('whenData() throws ChildProcessExitedError code=0', async (test) => {
+
+  let client = new LoggedClient(WorkerPath)
+
+  await client.whenReady()
+
+  try {
+    await test.throwsAsync(Promise.all([ client.whenData(), client.process.emit('exit', 0, null) ]), { 'instanceOf': ChildProcessExitedError })
+  } finally {
+    await client.exit()
+  }
+
+})
+
+Test.serial('whenData() throws ChildProcessExitedError code=null', async (test) => {
+
+  let client = new LoggedClient(WorkerPath)
+
+  await client.whenReady()
+
+  try {
+    await test.throwsAsync(Promise.all([ client.whenData(), client.process.emit('exit', null, null) ]), { 'instanceOf': ChildProcessExitedError })
+  } finally {
+    await client.exit()
+  }
+
+})
+
+Test.serial('whenData() throws ChildProcessKilledError', async (test) => {
+
+  let client = new LoggedClient(WorkerPath)
+
+  await client.whenReady()
+
+  try {
+    await test.throwsAsync(Promise.all([ client.whenData(), client.process.emit('exit', null, 'SIGINT') ]), { 'instanceOf': ChildProcessKilledError })
+  } finally {
+    await client.exit()
+  }
+
+})
+
+Test.serial('whenData() throws Error', async (test) => {
+
+  let client = new LoggedClient(WorkerPath)
+
+  await client.whenReady()
+
+  try {
+    await test.throwsAsync(Promise.all([ client.whenData(), client.process.emit('error', new Error()) ]), { 'instanceOf': Error })
+  } finally {
+    await client.exit()
+  }
+
+})
+
+Test.serial('whenData(...) throws ChildProcessDurationExceededError', async (test) => {
+
+  let client = new LoggedClient(WorkerPath)
+
+  await client.whenReady()
+
+  try {
+    await test.throwsAsync(client.whenData((data) => /worker\.c?js/im.test(data)), { 'instanceOf': ChildProcessDurationExceededError })
+  } finally {
+    await client.exit()
+  }
+
+})
+
 Test.serial('whenExit() code=0', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
@@ -382,7 +480,7 @@ Test.serial('whenEvent()', async (test) => {
   await client.whenReady()
 
   try {
-    await test.notThrowsAsync(Promise.all([ client.whenEvent('exit', 1000), client.process.emit('exit', 0, null) ]))
+    await test.notThrowsAsync(Promise.all([ client.whenEvent({ 'emitter': client.process, 'name': 'exit' }, 1000), client.process.emit('exit', 0, null) ]))
   } finally {
     await client.exit()
   }
@@ -396,7 +494,7 @@ Test.serial('whenEvent() throws ChildProcessDurationExceededError', async (test)
   await client.whenReady()
 
   try {
-    await test.throwsAsync(client.whenEvent('exit', 1000), { 'instanceOf': ChildProcessDurationExceededError })
+    await test.throwsAsync(client.whenEvent({ 'emitter': client.process, 'name': 'exit' } , 1000), { 'instanceOf': ChildProcessDurationExceededError })
   } finally {
     await client.exit()
   }
