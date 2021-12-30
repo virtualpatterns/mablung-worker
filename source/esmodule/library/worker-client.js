@@ -99,8 +99,8 @@ class WorkerClient extends ForkedProcess {
     return super.whenMessage(compareFn, this.maximumDuration)
   }
 
-  whenData(compareFn = () => true) {
-    return super.whenData(compareFn, this.maximumDuration)
+  whenOutput(compareFn = () => true) {
+    return super.whenOutput(compareFn, this.maximumDuration)
   }
 
   whenExit() {

@@ -135,7 +135,7 @@ class ChildProcess {
 
   }
   
-  async whenData(compareFn = () => true, maximumDuration = 0) {
+  async whenOutput(compareFn = () => true, maximumDuration = 0) {
 
     let data = ''
     let totalDuration = 0

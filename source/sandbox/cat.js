@@ -31,7 +31,7 @@ async function main() {
       Path.dirname(DatabasePath)
     ])
 
-    console.log(await process.whenData((data) => /node is ready/im.test(data)))
+    console.log(await process.whenOutput((data) => /node is ready/im.test(data)))
     await Promise.all([ process.whenExit(), process.send('SIGINT') ])
 
   } catch (error) {
