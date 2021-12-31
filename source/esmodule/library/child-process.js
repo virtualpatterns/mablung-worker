@@ -236,16 +236,13 @@ class ChildProcess {
 
   }
 
-  whenEvent(event, maximumDuration = 0) {
-
-    // event is array of { 'emitter': ..., 'name': '...' }
+  whenEvent(event, maximumDuration = 0) { // event is array of { 'emitter': ..., 'name': '...' }
 
     let lock = new Lock()
 
     return new Promise((resolve, reject) => {
 
       let onEventTimeout = null
-
       let begin = Process.hrtime.bigint()
 
       for (let eventOn of (Is.array(event) ? event : [ event ])) {
