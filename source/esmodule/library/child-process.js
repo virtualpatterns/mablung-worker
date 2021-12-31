@@ -107,9 +107,7 @@ class ChildProcess {
 
       switch (name) {
         case 'message':
-          if (compareFn(argument[0])) {
-            return argument[0]
-          }
+          if (compareFn(argument[0])) { return argument[0] }
           break
         case 'error':
           throw argument[0]
@@ -144,8 +142,8 @@ class ChildProcess {
     while (durationRemaining >= 0) {
 
       let [ , name, duration, ...argument ] = await this.whenEvent([
-        { 'emitter': this.process.stdout, 'name': 'data', 'key': 'stderr-data' },
-        { 'emitter': this.process.stderr, 'name': 'data', 'key': 'stdout-data' },
+        { 'emitter': this.process.stdout, 'name': 'data' },
+        { 'emitter': this.process.stderr, 'name': 'data' },
         { 'emitter': this.process, 'name': 'error' },
         { 'emitter': this.process, 'name': 'exit' }
       ], maximumDuration)
@@ -153,9 +151,7 @@ class ChildProcess {
       switch (name) {
         case 'data':
           data = data.concat(argument[0].toString())
-          if (compareFn(data)) {
-            return data
-          }
+          if (compareFn(data)) { return data }
           break
         case 'error':
           throw argument[0]
@@ -241,7 +237,71 @@ class ChildProcess {
   }
 
   whenEvent(event, maximumDuration = 0) {
-    return ChildProcess.whenEvent(event, maximumDuration)
+
+    // event is array of { 'emitter': ..., 'name': '...' }
+
+    let lock = new Lock()
+
+    return new Promise((resolve, reject) => {
+
+      let onEventTimeout = null
+
+      let begin = Process.hrtime.bigint()
+
+      for (let eventOn of (Is.array(event) ? event : [ event ])) {
+
+        eventOn.emitter.once(eventOn.name, eventOn.onEventHandler = (...argument) => {
+
+          if (lock.isOpen) {
+
+            let end = Process.hrtime.bigint()
+            let duration = parseInt((end - begin) / BigInt(1e6))
+
+            if (maximumDuration > 0) {
+              clearTimeout(onEventTimeout)
+              onEventTimeout = null
+            }
+
+            for (let eventOff of (Is.array(event) ? event.reverse() : [ event ])) {
+              eventOff.emitter.off(eventOff.name, eventOff.onEventHandler)
+              delete eventOff.onEventHandler
+            }
+
+            resolve([ eventOn.emitter, eventOn.name, duration, ...argument ])
+
+          }
+
+        })
+
+      }
+
+      if (maximumDuration > 0) {
+
+        onEventTimeout = setTimeout(() => {
+
+          if (lock.isOpen) {
+
+            let end = Process.hrtime.bigint()
+            let duration = parseInt((end - begin) / BigInt(1e6))
+
+            clearTimeout(onEventTimeout)
+            onEventTimeout = null
+
+            for (let eventOff of (Is.array(event) ? event.reverse() : [event])) {
+              eventOff.emitter.off(eventOff.name, eventOff.onEventHandler)
+              delete eventOff.onEventHandler
+            }
+
+            reject(new ChildProcessDurationExceededError(duration, maximumDuration))
+
+          }
+
+        }, maximumDuration)
+
+      }
+
+    })
+
   }
 
   // static whenEvent(emitter, name, maximumDuration = 0) {
@@ -312,77 +372,6 @@ class ChildProcess {
   //   })
 
   // }
-
-  static whenEvent(event, maximumDuration = 0) {
-
-    // event is array of { 'emitter': ..., 'name': '...', 'key': '...' }
-
-    let lock = new Lock()
-
-    return new Promise((resolve, reject) => {
-
-      let onEventHandler = {}
-      let onEventTimeout = null
-
-      let begin = Process.hrtime.bigint()
-
-      for (let eventOn of (Is.array(event) ? event : [ event ])) {
-
-        eventOn.emitter.once(eventOn.name, onEventHandler[eventOn.key || eventOn.name] = (...argument) => {
-
-          if (lock.isOpen) {
-
-            let end = Process.hrtime.bigint()
-            let duration = parseInt((end - begin) / BigInt(1e6))
-
-            if (maximumDuration > 0) {
-              clearTimeout(onEventTimeout)
-              onEventTimeout = null
-              delete onEventHandler['timeout']
-            }
-
-            for (let eventOff of (Is.array(event) ? event.reverse() : [ event ])) {
-              eventOff.emitter.off(eventOff.name, onEventHandler[eventOff.key || eventOff.name])
-              delete onEventHandler[eventOff.key || eventOff.name]
-            }
-
-            resolve([ eventOn.emitter, eventOn.name, duration, ...argument ])
-
-          }
-
-        })
-
-      }
-
-      if (maximumDuration > 0) {
-
-        onEventTimeout = setTimeout(onEventHandler['timeout'] = () => {
-
-          if (lock.isOpen) {
-
-            let end = Process.hrtime.bigint()
-            let duration = parseInt((end - begin) / BigInt(1e6))
-
-            clearTimeout(onEventTimeout)
-            onEventTimeout = null
-            delete onEventHandler['timeout']
-
-            for (let eventOff of (Is.array(event) ? event.reverse() : [ event ])) {
-              eventOff.emitter.off(eventOff.name, onEventHandler[eventOff.key || eventOff.name])
-              delete onEventHandler[eventOff.key || eventOff.name]
-            }
-
-            reject(new ChildProcessDurationExceededError(duration, maximumDuration))
-
-          }
-
-        }, maximumDuration)
-
-      }
-
-    })
-
-  }
 
 }
 
