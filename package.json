@@ -30,7 +30,7 @@
     "url": "https://github.com/virtualpatterns/mablung-worker"
   },
   "type": "module",
-  "version": "0.0.2-115",
+  "version": "0.0.2-116",
   "dependencies": {
     "@virtualpatterns/mablung-configuration": "0.0.2-53",
     "@virtualpatterns/mablung-console": "0.0.2-97",
@@ -44,7 +44,7 @@
     "@virtualpatterns/mablung-check-dependency": "0.0.26-113",
     "@virtualpatterns/mablung-makefile-environment": "0.0.26-78",
     "@virtualpatterns/mablung-source-map-support": "0.0.26-81",
-    "ava": "^4.1.0",  
+    "ava": "^4.1.0",
     "fs-extra": "^10.0.1",
     "shx": "^0.3.4",
     "sinon": "^13.0.1"
