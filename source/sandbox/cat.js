@@ -1,9 +1,9 @@
 import '@virtualpatterns/mablung-source-map-support/install'
 
 import { CreateLoggedProcess } from '@virtualpatterns/mablung-worker/test'
-import { SpawnedProcess } from '@virtualpatterns/mablung-worker'
 import FileSystem from 'fs-extra'
-import Path from 'path'
+import { Path } from '@virtualpatterns/mablung-path'
+import { SpawnedProcess } from '@virtualpatterns/mablung-worker'
 
 const FilePath = __filePath
 const Process = process

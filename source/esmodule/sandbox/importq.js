@@ -1,4 +1,3 @@
-import '@virtualpatterns/mablung-source-map-support/install'
 // import DefaultBundle, * as ModuleBundle from 'esbuild'
 // import DefaultTraverse, * as ModuleTraverse from '@babel/traverse'
 import DefaultChangeCase, * as ModuleChangeCase from 'change-case'

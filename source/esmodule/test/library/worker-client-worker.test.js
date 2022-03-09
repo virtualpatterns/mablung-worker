@@ -1,25 +1,25 @@
 import { CreateLoggedProcess } from '@virtualpatterns/mablung-worker/test'
 import { WorkerClient, ChildProcessDurationExceededError, ChildProcessExitedError, ChildProcessKilledError } from '@virtualpatterns/mablung-worker'
+import { Path } from '@virtualpatterns/mablung-path'
 import FileSystem from 'fs-extra'
-import Path from 'path'
 import Sinon from 'sinon'
 import Test from 'ava'
 
-import { CreateMessageId } from '../../library/create-message-id.js'
+import { CreateRandomId } from '../../library/create-random-id.js'
 
 const FilePath = __filePath
-const Require = __require
+const FolderPath = Path.dirname(FilePath)
 
 const LogPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '.log')
 const LoggedClient = CreateLoggedProcess(WorkerClient, LogPath)
-const WorkerPath = Require.resolve('./worker/worker-client-worker.js')
+const WorkerPath = Path.resolve(FolderPath, './worker/worker-client-worker.js')
 
 Test.before(async () => {
   await FileSystem.ensureDir(Path.dirname(LogPath))
   return FileSystem.remove(LogPath)
 })
 
-Test.serial('then', async (test) => {
+Test('then', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -33,7 +33,7 @@ Test.serial('then', async (test) => {
 
 })
 
-Test.serial('invalidProperty()', async (test) => {
+Test('invalidProperty()', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -47,7 +47,7 @@ Test.serial('invalidProperty()', async (test) => {
   
 })
 
-Test.serial('doIt()', async (test) => {
+Test('doIt()', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -61,7 +61,7 @@ Test.serial('doIt()', async (test) => {
   
 })
 
-Test.serial('doIt() throws Error', async (test) => {
+Test('doIt() throws Error', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -72,7 +72,7 @@ Test.serial('doIt() throws Error', async (test) => {
     let sendStub = Sinon
       .stub(client, 'send')
       .resolves({
-        'id': await CreateMessageId(),
+        'id': await CreateRandomId(),
         'type': 'call',
         'name': 'doIt',
         'argument': [],
@@ -91,7 +91,7 @@ Test.serial('doIt() throws Error', async (test) => {
 
 })
 
-Test.serial('doIt(...)', async (test) => {
+Test('doIt(...)', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -105,7 +105,7 @@ Test.serial('doIt(...)', async (test) => {
   
 })
 
-Test.serial('doIt(...) throws ChildProcessDurationExceededError', async (test) => {
+Test('doIt(...) throws ChildProcessDurationExceededError', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -126,7 +126,7 @@ Test.serial('doIt(...) throws ChildProcessDurationExceededError', async (test) =
 
 })
 
-Test.serial('doIt(...) throws ChildProcessExitedError', async (test) => {
+Test('doIt(...) throws ChildProcessExitedError', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -135,7 +135,7 @@ Test.serial('doIt(...) throws ChildProcessExitedError', async (test) => {
 
 })
 
-Test.serial('doIt(...) throws ChildProcessKilledError', async (test) => {
+Test('doIt(...) throws ChildProcessKilledError', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -144,7 +144,7 @@ Test.serial('doIt(...) throws ChildProcessKilledError', async (test) => {
 
 })
 
-Test.serial('getPid()', async (test) => {
+Test('getPid()', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -158,7 +158,7 @@ Test.serial('getPid()', async (test) => {
   
 })
 
-Test.serial('getPid() throws Error', async (test) => {
+Test('getPid() throws Error', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -169,7 +169,7 @@ Test.serial('getPid() throws Error', async (test) => {
     let sendStub = Sinon
       .stub(client, 'send')
       .resolves({
-        'id': await CreateMessageId(),
+        'id': await CreateRandomId(),
         'type': 'call',
         'name': 'getPid',
         'argument': [],
@@ -188,7 +188,7 @@ Test.serial('getPid() throws Error', async (test) => {
 
 })
 
-Test.serial('getPid(...)', async (test) => {
+Test('getPid(...)', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -202,7 +202,7 @@ Test.serial('getPid(...)', async (test) => {
   
 })
 
-Test.serial('getPid(...) throws ChildProcessDurationExceededError', async (test) => {
+Test('getPid(...) throws ChildProcessDurationExceededError', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -223,7 +223,7 @@ Test.serial('getPid(...) throws ChildProcessDurationExceededError', async (test)
 
 })
 
-Test.serial('getPid(...) throws ChildProcessExitedError', async (test) => {
+Test('getPid(...) throws ChildProcessExitedError', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -232,7 +232,7 @@ Test.serial('getPid(...) throws ChildProcessExitedError', async (test) => {
 
 })
 
-Test.serial('getPid(...) throws ChildProcessKilledError', async (test) => {
+Test('getPid(...) throws ChildProcessKilledError', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -241,7 +241,7 @@ Test.serial('getPid(...) throws ChildProcessKilledError', async (test) => {
 
 })
 
-Test.serial('throwException() throws WorkerExceptionError', async (test) => {
+Test('throwException() throws WorkerExceptionError', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -255,7 +255,7 @@ Test.serial('throwException() throws WorkerExceptionError', async (test) => {
 
 })
 
-Test.serial('throwUncaughtException()', async (test) => {
+Test('throwUncaughtException()', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -264,7 +264,7 @@ Test.serial('throwUncaughtException()', async (test) => {
 
 })
 
-Test.serial('rejectUnhandledException()', async (test) => {
+Test('rejectUnhandledException()', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 

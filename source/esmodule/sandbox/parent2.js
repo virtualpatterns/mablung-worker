@@ -1,30 +1,30 @@
-import { createRequire } from 'module'
+// import { createRequire } from 'module'
 
-import { WorkerClient } from '../index.js'
+// import { WorkerClient } from '../index.js'
 
-const Process = process
-const Require = __require
+// const Process = process
+// const Require = __require
 
-Process.on('exit', () => {
-  console.log('PARENT Process.on(\'exit\', () => { ... })')
-})
+// Process.on('exit', () => {
+//   console.log('PARENT Process.on(\'exit\', () => { ... })')
+// })
 
-;(async () => {
+// ;(async () => {
 
-  try {
+//   try {
 
-    let worker = await WorkerClient.createWorker(Require.resolve('../library/worker/create-worker.js'), { 'execArgv': [ /* '--inspect=19000' */ ], 'stdio': 'inherit' })
+//     let worker = await WorkerClient.createWorker(Path.resolve(FolderPath, '../library/worker/create-worker.js'), { 'execArgv': [ /* '--inspect=19000' */ ], 'stdio': 'inherit' })
 
-    try {
+//     try {
 
-      console.log(await worker.getPid())
+//       console.log(await worker.getPid())
 
-    } finally {
-      await worker.end()
-    }
+//     } finally {
+//       await worker.end()
+//     }
 
-  } catch (error) {
-    console.error(error)
-  }
+//   } catch (error) {
+//     console.error(error)
+//   }
 
-})()
+// })()

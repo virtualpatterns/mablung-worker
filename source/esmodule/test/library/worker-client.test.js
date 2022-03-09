@@ -1,25 +1,25 @@
 import { CreateLoggedProcess } from '@virtualpatterns/mablung-worker/test'
 import { WorkerClient } from '@virtualpatterns/mablung-worker'
+import { Path } from '@virtualpatterns/mablung-path'
 import FileSystem from 'fs-extra'
-import Path from 'path'
 import Sinon from 'sinon'
 import Test from 'ava'
 
-import { CreateMessageId } from '../../library/create-message-id.js'
+import { CreateRandomId } from '../../library/create-random-id.js'
 
 const FilePath = __filePath
-const Require = __require
+const FolderPath = Path.dirname(FilePath)
 
 const LogPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '.log')
 const LoggedClient = CreateLoggedProcess(WorkerClient, LogPath)
-const WorkerPath = Require.resolve('./worker/worker-client.js')
+const WorkerPath = Path.resolve(FolderPath, './worker/worker-client.js')
 
 Test.before(async () => {
   await FileSystem.ensureDir(Path.dirname(LogPath))
   return FileSystem.remove(LogPath)
 })
 
-Test.serial('WorkerClient(\'...\')', (test) => {
+Test('WorkerClient(\'...\')', (test) => {
   return test.notThrowsAsync(async () => {
 
     let client = new LoggedClient(WorkerPath)
@@ -40,7 +40,7 @@ Test.serial('WorkerClient(\'...\')', (test) => {
   })
 })
 
-Test.serial('WorkerClient(\'...\', { ... })', (test) => {
+Test('WorkerClient(\'...\', { ... })', (test) => {
   return test.notThrowsAsync(async () => {
     
     let client = new LoggedClient(WorkerPath, { '--asd': 'fgh' })
@@ -64,10 +64,10 @@ Test.serial('WorkerClient(\'...\', { ... })', (test) => {
   })
 })
 
-Test.serial('WorkerClient(\'...\', { ... }, { ... })', (test) => {
+Test('WorkerClient(\'...\', { ... }, { ... })', (test) => {
   return test.notThrowsAsync(async () => {
 
-    let client = new LoggedClient(WorkerPath, { '--asd': 'fgh' }, { 'maximumDuration': 10000 })
+    let client = new LoggedClient(WorkerPath, { '--asd': 'fgh' }, { 'maximumDuration': 5000 })
 
     await client.whenReady()
 
@@ -79,7 +79,7 @@ Test.serial('WorkerClient(\'...\', { ... }, { ... })', (test) => {
       test.deepEqual(client.option, {
         'serialization': 'advanced',
         'stdio': 'pipe',
-        'maximumDuration': 10000
+        'maximumDuration': 5000
       })
     } finally {
       await client.exit()
@@ -88,9 +88,9 @@ Test.serial('WorkerClient(\'...\', { ... }, { ... })', (test) => {
   })
 })
 
-Test.serial('maximumDuration', async (test) => {
+Test('maximumDuration', async (test) => {
 
-  let maximumDuration = 10000
+  let maximumDuration = 5000
 
   let client = new LoggedClient(WorkerPath, {}, { 'maximumDuration': maximumDuration })
 
@@ -112,7 +112,7 @@ Test.serial('maximumDuration', async (test) => {
 
 })
 
-Test.serial('ping()', async (test) => {
+Test('ping()', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -129,7 +129,7 @@ Test.serial('ping()', async (test) => {
 
 })
 
-Test.serial('ping() throws Error', async (test) => {
+Test('ping() throws Error', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -140,7 +140,7 @@ Test.serial('ping() throws Error', async (test) => {
     let sendStub = Sinon
       .stub(client, 'send')
       .resolves({
-        'id': await CreateMessageId(),
+        'id': await CreateRandomId(),
         'type': 'ping',
         'error': new Error()
       })
@@ -157,7 +157,7 @@ Test.serial('ping() throws Error', async (test) => {
 
 })
 
-Test.serial('ping() returns undefined', async (test) => {
+Test('ping() returns undefined', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -168,7 +168,7 @@ Test.serial('ping() returns undefined', async (test) => {
     let sendStub = Sinon
       .stub(client, 'send')
       .resolves({
-        'id': await CreateMessageId(),
+        'id': await CreateRandomId(),
         'type': 'ping'
       })
 
@@ -184,7 +184,7 @@ Test.serial('ping() returns undefined', async (test) => {
 
 })
 
-Test.serial('exit()', async (test) => {
+Test('exit()', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -193,7 +193,7 @@ Test.serial('exit()', async (test) => {
 
 })
 
-Test.serial('exit(...)', async (test) => {
+Test('exit(...)', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -206,7 +206,7 @@ Test.serial('exit(...)', async (test) => {
 
 })
 
-Test.serial('exit(...) on send(\'...\')', async (test) => {
+Test('exit(...) on send(\'...\')', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -219,7 +219,7 @@ Test.serial('exit(...) on send(\'...\')', async (test) => {
 
 })
 
-Test.serial('kill()', async (test) => {
+Test('kill()', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -228,7 +228,7 @@ Test.serial('kill()', async (test) => {
 
 })
 
-Test.serial('kill(\'...\')', async (test) => {
+Test('kill(\'...\')', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 

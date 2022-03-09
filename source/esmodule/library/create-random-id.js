@@ -1,7 +1,7 @@
-import Is from '@pwn/is'
+import { Is } from '@virtualpatterns/mablung-is'
 import Cryptography from 'crypto'
 
-export function CreateId(length = 16) {
+export function CreateRandomId(length = 16) {
 
   return new Promise((resolve, reject) => {
 

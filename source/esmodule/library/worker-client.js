@@ -1,7 +1,7 @@
 import { Configuration } from '@virtualpatterns/mablung-configuration'
 import { Is } from '@virtualpatterns/mablung-is'
 
-import { CreateMessageId } from './create-message-id.js'
+import { CreateRandomId } from './create-random-id.js'
 import { ForkedProcess } from './forked-process.js'
 import { WorkerClientHandler } from './worker-client-handler.js'
 
@@ -55,7 +55,7 @@ class WorkerClient extends ForkedProcess {
       return super.send(message)
     } else {
 
-      let requestMessage = Is.propertyDefined(message, 'id') ? message : { 'id': await CreateMessageId(), ...message }
+      let requestMessage = Is.propertyDefined(message, 'id') ? message : { 'id': await CreateRandomId(), ...message }
 
       if (awaitResponse) {
         await super.send(requestMessage)

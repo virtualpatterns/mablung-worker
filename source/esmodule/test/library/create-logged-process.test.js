@@ -1,44 +1,42 @@
 import { CreateLoggedProcess } from '@virtualpatterns/mablung-worker/test'
-import { SpawnedProcess } from '@virtualpatterns/mablung-worker'
 import FileSystem from 'fs-extra'
-import Path from 'path'
+import { Path } from '@virtualpatterns/mablung-path'
+import { SpawnedProcess } from '@virtualpatterns/mablung-worker'
 import Test from 'ava'
 
 const FilePath = __filePath
 const Process = process
-// const Require = __require
 
 const LogPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '.log')
-// const WorkerPath = Require.resolve('./worker/worker.js')
 
 Test.before(async () => {
   await FileSystem.ensureDir(Path.dirname(LogPath))
   return FileSystem.remove(LogPath)
 })
 
-Test.serial('CreateLoggedProcess(SpawnedProcess, \'...\')', (test) => {
+Test('CreateLoggedProcess(SpawnedProcess, \'...\')', (test) => {
   test.notThrows(() => { CreateLoggedProcess(SpawnedProcess, LogPath) })
 })
 
-Test.serial('CreateLoggedProcess(SpawnedProcess, \'...\', { ... })', (test) => {
+Test('CreateLoggedProcess(SpawnedProcess, \'...\', { ... })', (test) => {
   test.notThrows(() => { CreateLoggedProcess(SpawnedProcess, LogPath, {}) })
 })
 
-Test.serial('CreateLoggedProcess(SpawnedProcess, \'...\', { ... }, { ... })', (test) => {
+Test('CreateLoggedProcess(SpawnedProcess, \'...\', { ... }, { ... })', (test) => {
   test.notThrows(() => { CreateLoggedProcess(SpawnedProcess, LogPath, {}, {}) })
 })
 
-// Test.serial('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\')', (test) => {
+// Test('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\')', (test) => {
 //   let process = new (CreateLoggedProcess(SpawnedProcess, LogPath))(Process.env.MAKE_PATH)
 //   return test.notThrowsAsync(process.whenExit())
 // })
 
-Test.serial('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\')', (test) => {
+Test('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\')', (test) => {
   let process = new (CreateLoggedProcess(SpawnedProcess, LogPath))(Process.env.MAKE_PATH)
   return test.notThrowsAsync(process.whenExit())
 })
 
-Test.serial('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\', { ... })', (test) => {
+Test('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\', { ... })', (test) => {
   let process = new (CreateLoggedProcess(SpawnedProcess, LogPath))(Process.env.MAKE_PATH, {
     '--annabelle': 'bernadette',
     '--benjamin': 'claudius',
@@ -47,7 +45,7 @@ Test.serial('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\', { ... })', (t
   return test.notThrowsAsync(process.whenExit())
 })
 
-Test.serial('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\', { ... }, { ... })', (test) => {
+Test('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\', { ... }, { ... })', (test) => {
   let process = new (CreateLoggedProcess(SpawnedProcess, LogPath))(Process.env.MAKE_PATH, {
     '--annabelle': 'bernadette',
     '--benjamin': 'claudius',
@@ -58,17 +56,17 @@ Test.serial('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\', { ... }, { ..
   return test.notThrowsAsync(process.whenExit())
 })
 
-Test.serial('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\') on kill', (test) => {
+Test('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\') on kill', (test) => {
   let process = new (CreateLoggedProcess(SpawnedProcess, LogPath))(Process.env.MAKE_PATH)
   return test.notThrowsAsync(Promise.all([ process.whenKill(), process.send('SIGINT') ]))
 })
 
-Test.serial('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\') on error', (test) => {
+Test('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\') on error', (test) => {
   let process = new (CreateLoggedProcess(SpawnedProcess, LogPath))('invalid')
   return test.notThrowsAsync(process.whenError())
 })
 
-// Test.serial('CreateLoggedProcess(WorkerClient, \'...\')(\'...\')', async (test) => {
+// Test('CreateLoggedProcess(WorkerClient, \'...\')(\'...\')', async (test) => {
 
 //   let client = new (CreateLoggedProcess(WorkerClient, LogPath))(WorkerPath)
 

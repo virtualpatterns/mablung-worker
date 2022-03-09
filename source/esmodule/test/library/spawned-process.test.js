@@ -1,7 +1,7 @@
 import { CreateLoggedProcess } from '@virtualpatterns/mablung-worker/test'
 import { SpawnedProcess } from '@virtualpatterns/mablung-worker'
+import { Path } from '@virtualpatterns/mablung-path'
 import FileSystem from 'fs-extra'
-import Path from 'path'
 import Test from 'ava'
 
 const FilePath = __filePath
@@ -15,17 +15,17 @@ Test.before(async () => {
   return FileSystem.remove(LogPath)
 })
 
-Test.serial('SpawnedProcess(\'...\')', (test) => {
+Test('SpawnedProcess(\'...\')', (test) => {
   let process = new LoggedProcess(Process.env.MAKE_PATH)
   return test.notThrowsAsync(process.whenExit())
 })
 
-Test.serial('SpawnedProcess(\'...\', { ... })', (test) => {
+Test('SpawnedProcess(\'...\', { ... })', (test) => {
   let process = new LoggedProcess(Process.env.MAKE_PATH, { 'version': true })
   return test.notThrowsAsync(process.whenExit())
 })
 
-Test.serial('SpawnedProcess(\'...\', { ... }, { ... })', (test) => {
+Test('SpawnedProcess(\'...\', { ... }, { ... })', (test) => {
   let process = new LoggedProcess(Process.env.MAKE_PATH, { 'version': true }, {})
   return test.notThrowsAsync(process.whenExit())
 })

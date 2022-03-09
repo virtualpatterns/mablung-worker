@@ -1,6 +1,6 @@
 import { Is } from '@virtualpatterns/mablung-is'
 
-import { CreateMessageId } from './create-message-id.js'
+import { CreateRandomId } from './create-random-id.js'
 
 import { WorkerServerInvalidMessageError } from './error/worker-server-invalid-message-error.js'
 import { WorkerServerInvalidPropertyError } from './error/worker-server-invalid-property-error.js'
@@ -221,7 +221,7 @@ class WorkerServer {
 
   static async send(message) {
     
-    let responseMessage = Is.propertyDefined(message, 'id') ? message : { 'id': await CreateMessageId(), ...message }
+    let responseMessage = Is.propertyDefined(message, 'id') ? message : { 'id': await CreateRandomId(), ...message }
 
     return new Promise((resolve, reject) => {
 

@@ -1,32 +1,32 @@
 
-import { LoggedClient } from '../test/library/logged-client.js'
+// import { LoggedClient } from '../test/library/logged-client.js'
 
-const Require = __require
+// const Require = __require
 
-async function main() {
+// async function main() {
 
-  try {
+//   try {
 
-    let worker = new LoggedClient()
+//     let worker = new LoggedClient()
 
-    try {
+//     try {
 
-      await worker.import(Require.resolve('../test/library/worker.js'))
+//       await worker.import(Path.resolve(FolderPath, '../test/library/worker.js'))
 
-      try {
-        // do nothing
-      } finally {
-        // await worker.release()
-      }
+//       try {
+//         // do nothing
+//       } finally {
+//         // await worker.release()
+//       }
 
-    } finally {
-      await worker.end()
-    }
+//     } finally {
+//       await worker.end()
+//     }
       
-  } catch (error) {
-    console.error(error)
-  }
+//   } catch (error) {
+//     console.error(error)
+//   }
 
-}
+// }
 
-main()
+// main()

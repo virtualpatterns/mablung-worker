@@ -1,22 +1,22 @@
 import { CreateLoggedProcess } from '@virtualpatterns/mablung-worker/test'
 import { WorkerClient } from '@virtualpatterns/mablung-worker'
+import { Path } from '@virtualpatterns/mablung-path'
 import FileSystem from 'fs-extra'
-import Path from 'path'
 import Test from 'ava'
 
 const FilePath = __filePath
-const Require = __require
+const FolderPath = Path.dirname(FilePath)
 
 const LogPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '.log')
 const LoggedClient = CreateLoggedProcess(WorkerClient, LogPath)
-const WorkerPath = Require.resolve('./worker/worker-server-on.js')
+const WorkerPath = Path.resolve(FolderPath, './worker/worker-server-on.js')
 
 Test.before(async () => {
   await FileSystem.ensureDir(Path.dirname(LogPath))
   return FileSystem.remove(LogPath)
 })
 
-Test.serial('onInterval() throws Error', async (test) => {
+Test('onInterval() throws Error', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -30,7 +30,7 @@ Test.serial('onInterval() throws Error', async (test) => {
 
 })
 
-Test.serial('onMessage(...) throws Error', async (test) => {
+Test('onMessage(...) throws Error', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -44,7 +44,7 @@ Test.serial('onMessage(...) throws Error', async (test) => {
 
 })
 
-Test.serial('onBeforeExit() throws Error', async (test) => {
+Test('onBeforeExit() throws Error', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -58,7 +58,7 @@ Test.serial('onBeforeExit() throws Error', async (test) => {
 
 })
 
-Test.serial('onExit() throws Error', async (test) => {
+Test('onExit() throws Error', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 
@@ -72,7 +72,7 @@ Test.serial('onExit() throws Error', async (test) => {
 
 })
 
-Test.serial('onError(...) throws Error', async (test) => {
+Test('onError(...) throws Error', async (test) => {
 
   let client = new LoggedClient(WorkerPath)
 

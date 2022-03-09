@@ -1,22 +1,22 @@
 
-import { LoggedClient } from '../library/worker-client/logged-client.js'
+// import { LoggedClient } from '../library/worker-client/logged-client.js'
 
-const Require = __require
+// const Require = __require
 
-;(async () => {
+// ;(async () => {
 
-  try {
+//   try {
 
-    let worker = await LoggedClient.createWorker(Require.resolve('../library/worker/get-pid.js'))
+//     let worker = await LoggedClient.createWorker(Path.resolve(FolderPath, '../library/worker/get-pid.js'))
 
-    try {
-      await worker.throw(new Error('You suck!'))
-    } finally {
-      // await worker.end()
-    }
+//     try {
+//       await worker.throw(new Error('You suck!'))
+//     } finally {
+//       // await worker.end()
+//     }
       
-  } catch (error) {
-    console.error(error)
-  }
+//   } catch (error) {
+//     console.error(error)
+//   }
 
-})()
+// })()
