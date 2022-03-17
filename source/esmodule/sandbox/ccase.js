@@ -1,7 +1,7 @@
-import { pascalCase as PascalCase } from 'change-case'
+// import { pascalCase as PascalCase } from 'change-case'
 
-// import DefaultChangeCase, * as ModuleChangeCase from 'change-case'
+// // import DefaultChangeCase, * as ModuleChangeCase from 'change-case'
 
-// const { 'pascalCase': PascalCase } = DefaultChangeCase || ModuleChangeCase
+// // const { 'pascalCase': PascalCase } = DefaultChangeCase || ModuleChangeCase
 
-console.log(PascalCase('the-end-is-near'))
+// console.log(PascalCase('the-end-is-near'))

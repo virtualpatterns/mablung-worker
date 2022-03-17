@@ -1,10 +1,11 @@
-import '@virtualpatterns/mablung-source-map-support/install'
-
 import { WorkerServer } from '@virtualpatterns/mablung-worker'
+import SourceMapSupport from 'source-map-support'
 
 import { WorkerExceptionError } from '../error/worker-exception-error.js'
 import { WorkerUncaughtExceptionError } from '../error/worker-uncaught-exception-error.js'
 import { WorkerUnhandledRejectionError } from '../error/worker-unhandled-rejection-error.js'
+
+SourceMapSupport.install({ 'handleUncaughtExceptions': false })
 
 const Process = process
 
