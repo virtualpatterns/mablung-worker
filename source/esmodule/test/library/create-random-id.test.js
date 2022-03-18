@@ -1,4 +1,4 @@
-import { CreateRandomId } from '@virtualpatterns/mablung-worker'
+import { CreateRandomId } from '@virtualpatterns/mablung-worker/test'
 import Cryptography from 'crypto'
 import Sinon from 'sinon'
 import Test from 'ava'

@@ -6,7 +6,6 @@ import Test from 'ava'
   'SpawnedProcess',
   'WorkerClient',
   'WorkerServer',
-  'CreateRandomId',
   'ChildProcessDurationExceededError',
   'ChildProcessExitedError',
   'ChildProcessKilledError',

@@ -1,7 +1,8 @@
 import Test from 'ava'
 
 ;[
-  'CreateLoggedProcess'
+  'CreateLoggedProcess',
+  'CreateRandomId'
 ].forEach((name) => {
 
   Test(name, async (test) => {
