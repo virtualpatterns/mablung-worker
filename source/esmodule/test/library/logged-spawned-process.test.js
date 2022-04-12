@@ -14,11 +14,11 @@ Test.before(async () => {
   return FileSystem.ensureDir(DataPath)
 })
 
-Test('LoggedProcess()', (test) => {
+Test('LoggedSpawnedProcess()', (test) => {
   test.throws(() => { new LoggedSpawnedProcess() }, { 'code': 'ERR_INVALID_ARG_TYPE' })
 })
 
-Test('LoggedProcess(\'...\', \'...\')', async (test) => {
+Test('LoggedSpawnedProcess(\'...\', \'...\')', async (test) => {
 
   let id = await CreateRandomId()
   let logPath = Path.resolve(DataPath, `${id}.log`)
@@ -27,7 +27,7 @@ Test('LoggedProcess(\'...\', \'...\')', async (test) => {
 
 })
 
-Test('LoggedProcess(\'...\', \'...\', { ... }, { ... })', async (test) => {
+Test('LoggedSpawnedProcess(\'...\', \'...\', { ... }, { ... })', async (test) => {
 
   let id = await CreateRandomId()
   let logPath = Path.resolve(DataPath, `${id}.log`)
@@ -42,7 +42,7 @@ Test('LoggedProcess(\'...\', \'...\', { ... }, { ... })', async (test) => {
 
 })
 
-Test('LoggedProcess(\'...\', { ... }, \'...\')', async (test) => {
+Test('LoggedSpawnedProcess(\'...\', { ... }, \'...\')', async (test) => {
 
   let id = await CreateRandomId()
   let logPath = Path.resolve(DataPath, `${id}.log`)
@@ -51,7 +51,7 @@ Test('LoggedProcess(\'...\', { ... }, \'...\')', async (test) => {
 
 })
 
-Test('LoggedProcess(\'...\', { ... }, { ... }, \'...\')', async (test) => {
+Test('LoggedSpawnedProcess(\'...\', { ... }, { ... }, \'...\')', async (test) => {
 
   let id = await CreateRandomId()
   let logPath = Path.resolve(DataPath, `${id}.log`)
@@ -60,7 +60,7 @@ Test('LoggedProcess(\'...\', { ... }, { ... }, \'...\')', async (test) => {
 
 })
 
-Test('LoggedProcess(\'...\', { ... }, { ... }, { ... }, \'...\')', async (test) => {
+Test('LoggedSpawnedProcess(\'...\', { ... }, { ... }, { ... }, \'...\')', async (test) => {
 
   let id = await CreateRandomId()
   let logPath = Path.resolve(DataPath, `${id}.log`)
@@ -68,47 +68,3 @@ Test('LoggedProcess(\'...\', { ... }, { ... }, { ... }, \'...\')', async (test) 
   test.throws(() => { new LoggedSpawnedProcess(logPath, {}, {}, {}, Process.env.MAKE_PATH) }, { 'code': 'ERR_INVALID_ARG_TYPE' })
 
 })
-
-// Test('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\', { ... })', (test) => {
-//   let process = new (CreateLoggedProcess(SpawnedProcess, LogPath))(Process.env.MAKE_PATH, {
-//     '--annabelle': 'bernadette',
-//     '--benjamin': 'claudius',
-//     '--claudette': 'danaldus'
-//   })
-//   return test.notThrowsAsync(process.whenExit())
-// })
-
-// Test('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\', { ... }, { ... })', (test) => {
-//   let process = new (CreateLoggedProcess(SpawnedProcess, LogPath))(Process.env.MAKE_PATH, {
-//     '--annabelle': 'bernadette',
-//     '--benjamin': 'claudius',
-//     '--claudette': 'danaldus'
-//   }, {
-//     '--annabelle': 'bernadette'
-//   })
-//   return test.notThrowsAsync(process.whenExit())
-// })
-
-// Test('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\') on kill', (test) => {
-//   let process = new (CreateLoggedProcess(SpawnedProcess, LogPath))(Process.env.MAKE_PATH)
-//   return test.notThrowsAsync(Promise.all([ process.whenKill(), process.send('SIGINT') ]))
-// })
-
-// Test('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\') on error', (test) => {
-//   let process = new (CreateLoggedProcess(SpawnedProcess, LogPath))('invalid')
-//   return test.notThrowsAsync(process.whenError())
-// })
-
-// // Test('CreateLoggedProcess(WorkerClient, \'...\')(\'...\')', async (test) => {
-
-// //   let client = new (CreateLoggedProcess(WorkerClient, LogPath))(WorkerPath)
-
-// //   await client.whenReady()
-
-// //   try {
-// //     await test.notThrowsAsync(client.ping())
-// //   } finally {
-// //     await client.exit()
-// //   }
-
-// // })
