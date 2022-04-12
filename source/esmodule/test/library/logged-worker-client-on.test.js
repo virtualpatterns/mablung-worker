@@ -1,6 +1,6 @@
-import { CreateLoggedProcess } from '@virtualpatterns/mablung-worker/test'
+import { CreateRandomId } from '@virtualpatterns/mablung-worker'
+import { LoggedWorkerClient } from '@virtualpatterns/mablung-worker/test'
 import { Path } from '@virtualpatterns/mablung-path'
-import { WorkerClient } from '@virtualpatterns/mablung-worker'
 import FileSystem from 'fs-extra'
 import Sinon from 'sinon'
 import Test from 'ava'
@@ -8,17 +8,20 @@ import Test from 'ava'
 const FilePath = __filePath
 const FolderPath = Path.dirname(FilePath)
 
-const LogPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '.log')
+const DataPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '')
 const WorkerPath = Path.resolve(FolderPath, './worker/worker.js')
 
 Test.before(async () => {
-  await FileSystem.ensureDir(Path.dirname(LogPath))
-  return FileSystem.remove(LogPath)
+  await FileSystem.remove(DataPath)
+  return FileSystem.ensureDir(DataPath)
 })
 
 Test('onSpawn() throws Error', async (test) => {
 
-  let client = new (CreateLoggedProcess(WorkerClient, LogPath))(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   try {
 
@@ -41,7 +44,10 @@ Test('onSpawn() throws Error', async (test) => {
 
 Test('onMessage() throws Error', async (test) => {
 
-  let client = new (CreateLoggedProcess(WorkerClient, LogPath))(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   try {
 
@@ -64,7 +70,10 @@ Test('onMessage() throws Error', async (test) => {
 
 Test('onExit() throws Error', async (test) => {
 
-  let client = new (CreateLoggedProcess(WorkerClient, LogPath))(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -83,7 +92,10 @@ Test('onExit() throws Error', async (test) => {
 
 Test('onKill() throws Error', async (test) => {
 
-  let client = new (CreateLoggedProcess(WorkerClient, LogPath))(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -102,7 +114,7 @@ Test('onKill() throws Error', async (test) => {
 
 // Test('onError() throws Error', async (test) => {
 
-//   let client = new LoggedClient(WorkerPath)
+//   let client = new LoggedWorkerClient(WorkerPath)
 
 //   await client.whenReady()
 

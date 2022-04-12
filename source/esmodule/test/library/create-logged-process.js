@@ -5,17 +5,14 @@ import Utility from 'util'
 
 const Process = process
 
-export function CreateLoggedProcess(processClass, userLogPath, userLogOption = {}, userConsoleOption = {}) {
+export function CreateLoggedProcess(processClass) { //, userLogPath, userLogOption = {}, userConsoleOption = {}) {
 
   class LoggedProcess extends processClass {
 
     constructor(...argument) {
-      super(...argument)
+      super(...LoggedProcess.getSuperConstructorArgument(...argument))
 
-      let logPath = userLogPath
-      let logOption = userLogOption
-
-      let consoleOption = userConsoleOption
+      let [ logPath, logOption, consoleOption ] = this.getConstructorArgument(...argument)
 
       this.console = new Console(logPath, logOption, consoleOption)
       this.console.log('-'.repeat(50))
@@ -75,6 +72,94 @@ export function CreateLoggedProcess(processClass, userLogPath, userLogOption = {
 
     }
 
+    static getSuperConstructorArgument(...argument) {
+
+      // the defaults
+      // let logPath  = null
+      // let logOption = {}
+      // let consoleOption = {}
+      let processPath = null
+      let processArgument = {}
+      let processOption = {}
+
+      switch (true) {
+        case Is.string(argument[1]):
+          // logPath = argument[0] || null
+          // logOption = default
+          // consoleOption = default
+          processPath = argument[1]
+          processArgument = argument[2] || processArgument
+          processOption = argument[3] || processOption
+          break
+        case Is.string(argument[2]):
+          // logPath = argument[0] || null
+          // logOption = argument[1]
+          // consoleOption = default
+          processPath = argument[2]
+          processArgument = argument[3] || processArgument
+          processOption = argument[4] || processOption
+          break
+        case Is.string(argument[3]):
+          // logPath = argument[0] || null
+          // logOption = argument[1]
+          // consoleOption = argument[2]
+          processPath = argument[3]
+          processArgument = argument[4] || processArgument
+          processOption = argument[5] || processOption
+          break
+        default:
+          // logPath = argument[0] || null
+          // logOption = argument[1]
+          // consoleOption = argument[2]
+          processPath = argument[3] || null
+          processArgument = argument[4] || processArgument
+          processOption = argument[5] || processOption
+      }
+  
+      return [ processPath, processArgument, processOption ]
+  
+    }
+
+    getConstructorArgument(...argument) {
+
+      // the defaults
+      let logPath  = null
+      let logOption = {}
+      let consoleOption = {}
+      // let processPath = null
+      // let processArgument = {}
+      // let processOption = {}
+
+      switch (true) {
+        case Is.string(argument[1]):
+          logPath = argument[0] || logPath
+          // logOption = default
+          // consoleOption = default
+          // processPath = argument[1]
+          // processArgument = argument[2] || {}
+          // processOption = argument[3] || {}
+          break
+        case Is.string(argument[2]):
+          logPath = argument[0] || logPath
+          logOption = argument[1] || {}
+          // consoleOption = default
+          // processPath = argument[2]
+          // processArgument = argument[3] || {}
+          // processOption = argument[4] || {}
+          break
+        default:
+          logPath = argument[0] || logPath
+          logOption = argument[1] || {}
+          consoleOption = argument[2] || {}
+          // processPath = argument[3] || null
+          // processArgument = argument[4] || {}
+          // processOption = argument[5] || {}
+      }
+  
+      return [ logPath, logOption, consoleOption ]
+  
+    }
+  
     onSpawn() {
 
       let processPath = this.processPath

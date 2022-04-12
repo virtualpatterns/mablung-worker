@@ -1,27 +1,27 @@
-import { CreateLoggedProcess } from '@virtualpatterns/mablung-worker/test'
-import { WorkerClient, ChildProcessDurationExceededError, ChildProcessExitedError, ChildProcessKilledError } from '@virtualpatterns/mablung-worker'
+import { ChildProcessDurationExceededError, ChildProcessExitedError, ChildProcessKilledError, CreateRandomId } from '@virtualpatterns/mablung-worker'
+import { LoggedWorkerClient } from '@virtualpatterns/mablung-worker/test'
 import { Path } from '@virtualpatterns/mablung-path'
 import FileSystem from 'fs-extra'
 import Sinon from 'sinon'
 import Test from 'ava'
 
-import { CreateRandomId } from '../../library/create-random-id.js'
-
 const FilePath = __filePath
 const FolderPath = Path.dirname(FilePath)
 
-const LogPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '.log')
-const LoggedClient = CreateLoggedProcess(WorkerClient, LogPath)
+const DataPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '')
 const WorkerPath = Path.resolve(FolderPath, './worker/worker-client-worker.js')
 
 Test.before(async () => {
-  await FileSystem.ensureDir(Path.dirname(LogPath))
-  return FileSystem.remove(LogPath)
+  await FileSystem.remove(DataPath)
+  return FileSystem.ensureDir(DataPath)
 })
 
 Test('then', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -35,7 +35,10 @@ Test('then', async (test) => {
 
 Test('invalidProperty()', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -49,7 +52,10 @@ Test('invalidProperty()', async (test) => {
 
 Test('doIt()', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -63,7 +69,10 @@ Test('doIt()', async (test) => {
 
 Test('doIt() throws Error', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -93,7 +102,10 @@ Test('doIt() throws Error', async (test) => {
 
 Test('doIt(...)', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -107,7 +119,10 @@ Test('doIt(...)', async (test) => {
 
 Test('doIt(...) throws ChildProcessDurationExceededError', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -128,7 +143,10 @@ Test('doIt(...) throws ChildProcessDurationExceededError', async (test) => {
 
 Test('doIt(...) throws ChildProcessExitedError', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
   await test.throwsAsync(Promise.all([ client.worker.doIt(1000), client.exit(0, true) ]), { 'instanceOf': ChildProcessExitedError })
@@ -137,7 +155,10 @@ Test('doIt(...) throws ChildProcessExitedError', async (test) => {
 
 Test('doIt(...) throws ChildProcessKilledError', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
   await test.throwsAsync(Promise.all([ client.worker.doIt(1000), client.kill() ]), { 'instanceOf': ChildProcessKilledError })
@@ -146,7 +167,10 @@ Test('doIt(...) throws ChildProcessKilledError', async (test) => {
 
 Test('getPid()', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -160,7 +184,10 @@ Test('getPid()', async (test) => {
 
 Test('getPid() throws Error', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -190,7 +217,10 @@ Test('getPid() throws Error', async (test) => {
 
 Test('getPid(...)', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -204,7 +234,10 @@ Test('getPid(...)', async (test) => {
 
 Test('getPid(...) throws ChildProcessDurationExceededError', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -225,7 +258,10 @@ Test('getPid(...) throws ChildProcessDurationExceededError', async (test) => {
 
 Test('getPid(...) throws ChildProcessExitedError', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
   await test.throwsAsync(Promise.all([ client.worker.getPid(2500), client.exit(0, true) ]), { 'instanceOf': ChildProcessExitedError })
@@ -234,7 +270,10 @@ Test('getPid(...) throws ChildProcessExitedError', async (test) => {
 
 Test('getPid(...) throws ChildProcessKilledError', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
   await test.throwsAsync(Promise.all([ client.worker.getPid(2500), client.kill() ]), { 'instanceOf': ChildProcessKilledError })
@@ -243,7 +282,10 @@ Test('getPid(...) throws ChildProcessKilledError', async (test) => {
 
 Test('throwException() throws WorkerExceptionError', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -257,7 +299,10 @@ Test('throwException() throws WorkerExceptionError', async (test) => {
 
 Test('throwUncaughtException()', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
   await test.notThrowsAsync(Promise.all([ client.whenExit(), client.worker.throwUncaughtException() ]))
@@ -266,7 +311,10 @@ Test('throwUncaughtException()', async (test) => {
 
 Test('rejectUnhandledException()', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 

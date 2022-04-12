@@ -1,5 +1,5 @@
-import { CreateLoggedProcess } from '@virtualpatterns/mablung-worker/test'
-import { WorkerClient, ChildProcessSignalError } from '@virtualpatterns/mablung-worker'
+import { ChildProcessSignalError, CreateRandomId } from '@virtualpatterns/mablung-worker'
+import { LoggedWorkerClient } from '@virtualpatterns/mablung-worker/test'
 import { Path } from '@virtualpatterns/mablung-path'
 import FileSystem from 'fs-extra'
 import Sinon from 'sinon'
@@ -8,18 +8,20 @@ import Test from 'ava'
 const FilePath = __filePath
 const FolderPath = Path.dirname(FilePath)
 
-const LogPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '.log')
-const LoggedClient = CreateLoggedProcess(WorkerClient, LogPath)
+const DataPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '')
 const WorkerPath = Path.resolve(FolderPath, './worker/worker.js')
 
 Test.before(async () => {
-  await FileSystem.ensureDir(Path.dirname(LogPath))
-  return FileSystem.remove(LogPath)
+  await FileSystem.remove(DataPath)
+  return FileSystem.ensureDir(DataPath)
 })
 
 Test('send(\'...\')', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
   await test.notThrowsAsync(client.send('SIGINT'))
@@ -29,7 +31,10 @@ Test('send(\'...\')', async (test) => {
 
 Test('send({ ... }, false)', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
   await test.notThrowsAsync(client.send({ 'type': 'exit', 'code': 0 }, false))
@@ -39,7 +44,10 @@ Test('send({ ... }, false)', async (test) => {
 
 Test('send({ ... }, true)', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -54,7 +62,10 @@ Test('send({ ... }, true)', async (test) => {
 
 Test('send({ id, ... }, false)', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
   await test.notThrowsAsync(client.send({ 'id': '123', 'type': 'exit', 'code': 0 }, false))
@@ -64,7 +75,10 @@ Test('send({ id, ... }, false)', async (test) => {
 
 Test('send({ id, ... }, true)', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -79,7 +93,10 @@ Test('send({ id, ... }, true)', async (test) => {
 
 Test('send({ \'type\' }, false)', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -93,7 +110,10 @@ Test('send({ \'type\' }, false)', async (test) => {
 
 Test('send({ \'type\' }, true) returns { \'The message with type \'type\' is invalid.\' }', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -112,7 +132,10 @@ Test('send({ \'type\' }, true) returns { \'The message with type \'type\' is inv
 
 Test('send({}) throws \'The message with type undefined is invalid.\'', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -131,7 +154,10 @@ Test('send({}) throws \'The message with type undefined is invalid.\'', async (t
 
 Test('send(\'...\') throws ChildProcessSignalError', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -155,7 +181,10 @@ Test('send(\'...\') throws ChildProcessSignalError', async (test) => {
 
 Test('send({ ... }) throws Error', async (test) => {
 
-  let client = new LoggedClient(WorkerPath)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  let client = new LoggedWorkerClient(logPath, WorkerPath)
 
   await client.whenReady()
 

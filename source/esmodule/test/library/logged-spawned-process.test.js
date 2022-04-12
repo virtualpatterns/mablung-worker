@@ -1,74 +1,72 @@
-import { CreateLoggedProcess } from '@virtualpatterns/mablung-worker/test'
-import { CreateRandomId, ForkedProcess, SpawnedProcess, WorkerClient } from '@virtualpatterns/mablung-worker'
+import { CreateRandomId } from '@virtualpatterns/mablung-worker'
+import { LoggedSpawnedProcess } from '@virtualpatterns/mablung-worker/test'
 import { Path } from '@virtualpatterns/mablung-path'
 import Test from 'ava'
 import FileSystem from 'fs-extra'
 
 const FilePath = __filePath
-const FolderPath = Path.dirname(FilePath)
 const Process = process
 
 const DataPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '')
-const WorkerPath = 
 
 Test.before(async () => {
   await FileSystem.remove(DataPath)
   return FileSystem.ensureDir(DataPath)
 })
 
-Test('CreateLoggedProcess(ForkedProcess)', (test) => {
-  return test.notThrowsAsync(async () => { 
-
-    let id = await CreateRandomId()
-    let logPath = Path.resolve(DataPath, `${id}.log`)
-
-    const LoggedForkedProcess = CreateLoggedProcess(ForkedProcess)
-
-    let process = new LoggedForkedProcess(logPath, Path.resolve(FolderPath, './resource/forked.js'))
-
-    test.assert(process instanceof ForkedProcess)
-
-    await process.whenExit()
-
-  })
+Test('LoggedProcess()', (test) => {
+  test.throws(() => { new LoggedSpawnedProcess() }, { 'code': 'ERR_INVALID_ARG_TYPE' })
 })
 
-Test('CreateLoggedProcess(SpawnedProcess)', (test) => {
-  return test.notThrowsAsync(async () => { 
+Test('LoggedProcess(\'...\', \'...\')', async (test) => {
 
-    let id = await CreateRandomId()
-    let logPath = Path.resolve(DataPath, `${id}.log`)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
 
-    const LoggedSpawnedProcess = CreateLoggedProcess(SpawnedProcess)
+  await test.notThrowsAsync(new LoggedSpawnedProcess(logPath, Process.env.MAKE_PATH).whenExit())
 
-    let process = new LoggedSpawnedProcess(logPath, Process.env.MAKE_PATH, { 'version': true })
-
-    test.assert(process instanceof SpawnedProcess)
-
-    await process.whenExit()
-
-  })
 })
 
-Test('CreateLoggedProcess(WorkerClient)', (test) => {
-  return test.notThrowsAsync(async () => { 
+Test('LoggedProcess(\'...\', \'...\', { ... }, { ... })', async (test) => {
 
-    let id = await CreateRandomId()
-    let logPath = Path.resolve(DataPath, `${id}.log`)
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
 
-    const LoggedWorkerClient = CreateLoggedProcess(WorkerClient)
+  await test.notThrowsAsync(new LoggedSpawnedProcess(logPath, Process.env.MAKE_PATH, {
+      '--annabelle': 'bernadette',
+      '--benjamin': 'claudius',
+      '--claudette': 'danaldus'
+    }, {
+      '--annabelle': 'bernadette'
+    }).whenExit())
 
-    let client = new LoggedWorkerClient(logPath, Path.resolve(FolderPath, './worker/worker.js'))
+})
 
-    await client.whenReady()
+Test('LoggedProcess(\'...\', { ... }, \'...\')', async (test) => {
 
-    try {
-      test.assert(client instanceof WorkerClient)
-    } finally {
-      await client.exit()
-    }
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
 
-  })
+  await test.notThrowsAsync(new LoggedSpawnedProcess(logPath, {}, Process.env.MAKE_PATH).whenExit())
+
+})
+
+Test('LoggedProcess(\'...\', { ... }, { ... }, \'...\')', async (test) => {
+
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  await test.notThrowsAsync(new LoggedSpawnedProcess(logPath, {}, {}, Process.env.MAKE_PATH).whenExit())
+
+})
+
+Test('LoggedProcess(\'...\', { ... }, { ... }, { ... }, \'...\')', async (test) => {
+
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  test.throws(() => { new LoggedSpawnedProcess(logPath, {}, {}, {}, Process.env.MAKE_PATH) }, { 'code': 'ERR_INVALID_ARG_TYPE' })
+
 })
 
 // Test('CreateLoggedProcess(SpawnedProcess, \'...\')(\'...\', { ... })', (test) => {
