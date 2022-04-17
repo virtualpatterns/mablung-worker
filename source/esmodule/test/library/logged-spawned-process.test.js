@@ -14,57 +14,42 @@ Test.before(async () => {
   return FileSystem.ensureDir(DataPath)
 })
 
+Test.beforeEach(async (test) => {
+
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  test.context.logPath = logPath
+
+})
+
 Test('LoggedSpawnedProcess()', (test) => {
   test.throws(() => { new LoggedSpawnedProcess() }, { 'code': 'ERR_INVALID_ARG_TYPE' })
 })
 
-Test('LoggedSpawnedProcess(\'...\', \'...\')', async (test) => {
-
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  await test.notThrowsAsync(new LoggedSpawnedProcess(logPath, Process.env.MAKE_PATH).whenExit())
-
+Test('LoggedSpawnedProcess(\'...\', \'...\')', (test) => {
+  return test.notThrowsAsync(new LoggedSpawnedProcess(test.context.logPath, Process.env.MAKE_PATH).whenExit())
 })
 
-Test('LoggedSpawnedProcess(\'...\', \'...\', { ... }, { ... })', async (test) => {
-
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  await test.notThrowsAsync(new LoggedSpawnedProcess(logPath, Process.env.MAKE_PATH, {
-      '--annabelle': 'bernadette',
-      '--benjamin': 'claudius',
-      '--claudette': 'danaldus'
-    }, {
-      '--annabelle': 'bernadette'
-    }).whenExit())
-
+Test('LoggedSpawnedProcess(\'...\', \'...\', { ... }, { ... })', (test) => {
+  return test.notThrowsAsync(new LoggedSpawnedProcess(test.context.logPath, Process.env.MAKE_PATH, {
+    '--annabelle': 'bernadette',
+    '--benjamin': 'claudius',
+    '--claudette': 'danaldus'
+  }, {
+    '--annabelle': 'bernadette'
+  }).whenExit())
 })
 
-Test('LoggedSpawnedProcess(\'...\', { ... }, \'...\')', async (test) => {
-
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  await test.notThrowsAsync(new LoggedSpawnedProcess(logPath, {}, Process.env.MAKE_PATH).whenExit())
-
+Test('LoggedSpawnedProcess(\'...\', { ... }, \'...\')', (test) => {
+  return test.notThrowsAsync(new LoggedSpawnedProcess(test.context.logPath, {}, Process.env.MAKE_PATH).whenExit())
 })
 
-Test('LoggedSpawnedProcess(\'...\', { ... }, { ... }, \'...\')', async (test) => {
-
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  await test.notThrowsAsync(new LoggedSpawnedProcess(logPath, {}, {}, Process.env.MAKE_PATH).whenExit())
-
+Test('LoggedSpawnedProcess(\'...\', { ... }, { ... }, \'...\')', (test) => {
+  return test.notThrowsAsync(new LoggedSpawnedProcess(test.context.logPath, {}, {}, Process.env.MAKE_PATH).whenExit())
 })
 
-Test('LoggedSpawnedProcess(\'...\', { ... }, { ... }, { ... }, \'...\')', async (test) => {
-
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  test.throws(() => { new LoggedSpawnedProcess(logPath, {}, {}, {}, Process.env.MAKE_PATH) }, { 'code': 'ERR_INVALID_ARG_TYPE' })
+Test('LoggedSpawnedProcess(\'...\', { ... }, { ... }, { ... }, \'...\')', (test) => {
+  test.throws(() => { new LoggedSpawnedProcess(test.context.logPath, {}, {}, {}, Process.env.MAKE_PATH) }, { 'code': 'ERR_INVALID_ARG_TYPE' })
 
 })

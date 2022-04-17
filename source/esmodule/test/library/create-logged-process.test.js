@@ -9,7 +9,6 @@ const FolderPath = Path.dirname(FilePath)
 const Process = process
 
 const DataPath = FilePath.replace('/release/', '/data/').replace(/\.test\.c?js$/, '')
-const WorkerPath = 
 
 Test.before(async () => {
   await FileSystem.remove(DataPath)

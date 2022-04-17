@@ -16,13 +16,19 @@ Test.before(async () => {
   return FileSystem.ensureDir(DataPath)
 })
 
+Test.beforeEach(async (test) => {
+
+  let id = await CreateRandomId()
+  let logPath = Path.resolve(DataPath, `${id}.log`)
+
+  test.context.logPath = logPath
+
+})
+
 Test('LoggedWorkerClient(\'...\')', (test) => {
   return test.notThrowsAsync(async () => {
-
-    let id = await CreateRandomId()
-    let logPath = Path.resolve(DataPath, `${id}.log`)
   
-    let client = new LoggedWorkerClient(logPath, WorkerPath)
+    let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
   
     await client.whenReady()
 
@@ -43,10 +49,7 @@ Test('LoggedWorkerClient(\'...\')', (test) => {
 Test('LoggedWorkerClient(\'...\', { ... })', (test) => {
   return test.notThrowsAsync(async () => {
 
-    let id = await CreateRandomId()
-    let logPath = Path.resolve(DataPath, `${id}.log`)
-
-    let client = new LoggedWorkerClient(logPath, WorkerPath, { '--asd': 'fgh' })
+    let client = new LoggedWorkerClient(test.context.logPath, WorkerPath, { '--asd': 'fgh' })
 
     await client.whenReady()
 
@@ -70,10 +73,7 @@ Test('LoggedWorkerClient(\'...\', { ... })', (test) => {
 Test('LoggedWorkerClient(\'...\', { ... }, { ... })', (test) => {
   return test.notThrowsAsync(async () => {
 
-    let id = await CreateRandomId()
-    let logPath = Path.resolve(DataPath, `${id}.log`)
-
-    let client = new LoggedWorkerClient(logPath, WorkerPath, { '--asd': 'fgh' }, { 'maximumDuration': 5000 })
+    let client = new LoggedWorkerClient(test.context.logPath, WorkerPath, { '--asd': 'fgh' }, { 'maximumDuration': 5000 })
 
     await client.whenReady()
 
@@ -96,12 +96,9 @@ Test('LoggedWorkerClient(\'...\', { ... }, { ... })', (test) => {
 
 Test('maximumDuration', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
   let maximumDuration = 5000
 
-  let client = new LoggedWorkerClient(logPath, WorkerPath, {}, { 'maximumDuration': maximumDuration })
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath, {}, { 'maximumDuration': maximumDuration })
 
   await client.whenReady()
 
@@ -123,10 +120,7 @@ Test('maximumDuration', async (test) => {
 
 Test('ping()', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -143,10 +137,7 @@ Test('ping()', async (test) => {
 
 Test('ping() throws Error', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -174,10 +165,7 @@ Test('ping() throws Error', async (test) => {
 
 Test('ping() returns undefined', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -204,10 +192,7 @@ Test('ping() returns undefined', async (test) => {
 
 Test('exit()', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
   await test.notThrowsAsync(client.exit())
@@ -216,10 +201,7 @@ Test('exit()', async (test) => {
 
 Test('exit(...)', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -232,10 +214,7 @@ Test('exit(...)', async (test) => {
 
 Test('exit(...) on send(\'...\')', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -246,12 +225,9 @@ Test('exit(...) on send(\'...\')', async (test) => {
 
 })
 
-Test.only('kill()', async (test) => {
+Test('kill()', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
   await test.notThrowsAsync(client.kill())
@@ -260,10 +236,7 @@ Test.only('kill()', async (test) => {
 
 Test('kill(\'...\')', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
   await test.notThrowsAsync(client.kill('SIGINT'))

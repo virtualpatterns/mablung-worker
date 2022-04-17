@@ -15,12 +15,18 @@ Test.before(async () => {
   return FileSystem.ensureDir(DataPath)
 })
 
-Test('onError(...)', async (test) => {
+Test.beforeEach(async (test) => {
 
   let id = await CreateRandomId()
   let logPath = Path.resolve(DataPath, `${id}.log`)
 
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  test.context.logPath = logPath
+
+})
+
+Test('onError(...)', async (test) => {
+
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
 

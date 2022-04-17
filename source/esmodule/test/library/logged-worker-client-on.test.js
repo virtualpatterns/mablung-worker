@@ -16,12 +16,18 @@ Test.before(async () => {
   return FileSystem.ensureDir(DataPath)
 })
 
-Test('onSpawn() throws Error', async (test) => {
+Test.beforeEach(async (test) => {
 
   let id = await CreateRandomId()
   let logPath = Path.resolve(DataPath, `${id}.log`)
 
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  test.context.logPath = logPath
+
+})
+
+Test('onSpawn() throws Error', async (test) => {
+
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   try {
 
@@ -44,10 +50,7 @@ Test('onSpawn() throws Error', async (test) => {
 
 Test('onMessage() throws Error', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   try {
 
@@ -70,10 +73,7 @@ Test('onMessage() throws Error', async (test) => {
 
 Test('onExit() throws Error', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -92,10 +92,7 @@ Test('onExit() throws Error', async (test) => {
 
 Test('onKill() throws Error', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
 

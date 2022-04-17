@@ -16,12 +16,18 @@ Test.before(async () => {
   return FileSystem.ensureDir(DataPath)
 })
 
-Test('send(\'...\')', async (test) => {
+Test.beforeEach(async (test) => {
 
   let id = await CreateRandomId()
   let logPath = Path.resolve(DataPath, `${id}.log`)
 
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  test.context.logPath = logPath
+
+})
+
+Test('send(\'...\')', async (test) => {
+
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
   await test.notThrowsAsync(client.send('SIGINT'))
@@ -31,10 +37,7 @@ Test('send(\'...\')', async (test) => {
 
 Test('send({ ... }, false)', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
   await test.notThrowsAsync(client.send({ 'type': 'exit', 'code': 0 }, false))
@@ -44,10 +47,7 @@ Test('send({ ... }, false)', async (test) => {
 
 Test('send({ ... }, true)', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -62,10 +62,7 @@ Test('send({ ... }, true)', async (test) => {
 
 Test('send({ id, ... }, false)', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
   await test.notThrowsAsync(client.send({ 'id': '123', 'type': 'exit', 'code': 0 }, false))
@@ -75,10 +72,7 @@ Test('send({ id, ... }, false)', async (test) => {
 
 Test('send({ id, ... }, true)', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -93,10 +87,7 @@ Test('send({ id, ... }, true)', async (test) => {
 
 Test('send({ \'type\' }, false)', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -110,10 +101,7 @@ Test('send({ \'type\' }, false)', async (test) => {
 
 Test('send({ \'type\' }, true) returns { \'The message with type \'type\' is invalid.\' }', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -132,10 +120,7 @@ Test('send({ \'type\' }, true) returns { \'The message with type \'type\' is inv
 
 Test('send({}) throws \'The message with type undefined is invalid.\'', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -154,10 +139,7 @@ Test('send({}) throws \'The message with type undefined is invalid.\'', async (t
 
 Test('send(\'...\') throws ChildProcessSignalError', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -181,10 +163,7 @@ Test('send(\'...\') throws ChildProcessSignalError', async (test) => {
 
 Test('send({ ... }) throws Error', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
 

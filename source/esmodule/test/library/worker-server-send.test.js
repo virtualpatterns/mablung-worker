@@ -15,12 +15,18 @@ Test.before(async () => {
   return FileSystem.ensureDir(DataPath)
 })
 
-Test('send()', async (test) => {
+Test.beforeEach(async (test) => {
 
   let id = await CreateRandomId()
   let logPath = Path.resolve(DataPath, `${id}.log`)
 
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  test.context.logPath = logPath
+
+})
+
+Test('send()', async (test) => {
+
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -34,10 +40,7 @@ Test('send()', async (test) => {
 
 Test('send({ ... }) throws Error', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
 
@@ -51,10 +54,7 @@ Test('send({ ... }) throws Error', async (test) => {
 
 Test('send({ ... }) throws WorkerServerNoIPCChannelError', async (test) => {
 
-  let id = await CreateRandomId()
-  let logPath = Path.resolve(DataPath, `${id}.log`)
-
-  let client = new LoggedWorkerClient(logPath, WorkerPath)
+  let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
 
