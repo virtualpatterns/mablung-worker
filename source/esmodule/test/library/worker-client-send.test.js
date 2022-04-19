@@ -1,5 +1,5 @@
-import { ChildProcessSignalError, CreateRandomId } from '@virtualpatterns/mablung-worker'
-import { LoggedWorkerClient } from '@virtualpatterns/mablung-worker/test'
+import { ChildProcessSignalError } from '@virtualpatterns/mablung-worker'
+import { CreateRandomId, LoggedWorkerClient } from '@virtualpatterns/mablung-worker/test'
 import { Path } from '@virtualpatterns/mablung-path'
 import FileSystem from 'fs-extra'
 import Sinon from 'sinon'

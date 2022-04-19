@@ -1,5 +1,5 @@
-import { ChildProcessDurationExceededError, ChildProcessExitedError, ChildProcessKilledError, CreateRandomId } from '@virtualpatterns/mablung-worker'
-import { LoggedWorkerClient } from '@virtualpatterns/mablung-worker/test'
+import { ChildProcessDurationExceededError, ChildProcessExitedError, ChildProcessKilledError } from '@virtualpatterns/mablung-worker'
+import { CreateRandomId, LoggedWorkerClient } from '@virtualpatterns/mablung-worker/test'
 import { Path } from '@virtualpatterns/mablung-path'
 import FileSystem from 'fs-extra'
 import Sinon from 'sinon'
@@ -141,12 +141,12 @@ Test('doIt(...) throws ChildProcessExitedError', async (test) => {
 
 })
 
-Test('doIt(...) throws ChildProcessKilledError', async (test) => {
+Test('doIt(...) throws Error', async (test) => {
 
   let client = new LoggedWorkerClient(test.context.logPath, WorkerPath)
 
   await client.whenReady()
-  await test.throwsAsync(Promise.all([ client.worker.doIt(1000), client.kill() ]), { 'instanceOf': ChildProcessKilledError })
+  await test.throwsAsync(Promise.all([ client.worker.doIt(1000), client.kill() ]), { 'instanceOf': Error })
 
 })
 

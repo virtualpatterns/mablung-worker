@@ -1,5 +1,4 @@
-import { CreateRandomId } from '@virtualpatterns/mablung-worker'
-import { LoggedSpawnedProcess } from '@virtualpatterns/mablung-worker/test'
+import { CreateRandomId, LoggedSpawnedProcess } from '@virtualpatterns/mablung-worker/test'
 import { Path } from '@virtualpatterns/mablung-path'
 import Test from 'ava'
 import FileSystem from 'fs-extra'

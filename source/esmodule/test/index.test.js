@@ -22,6 +22,7 @@ import Test from 'ava'
 })
 
 ;[
+  'CreateRandomId',
   'CreateLoggedProcess',
   'LoggedForkedProcess', 
   'LoggedSpawnedProcess', 

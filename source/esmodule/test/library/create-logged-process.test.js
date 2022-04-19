@@ -1,5 +1,5 @@
-import { CreateLoggedProcess } from '@virtualpatterns/mablung-worker/test'
-import { CreateRandomId, ForkedProcess, SpawnedProcess, WorkerClient } from '@virtualpatterns/mablung-worker'
+import { CreateLoggedProcess, CreateRandomId } from '@virtualpatterns/mablung-worker/test'
+import { ForkedProcess, SpawnedProcess, WorkerClient } from '@virtualpatterns/mablung-worker'
 import { Path } from '@virtualpatterns/mablung-path'
 import Test from 'ava'
 import FileSystem from 'fs-extra'
