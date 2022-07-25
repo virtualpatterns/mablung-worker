@@ -32,8 +32,8 @@
   "type": "module",
   "version": "0.0.2-131",
   "dependencies": {
-    "@virtualpatterns/mablung-configuration": "0.0.2-57",
-    "@virtualpatterns/mablung-console": "0.0.2-101",
+    "@virtualpatterns/mablung-configuration": "0.0.2-59",
+    "@virtualpatterns/mablung-console": "0.0.2-103",
     "@virtualpatterns/mablung-is": "0.0.1-67",
     "@virtualpatterns/mablung-path": "^0.0.2-55"
   },
@@ -42,7 +42,7 @@
     "@virtualpatterns/eslint-config-mablung-makefile-environment": "0.0.26-34",
     "@virtualpatterns/mablung-check-dependency": "0.0.26-125",
     "@virtualpatterns/mablung-makefile-environment": "0.0.26-89",
-    "ava": "^4.3.0",
+    "ava": "^4.3.1",
     "fs-extra": "^10.1.0",
     "shx": "^0.3.4",
     "sinon": "^14.0.0",
